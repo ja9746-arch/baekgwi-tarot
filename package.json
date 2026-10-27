@@ -1,0 +1,7 @@
+{
+  "name": "baekgwi-tarot",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "백귀타로 — 백귀술사 호연이 백 귀신의 패로 보는 타로"
+}

@@ -897,7 +897,31 @@ async function openReading(){
   $("t2").addEventListener("click",()=>$("terms").hidden=false);
 }
 
-/* ── 여덟 장 — 여기서 전부 끝낸다 ── */
+/* ── 덮인 일곱 장 — 호연이 직접 읽는다 ── */
+async function askSeer(E){
+  const cards = [];
+  for(let i=3;i<10;i++){
+    const p=S.picked[i], c=p.card;
+    cards.push({pos:POS[i].k, posDesc:POS[i].desc, rev:p.rev,
+      nm:c.nm, jp:c.jp, hanja:c.hanja, suit:c.suit, no:c.no, el:c.el,
+      nature:c.nature, act:c.act, warn:c.warn, fix:c.fix});
+  }
+  const bone = {topic:E.topic, qtype:E.qtype, el:E.el, elN:E.elN, rev:E.rev,
+    leanSuit:E.leanSuit, leanN:E.leanN, daegui:E.daegui, when:E.when, verdict:E.verdict};
+  const ctrl = new AbortController();
+  const bail = setTimeout(()=>ctrl.abort(), 45000);
+  try{
+    const r = await fetch("/api/reading",{
+      method:"POST", headers:{"content-type":"application/json"},
+      body: JSON.stringify({q:S.q, cards, bone}), signal: ctrl.signal});
+    clearTimeout(bail);
+    if(!r.ok) return null;
+    const d = await r.json();
+    if(!d.sections || d.sections.length !== cards.length) return null;
+    return d.sections.map(x=>x.text);
+  }catch(e){ clearTimeout(bail); return null; }
+}
+
 async function unseal(){
   S.paid=true;
   const E=S.E;
@@ -905,18 +929,28 @@ async function unseal(){
   $("readfoot").innerHTML="";
   setBg("img/seer-card.webp");
 
+  /* 호연이 패를 들여다보는 동안 — 뜸이 기다림을 덮는다 */
+  const job = askSeer(E);
+  const waiting = document.createElement("div");
+  waiting.className="line";
+  waiting.innerHTML='<span class="who">호연</span><span class="body">패를 하나씩 들여다보겠네… 잠시 숨을 고르게.</span>';
+  readBox().appendChild(waiting); toBottom();
+  await dots();
+  const written = await job;
+
   for(let i=3;i<10;i++){
     await dots();
     await reveal(i);
-    await line(POS[i].ko+" · "+POS[i].desc, frame(i,S.picked[i],E));
+    const body = (written && written[i-3]) ? written[i-3] : frame(i,S.picked[i],E);
+    await line(POS[i].ko+" · "+POS[i].desc, body);
     $("fl"+i).parentElement.classList.remove("cur");
   }
 
   await dots();
-  const qt = E.qtype==="언제" ? `자네가 물은 것은 때였네. <strong>${E.when.t}</strong>, 그 안이다.`
+  const qt = E.qtype==="언제" ? `자네가 물은 것은 때였네. <strong>${E.when.t}</strong>, 그 안일세.`
            : E.qtype==="왜" ? `자네가 물은 것은 까닭이었네. 까닭은 ${S.picked[0].card.nm}에 있다. 자네 탓이 반, 붙은 것이 반이다.`
-           : E.qtype==="어떻게" ? `자네가 물은 것은 방법이었네. 부(符)에 적힌 그것 하나면 된다. 더 벌이지 마라.`
-           : E.qtype==="누구" ? `자네가 물은 것은 사람이었네. 심(心)에 나온 그 모습이 그 사람의 속이다.`
+           : E.qtype==="어떻게" ? `자네가 물은 것은 방법이었네. 부(符)에 적힌 그것 하나면 된다. 더 벌이지 말게.`
+           : E.qtype==="누구" ? `자네가 물은 것은 사람이었네. 심(心)에 나온 그 모습이 그 사람의 속일세.`
            : `자네가 물은 것은 되느냐 안 되느냐였네.`;
   await line("확답",`${qt}<br><strong>${E.verdict}</strong>`);
 
@@ -928,21 +962,21 @@ async function unseal(){
   bits.push(`뒤집힌 패가 ${E.rev}장이다`);
   await line("패의 모양",
     bits.join(", ")+`.<br>`+
-    (E.daegui>=2?"대귀가 둘 이상 든 패는 흔치 않다. 자네 일이 자네 손만의 일이 아니라는 뜻이다. "
-     :E.rev>=6?"절반 넘게 뒤집혔다. 지금 자네 자리가 통째로 흔들리고 있다는 뜻이다. "
-     :E.rev===0?"하나도 뒤집히지 않았다. 흐름이 자네 편이다. ":"")+
-    `문제가 <em>${E.leanSuit}</em> 한 군데에 몰려 있으니, 거기만 손보면 나머지는 따라온다.`);
+    (E.daegui>=2?"대귀가 둘 이상 든 패는 흔치 않네. 자네 일이 자네 손만의 일이 아니라는 뜻일세. "
+     :E.rev>=6?"절반 넘게 뒤집혔네. 지금 자네 자리가 통째로 흔들리고 있다는 뜻일세. "
+     :E.rev===0?"하나도 뒤집히지 않았네. 흐름이 자네 편일세. ":"")+
+    `문제가 <em>${E.leanSuit}</em> 한 군데에 몰려 있으니, 거기만 손보면 나머지는 따라오네.`);
 
   await dots();
   await line("호연",
-    `${E.grade<=1?"끝은 자네 쪽으로 기운다.":"끝은 그냥 두면 자네 쪽이 아니다."} `+
-    `다만 패는 끝을 이미 정해뒀다… <strong>${E.when.t}</strong>, 그때 자네가 어느 손을 쓰느냐만 남았다.<br>`+
-    `부(符)에 적힌 것부터 해라. 그게 첫 매듭이다.`);
+    `${E.grade<=1?"끝은 자네 쪽으로 기우네.":"끝은 그냥 두면 자네 쪽이 아닐세."} `+
+    `다만 패는 끝을 이미 정해뒀네… <strong>${E.when.t}</strong>, 그때 자네가 어느 손을 쓰느냐만 남았네.<br>`+
+    `부(符)에 적힌 것부터 하게. 그게 첫 매듭일세.`);
 
   setBg("img/seer-smile.webp");
   const tail=document.createElement("p");
   tail.className="tail";
-  tail.innerHTML=`이 풀이는 <b>${new Date().toLocaleDateString("ko-KR")}</b>의 패다.<br>같은 질문을 다시 물으면 패가 달라진다.`;
+  tail.innerHTML=`이 풀이는 <b>${new Date().toLocaleDateString("ko-KR")}</b>의 패일세.<br>같은 것을 다시 물으면 패가 달라지네.`;
   readBox().appendChild(tail); toBottom();
 
   $("readfoot").innerHTML=`<button class="btn ghost" id="again2">다 른 것 을 묻 다</button>`;
