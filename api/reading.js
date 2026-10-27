@@ -33,7 +33,7 @@ async function callModel(system, prompt) {
       },
       body: JSON.stringify({
         model: MODEL,
-        max_tokens: 3000,
+        max_tokens: 3200,
         temperature: 1,
         messages: [
           { role: "system", content: system },
@@ -58,7 +58,7 @@ async function callModel(system, prompt) {
     },
     body: JSON.stringify({
       model: MODEL.replace(/^anthropic\//, ""),
-      max_tokens: 3000,
+      max_tokens: 3200,
       temperature: 1,
       system,
       messages: [{ role: "user", content: prompt }],
@@ -120,7 +120,7 @@ const TONE = [
   "흐름이 등을 돌렸다. 엄숙하게 판결하듯 짧게 끊되, 끝에는 반드시 살 길 하나를 남겨라.",
 ];
 
-function buildPrompt(q, cards, bone) {
+function buildPrompt(q, cards, bone, stage) {
   const list = cards
     .map(
       (c, i) =>
@@ -139,17 +139,44 @@ function buildPrompt(q, cards, bone) {
     ? bone.opened.map((o) => `${o.pos} ${o.nm}`).join(", ")
     : "";
 
-  return `질문자가 품고 온 물음
+  const asked = [
+    bone.who ? `- 물음 속 사람: ${bone.who}` : "",
+    bone.feel ? `- 물음 속 마음: ${bone.feel}` : "",
+    bone.whenWord ? `- 물음 속 때를 가리키는 말: ${bone.whenWord}` : "",
+  ].filter(Boolean).join("\n");
+
+  const head = `질문자가 품고 온 물음
 "${q}"
 
 가려낸 것
 - 주제: ${bone.topic}
 - 묻는 꼴: ${bone.qtype}
+${asked}`;
+
+  if (stage === "free") {
+    return `${head}
+
+지금은 열 장 가운데 앞의 세 장만 무료로 먼저 여는 때다.
+- 이 세 장은 이 일의 뿌리(因), 지금 얽힌 것(緣), 자네가 못 보는 것(隱)이다.
+- 때(시기)와 확답, 붙은 귀, 떼는 법은 덮인 일곱 장에 있으니 절대 말하지 마라.
+- 대신 隱 자리 끝에서 "이 너머에 무엇이 있는지"를 궁금하게 만드는 한 문장으로 맺어라. 돈이나 결제 이야기는 하지 마라.
+- 물음 속 사람·마음·사정을 직접 집어 말하라. 질문자가 '이 술사가 내 사정을 안다'고 느껴야 한다.
+
+열린 패 (이 순서대로 풀어라)
+${list}
+
+지시
+- 위 패 순서대로 정확히 ${cards.length}개의 풀이를 쓴다.
+- 질문에 나온 말을 세 자리 모두에서 직접 되짚어라.`;
+  }
+
+  return `${head}
 - 이미 무료로 열어 본 세 장: ${opened}
 
 뼈대 (바꾸지 말 것)
 - 갈리는 때: ${bone.when.t} (${bone.when.d})
 - 확답: ${bone.verdict}
+- 확답의 근거: ${(bone.why || []).join(" / ")}
 - 열 장 중 오행 ${bone.el}이 ${bone.elN}장으로 가장 많다
 - 갈래는 ${bone.leanSuit}가 ${bone.leanN}장으로 가장 많다
 - 대귀 ${bone.daegui}장, 뒤집힌 패 ${bone.rev}장
@@ -166,7 +193,7 @@ ${list}
 - 자리 '果'의 풀이는 "${bone.verdict}"로 끝맺는다. 이 문장은 <strong>으로 감싼다.
 - 자리 '符'는 base에 적힌 두 처방을 질문자의 사정에 맞춰 오늘 당장 할 수 있는 행동으로 풀어 준다. 처방 자체는 바꾸지 않는다.
 - 질문에 나온 말을 최소 세 자리 이상에서 직접 되짚어라.
-- 묻는 꼴이 '언제'면 時와 果에서 때를 한 번 더 못 박고, '왜'면 鬼에서 까닭을, '어떻게'면 符에서 방법을, '누구'면 心에서 그 사람을 가장 두껍게 써라.`;
+- 묻는 꼴이 '언제'면 時와 果에서 때를 한 번 더 못 박고, '왜'면 鬼에서 까닭을, '어떻게'면 符에서 방법을, '누구'면 心에서 그 사람을, '어느'면 果에서 고른 쪽을 가장 두껍게 써라.`;
 }
 
 export default async function handler(req, res) {
@@ -197,6 +224,7 @@ export default async function handler(req, res) {
   }
   const q = String(body?.q || "").slice(0, MAX_Q).trim();
   const cards = Array.isArray(body?.cards) ? body.cards.slice(0, 10) : [];
+  const stage = body?.bone?.stage === "free" ? "free" : "paid";
   const bone = body?.bone;
   if (!q || !cards.length || !bone?.when?.t || !bone?.verdict) {
     res.status(400).json({ error: "패가 모자란다" });
@@ -204,7 +232,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const raw = await callModel(SYSTEM, buildPrompt(q, cards, bone));
+    const raw = await callModel(SYSTEM, buildPrompt(q, cards, bone, stage));
     if (!raw) {
       res.status(502).json({ error: "패를 읽다 끊겼다" });
       return;
