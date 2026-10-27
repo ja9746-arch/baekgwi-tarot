@@ -41,13 +41,13 @@
 }
 *{box-sizing:border-box}
 html,body{height:100%}
-body{margin:0;background:var(--mook);color:var(--jae);font-family:var(--sans);
+body{margin:0;background:linear-gradient(rgba(10,5,7,.86),rgba(10,5,7,.86)),url("img/bg.webp") center/cover no-repeat fixed,var(--mook);color:var(--jae);font-family:var(--sans);
   font-weight:300;line-height:1.75;-webkit-font-smoothing:antialiased;overflow:hidden}
 button{font-family:inherit;color:inherit;cursor:pointer}
 :focus-visible{outline:2px solid var(--geum);outline-offset:3px}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 
-#stage{position:relative;height:100%;width:100%;max-width:520px;margin:0 auto;overflow:hidden;isolation:isolate}
+#stage{position:relative;height:100%;width:100%;max-width:520px;margin:0 auto;overflow:hidden;isolation:isolate;box-shadow:0 0 80px rgba(0,0,0,.9)}
 #bg{position:absolute;inset:0;z-index:0;background:#070406;overflow:hidden}
 #bg .plate{position:absolute;inset:0;background:#070406 center 16%/cover no-repeat;
   opacity:0;transition:opacity .85s ease}
@@ -76,18 +76,19 @@ button{font-family:inherit;color:inherit;cursor:pointer}
 
 /* 들어가기 */
 .ask{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;
-  display:flex;flex-direction:column;justify-content:center;gap:20px;padding-block:10px}
+  display:flex;flex-direction:column;justify-content:center;gap:18px;padding-block:10px}
+#s-ask .ask{justify-content:flex-start;padding-top:min(5vh,44px)}
+@media (max-height:700px){#s-ask .ask .hint:last-child{display:none}#s-ask .rule{margin-top:10px}}
 .ask::-webkit-scrollbar{width:0}
 .ask h2{font-family:var(--serif);font-weight:700;font-size:clamp(19px,5.2vw,23px);
   text-align:center;margin:0;color:var(--jae);text-wrap:balance;line-height:1.95;
   letter-spacing:-.012em;text-shadow:0 2px 14px #000,0 0 30px rgba(0,0,0,.85)}
 .field{position:relative}
 .field textarea{width:100%;min-height:98px;resize:none;background:rgba(7,4,5,.88);color:var(--jae);
-  border:1px solid var(--line);border-radius:2px;padding:16px 16px 34px;font:inherit;font-size:15px;line-height:1.7}
+  border:1px solid var(--line);border-radius:2px;padding:14px 16px;font:inherit;font-size:16px;line-height:1.7;max-height:190px;overflow-y:auto}
 .field textarea::placeholder{color:#978679}
-.field textarea:focus{border-color:var(--geum);background:rgba(6,3,4,.94);
-  box-shadow:0 0 0 1px rgba(201,162,74,.3),0 0 30px rgba(0,0,0,.8)}
-.count{position:absolute;right:12px;bottom:10px;font-size:11px;color:#8d7f73;font-variant-numeric:tabular-nums}
+.field textarea:focus{outline:none;border-color:var(--geum);background:rgba(6,3,4,.94);box-shadow:0 0 30px rgba(0,0,0,.8)}
+.count{display:block;text-align:right;margin-top:6px;font-size:11px;color:#9a8b7e;font-variant-numeric:tabular-nums}
 .seer-name{margin:0 0 2px;text-align:center;font-family:var(--serif);font-size:13px;
   letter-spacing:.16em;color:var(--geum-dim);text-shadow:0 2px 12px #000,0 0 24px #000}
 .seer-name b{color:var(--geum);font-weight:700;font-size:15px;letter-spacing:.1em}
@@ -98,12 +99,12 @@ button{font-family:inherit;color:inherit;cursor:pointer}
 /* 단추 */
 .btn{display:block;width:100%;padding:16px 18px;border:1px solid var(--geum);
   background:linear-gradient(180deg,rgba(192,54,42,.32),rgba(120,24,18,.48));color:var(--jae);
-  font-family:var(--serif);font-weight:700;font-size:16px;letter-spacing:.26em;border-radius:2px;
-  text-indent:.26em;transition:.22s}
+  font-family:var(--serif);font-weight:700;font-size:16px;letter-spacing:.1em;border-radius:2px;
+  text-indent:.1em;transition:.22s}
 .btn:hover{background:linear-gradient(180deg,rgba(222,70,48,.46),rgba(150,30,22,.6));box-shadow:0 0 28px rgba(255,84,54,.3)}
-.btn:disabled{opacity:.62;cursor:default;box-shadow:none;filter:saturate(.5)}
+.btn:disabled{opacity:.82;cursor:default;box-shadow:none;filter:saturate(.7) brightness(.85)}
 .btn.ghost{background:transparent;border-color:var(--line);color:var(--jae-dim);font-weight:400;
-  font-size:13px;letter-spacing:.2em;padding:13px}
+  font-size:14px;letter-spacing:.06em;padding:13px}
 .btn.ghost:hover{border-color:var(--geum-dim);color:var(--jae);box-shadow:none}
 .foot{flex:none;position:relative;z-index:8;padding-top:10px;display:grid;gap:8px;
   padding-bottom:calc(22px + env(safe-area-inset-bottom,0px))}
@@ -129,6 +130,8 @@ button{font-family:inherit;color:inherit;cursor:pointer}
 .card.brushed{border-color:rgba(255,140,100,.85);box-shadow:0 -4px 18px rgba(0,0,0,.72),0 0 16px rgba(255,84,54,.3)}
 .card.off{opacity:0;pointer-events:none;transition:opacity .2s}
 .card.taken{opacity:0;pointer-events:none;transition:opacity .25s}
+.card.refill{animation:refill .42s ease both}
+@keyframes refill{from{opacity:0;transform:var(--t) translateY(30px)}to{opacity:1;transform:var(--t)}}
 .fan.pickable .card{cursor:pointer}
 .fan.pickable .card:hover{transform:var(--t) translate(0,-40px);
   filter:brightness(1.4) drop-shadow(0 0 16px rgba(255,84,54,.7));z-index:80}
@@ -147,11 +150,12 @@ button{font-family:inherit;color:inherit;cursor:pointer}
   bottom:calc(330px + env(safe-area-inset-bottom,0px));
   font-family:var(--serif);font-weight:700;font-size:20px;letter-spacing:.04em;color:#fff;
   text-shadow:0 2px 16px #000,0 0 30px #000,0 0 50px rgba(0,0,0,.95);
-  pointer-events:none;transition:opacity .4s}
+  pointer-events:none;transition:opacity .4s;
+  background:radial-gradient(closest-side,rgba(6,3,4,.82),rgba(6,3,4,.5) 60%,transparent);padding:16px 0}
 .deal small{display:block;margin-top:9px;font-size:12.5px;font-family:var(--sans);font-weight:300;
   letter-spacing:.04em;color:#c9b9aa;text-shadow:0 2px 12px #000,0 0 22px #000}
 .tally{display:flex;gap:12px;justify-content:center;margin-top:13px}
-.tally i{width:30px;height:4px;background:rgba(255,255,255,.18);border:1px solid rgba(201,162,74,.45);
+.tally i{width:34px;height:5px;background:rgba(255,255,255,.32);border:1px solid rgba(201,162,74,.75);
   border-radius:1px;transition:.3s}
 .tally i.on{background:var(--jusa-hot);border-color:var(--jusa-hot);box-shadow:0 0 14px rgba(255,84,54,.9)}
 
@@ -183,14 +187,17 @@ button{font-family:inherit;color:inherit;cursor:pointer}
   padding:1px 4px;border-radius:1px;white-space:nowrap}
 
 /* 풀이 */
-.read{flex:1 1 auto;min-height:0;overflow-y:auto;margin-top:12px;padding-bottom:10px}
+.read{flex:1 1 auto;min-height:0;overflow-y:auto;margin-top:10px;padding:16px 14px 28px;margin-inline:-6px;border-radius:4px;
+  background:linear-gradient(180deg,rgba(8,4,6,.62),rgba(8,4,6,.76));
+  -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 14px,#000 calc(100% - 22px),transparent);
+  mask-image:linear-gradient(to bottom,transparent 0,#000 14px,#000 calc(100% - 22px),transparent)}
 .read::-webkit-scrollbar{width:3px}
 .read::-webkit-scrollbar-thumb{background:var(--geum-dim)}
 .line{margin:0 0 17px;font-size:15.5px;font-weight:300;line-height:2.05;color:var(--jae);
   letter-spacing:-.008em;animation:rise .5s ease both}
-.line .who{display:block;font-family:var(--serif);font-weight:700;font-size:11.5px;letter-spacing:.3em;
-  color:var(--jusa-hot);margin-bottom:7px;text-indent:.3em}
-.line em{font-style:normal;color:var(--geum);font-weight:500}
+.line .who{display:block;font-family:var(--serif);font-weight:700;font-size:11.5px;letter-spacing:.06em;font-size:12.5px;
+  color:var(--jusa-hot);margin-bottom:7px;}
+.line em{font-style:normal;color:#e8c977;font-weight:500}
 .line strong{color:#ff8a6b;font-weight:500}
 @keyframes rise{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
 .caret{display:inline-block;width:2px;height:1em;vertical-align:-2px;background:var(--jusa-hot);
@@ -233,6 +240,12 @@ button{font-family:inherit;color:inherit;cursor:pointer}
   width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:rgba(8,4,6,.6);
   color:var(--geum);font-family:var(--serif);font-size:14px;line-height:1;display:grid;place-items:center}
 .snd.muted{color:#6d6057}
+#stage.typing .snd{opacity:0;pointer-events:none}
+.home{position:absolute;z-index:50;top:calc(12px + env(safe-area-inset-top,0px));left:max(12px,env(safe-area-inset-left,0px));
+  height:32px;padding:0 12px;border-radius:16px;border:1px solid var(--line);background:rgba(8,4,6,.6);color:#c9b9aa;font-size:12px}
+.toast{position:absolute;z-index:70;left:50%;bottom:calc(96px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);
+  max-width:86%;padding:10px 16px;border-radius:18px;background:rgba(10,5,7,.92);border:1px solid var(--line);color:var(--jae);
+  font-size:13px;text-align:center;animation:rise .3s ease both}
 /* 봉인 깨기 */
 #flash{position:absolute;inset:0;z-index:60;pointer-events:none;opacity:0;
   background:radial-gradient(60% 45% at 50% 30%,rgba(255,84,54,.85),rgba(120,10,0,.35) 60%,transparent 80%)}
@@ -249,20 +262,31 @@ button{font-family:inherit;color:inherit;cursor:pointer}
 .board .front.rev{box-shadow:inset 0 -3px 0 #ff5436}
 .board .slot.sealed .face.back::after{font-size:11px!important}
 .board .slot.opened{cursor:pointer}
+.board{background:rgba(6,3,4,.66);padding:8px 6px 7px;border-radius:4px;border:1px solid rgba(201,162,74,.2)}
+.board .slot .pos{font-size:11px!important;color:var(--geum)!important;text-shadow:0 1px 6px #000}
+.flipper.empty{opacity:.55!important}
 .board .slot.cur .flipper{box-shadow:0 0 0 1px var(--jusa-hot),0 0 14px rgba(255,84,54,.7)}
 #s-read .board{margin-top:6px}
 /* 크게 뒤집기 */
 .spot{position:fixed;inset:0;z-index:400;display:flex;flex-direction:column;align-items:center;justify-content:center;
   gap:10px;background:rgba(5,2,3,.9);transition:opacity .3s}
 .spot.out{opacity:0}
-.spotcard{width:min(58vw,236px);aspect-ratio:2/3;perspective:1000px}
+.spotcard{width:min(60vw,248px);aspect-ratio:2/3;perspective:1000px}
 .spotcard .inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;
   transition:transform .75s cubic-bezier(.3,.9,.3,1);transform:scale(.9)}
 .spot.open .spotcard .inner{transform:rotateY(180deg) scale(1)}
 .spotcard .face{border-radius:6px;border:1px solid var(--geum);box-shadow:0 18px 60px rgba(0,0,0,.8),0 0 40px rgba(255,84,54,.35)}
-.spotcard .front .art{position:absolute;inset:0;background:#150c0d center/cover no-repeat}
-.spotcard .front.rev .art{transform:rotate(180deg)}
-.spotpos{margin:0;font-family:var(--serif);font-size:13px;letter-spacing:.2em;color:var(--geum)}
+.spotcard .front{background:#0d0607}
+.cf{position:absolute;inset:6px;border:1px solid rgba(201,162,74,.55);border-radius:3px;display:flex;flex-direction:column;align-items:center;
+  padding:9px 9px 11px;gap:7px;background:radial-gradient(120% 70% at 50% 0%,rgba(192,54,42,.18),transparent 60%),#0d0607}
+.cf::before{content:"";position:absolute;inset:3px;border:1px solid rgba(201,162,74,.18);border-radius:2px;pointer-events:none}
+.cf-top{display:flex;justify-content:space-between;width:100%;font-family:var(--serif);font-size:11px;color:var(--geum);letter-spacing:.06em}
+.cf .art{width:100%;aspect-ratio:5/3;background:#150c0d center/cover no-repeat;border:1px solid rgba(201,162,74,.45);flex:none}
+.cf-hanja{margin-top:auto;font-family:var(--serif);font-weight:700;font-size:23px;line-height:1.1;color:#e2463a;letter-spacing:.06em;text-shadow:0 0 14px rgba(255,84,54,.45)}
+.cf-name{font-family:var(--serif);font-weight:700;font-size:15px;color:var(--jae)}
+.cf-nat{font-size:10.5px;line-height:1.5;color:#a39486;text-align:center;min-height:3em}
+.spotcard .front.rev .cf{transform:rotate(180deg)}
+.spotpos{margin:0;font-family:var(--serif);font-size:14px;letter-spacing:.08em;color:var(--geum)}
 .spotname{margin:6px 0 0;font-family:var(--serif);font-weight:700;font-size:21px;color:#fff;opacity:0;transition:opacity .4s .45s;text-shadow:0 2px 14px #000}
 .spotmeta{margin:0;font-size:12.5px;color:#c9b9aa;opacity:0;transition:opacity .4s .55s;max-width:80vw;text-align:center}
 .spot.open .spotname,.spot.open .spotmeta{opacity:1}
@@ -286,12 +310,15 @@ button{font-family:inherit;color:inherit;cursor:pointer}
 .sharehint{text-align:center;font-size:12px!important}
 .linkish{background:none;border:0;color:var(--geum);text-decoration:underline;padding:0;font-size:12px}
 .duo{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.duo .btn{font-size:13px;letter-spacing:.14em;text-indent:.14em;padding:13px 6px;text-align:center;text-decoration:none}
+.duo.single{grid-template-columns:1fr}
+.duo .btn{font-size:14px;letter-spacing:.04em;text-indent:.04em;padding:13px 6px;text-align:center;text-decoration:none}
 .legal{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
 </style>
 
 <div id="stage">
   <button id="snd" class="snd" aria-label="소리 끄기">音</button>
+  <button id="home" class="home" hidden>처음으로</button>
+  <div id="toast" class="toast" hidden></div>
   <div id="flash"></div>
   <div id="bg">
     <div class="plate" id="plateA"></div>
@@ -315,7 +342,7 @@ button{font-family:inherit;color:inherit;cursor:pointer}
       <p class="hint" style="font-size:11px;color:#8d7f73">여우의 연기, 호연 — 해동 백귀 백 장으로<br>말 속에 숨은 마음과 보이지 않는 기운을 읽는다</p>
     </div>
     <div class="foot">
-      <button class="btn" id="go" disabled>패 를 펴 다</button>
+      <button class="btn" id="go" disabled>패를 펴다</button>
       <p class="legal"><button id="histLink" hidden>지난 물음 다시 보기</button><button id="openTerms">이용안내 · 환불규정</button></p>
     </div>
   </section>
@@ -337,7 +364,7 @@ button{font-family:inherit;color:inherit;cursor:pointer}
     <div class="board" id="boardPick"></div>
     <div class="ask"></div>
     <p class="deal" id="pickmsg">열 장을 뽑게
-      <small>손이 멎는 자리가 자네 패일세</small>
+      <small>부채를 좌우로 돌리다가, 손이 멎는 자리를 누르게</small>
     </p>
     <div class="fanwrap" id="fanwrap2"><div class="fan pickable" id="fan2"></div></div>
   </section>
@@ -361,6 +388,8 @@ button{font-family:inherit;color:inherit;cursor:pointer}
     <h4>어떤 서비스인가</h4>
     <ul>
       <li>백귀타로는 오락과 참고를 위한 콘텐츠입니다.</li>
+      <li>풀이는 정해진 해석 규칙과 <b>생성형 인공지능</b>이 함께 써 내는 글입니다.</li>
+      <li>자신이나 남의 목숨·안전을 해치는 물음에는 풀이를 드리지 않습니다.</li>
       <li>풀이 내용은 의료·법률·투자·진로의 판단 근거가 되지 않습니다. 중요한 결정은 반드시 본인 책임 아래 하십시오.</li>
       <li>만 19세 미만은 보호자의 동의를 받은 뒤 이용하십시오.</li>
     </ul>
@@ -375,6 +404,7 @@ button{font-family:inherit;color:inherit;cursor:pointer}
     <h4>환불</h4>
     <ul>
       <li>결제 즉시 디지털 콘텐츠가 제공되므로, <b>봉인을 해제해 풀이를 열람한 뒤에는 환불이 어렵습니다.</b> (전자상거래법 제17조 제2항 제5호)</li>
+      <li>결제 전 앞의 세 장을 무료로 먼저 열어 보여 드리는 것으로 시험 사용을 갈음합니다. (같은 법 제17조 제6항)</li>
       <li>결제했으나 <b>풀이를 열람하지 않은 경우</b>, 결제일로부터 7일 이내 전액 환불해 드립니다.</li>
       <li>오류·중복결제·미제공 등 서비스 쪽 사유일 때는 열람 여부와 관계없이 전액 환불합니다.</li>
       <li>환불 요청: 아래 문의처로 결제일시와 결제수단을 적어 보내 주십시오. 영업일 기준 3일 안에 처리합니다.</li>
@@ -383,6 +413,8 @@ button{font-family:inherit;color:inherit;cursor:pointer}
     <h4>개인정보</h4>
     <ul>
       <li>질문으로 적은 글은 풀이를 만드는 데에만 쓰입니다.</li>
+      <li>풀이를 쓰기 위해 질문 글과 뽑힌 패가 인공지능 처리업체(Anthropic, 미국)로 전송됩니다. 전송은 Vercel(미국)의 통로를 거치며, 본 서비스는 그 글을 따로 저장하지 않습니다.</li>
+      <li>지난 물음 기록은 이용자의 기기(브라우저) 안에만 저장됩니다. 브라우저 데이터를 지우면 함께 사라집니다.</li>
       <li>이름·생년월일·연락처는 받지 않습니다.</li>
       <li>결제 확인에 필요한 기록은 전자상거래법에 따라 5년간 보관한 뒤 파기합니다.</li>
     </ul>
@@ -391,13 +423,20 @@ button{font-family:inherit;color:inherit;cursor:pointer}
     <ul>
       <li>상호 온미라이프 · 대표 김민철</li>
       <li>사업자등록번호 501-04-95672</li>
-      <li>통신판매업신고 <span class="fill">신고 준비 중</span></li>
+      <li>통신판매업신고 신고 진행 중</li>
       <li>주소 울산광역시 북구 염포로 685, 110동 1801호 (염포동, 염포성원상떼빌)</li>
       <li>문의 ja9746@naver.com</li>
     </ul>
-    <p style="font-size:11.5px;color:#8d7f73">통신판매업 신고번호는 신고 완료 후 채워 넣어야 합니다.</p>
 
-    <button class="btn ghost close" data-close="terms">닫 기</button>
+    <button class="btn ghost close" data-close="terms">닫기</button>
+  </div>
+</div>
+
+<div class="sheet" id="risk" hidden>
+  <div class="inner">
+    <h3>호연이 패를 덮었네</h3>
+    <p id="riskMsg"></p>
+    <button class="btn ghost close" data-close="risk">다른 것을 묻겠네</button>
   </div>
 </div>
 
@@ -406,8 +445,8 @@ button{font-family:inherit;color:inherit;cursor:pointer}
     <h3>이미 물은 것일세</h3>
     <p id="sameMsg"></p>
     <div class="duo" style="margin-top:18px">
-      <button class="btn" id="sameGo">그 때 패 펼 치 기</button>
-      <button class="btn ghost" id="sameNew">다 른 것 을 묻 겠 네</button>
+      <button class="btn" id="sameGo">그때 패 펼치기</button>
+      <button class="btn ghost" id="sameNew">다른 것을 묻겠네</button>
     </div>
   </div>
 </div>
@@ -417,7 +456,7 @@ button{font-family:inherit;color:inherit;cursor:pointer}
     <h3>지난 물음</h3>
     <p>이 기기에서 물었던 것들일세. 누르면 그때 패를 그대로 펼쳐 주지.</p>
     <div id="histList" class="hlist"></div>
-    <button class="btn ghost close" data-close="hist">닫 기</button>
+    <button class="btn ghost close" data-close="hist">닫기</button>
   </div>
 </div>
 
@@ -430,7 +469,7 @@ button{font-family:inherit;color:inherit;cursor:pointer}
     <p class="cvnature" id="cvNature"></p>
     <p id="cvLore"></p>
     <p class="cvsrc" id="cvSrc"></p>
-    <button class="btn ghost close" data-close="cv">닫 기</button>
+    <button class="btn ghost close" data-close="cv">닫기</button>
   </div>
 </div>
 
@@ -438,19 +477,19 @@ button{font-family:inherit;color:inherit;cursor:pointer}
   <div class="inner">
     <h3>자네 패를 한 장으로</h3>
     <img id="shareImg" class="shareimg" alt="백귀타로 결과 한 장">
-    <p class="sharehint">그림을 길게 눌러 저장하게.</p>
+    <p class="sharehint" id="shareHint">그림을 길게 눌러 저장하게.</p>
     <p class="sharehint" id="kakaoTip" hidden>카톡 안에서는 내려받기가 막힐 수 있네. 길게 눌러 저장하거나, <button id="openExternal" class="linkish">다른 브라우저로 열게</button>.</p>
-    <div class="duo">
-      <a class="btn" id="shareDl" href="#" download>내 려 받 기</a>
-      <button class="btn ghost" id="shareSend" hidden>보 내 기</button>
+    <div class="duo" id="shareDuo">
+      <a class="btn" id="shareDl" href="#" download>내려받기</a>
+      <button class="btn ghost" id="shareSend" hidden>보내기</button>
     </div>
-    <button class="btn ghost close" data-close="share">닫 기</button>
+    <button class="btn ghost close" data-close="share">닫기</button>
   </div>
 </div>
 
 <div class="spot" id="spot" hidden>
   <p class="spotpos"></p>
-  <div class="spotcard"><div class="inner"><div class="face back"></div><div class="face front"><div class="art"></div></div></div></div>
+  <div class="spotcard"><div class="inner"><div class="face back"></div><div class="face front"><div class="cf"><div class="cf-top"><span class="cf-no"></span><span class="cf-suit"></span></div><div class="art"></div><div class="cf-hanja"></div><div class="cf-name"></div><div class="cf-nat"></div></div></div></div></div>
   <p class="spotname"></p>
   <p class="spotmeta"></p>
 </div>
@@ -458,7 +497,106 @@ button{font-family:inherit;color:inherit;cursor:pointer}
 <script>
 
 /* ── 해동 백귀야행 — 백 장 (사고 재액군=대귀, 구설=검, 인연=잔, 재물=전, 정신=지) ── */
-const DECK = [{"nm": "불가사리","full": "불가사리(不可殺)","hanja": "不可殺","suit": "전(펜타클)","no": "一","el": "금","art": "img/baekgwi/001.webp","nature": "무쇠를 씹는 재물 포식귀","act": "무쇠와 금붙이를 씹어삼킬수록 몸집을 불린다.","warn": "통장의 쇠 냄새를 맡고 붙어, 벌어들이는 족족 재물을 재로 만든다.","fix": "아침에 동전 한 닢을 창틀에 올리고 “쇠는 내 것이 아니다” 세 번 읊는다.","src": "민간전승·《송남잡지(松南雜識)》"},{"nm": "야광귀","full": "야광귀(夜光鬼)","hanja": "夜光鬼","suit": "전(펜타클)","no": "二","el": "수","art": "img/baekgwi/002.webp","nature": "섣달밤 복을 신고 가는 도귀","act": "섣달 그믐밤 내려와 발에 맞는 신을 신고 사라진다.","warn": "그 신의 임자는 한 해의 재수와 복을 함께 잃는다.","fix": "자기 전 신발 코를 벽으로 돌려놓아 복을 붙든다.","src": "《동국세시기(東國歲時記)》"},{"nm": "아귀","full": "아귀(餓鬼)","hanja": "餓鬼","suit": "전(펜타클)","no": "三","el": "목","art": "img/baekgwi/003.webp","nature": "채워지지 않는 굶주림","act": "바늘 같은 목구멍과 산 같은 배로 아무리 먹어도 굶주린다.","warn": "붙은 자는 벌어도 벌어도 늘 부족하다 느낀다.","fix": "첫 끼 한 술을 덜어 그릇 밖에 내려놓고 “나는 족하다” 되뇐다.","src": "《삼국유사(三國遺事)》 불설(佛說)"},{"nm": "빈핍귀","full": "빈핍귀(貧乏鬼)","hanja": "貧乏鬼","suit": "전(펜타클)","no": "四","el": "화","art": "img/baekgwi/004.webp","nature": "가난을 물려주는 넋","act": "곳간에 스며 들어온 돈을 모조리 새어나가게 한다.","warn": "붙은 자는 아무리 벌어도 손에 남는 것이 없다.","fix": "하루 한 닢이라도 반드시 떼어 “쌓는다” 되뇌며 모은다.","src": "《청구야담(靑邱野談)》"},{"nm": "업구렁이","full": "업구렁이","hanja": "業구렁이","suit": "전(펜타클)","no": "五","el": "토","art": "img/baekgwi/005.webp","nature": "집을 떠난 업(業)의 넋","act": "집안의 복을 지키던 구렁이 업이 노하여 떠나면, 곳간이 스스로 비고 들어온 돈도 새어나간다.","warn": "벌어도 손에 남지 않는다. 구멍이 막히지 않았다.","fix": "문지방을 손바닥으로 쓸며 “이 집에 머무소서” 한 번 청한다.","src": "민간전승(民間傳承)"},{"nm": "거구귀","full": "거구귀(巨口鬼)","hanja": "巨口鬼","suit": "전(펜타클)","no": "六","el": "금","art": "img/baekgwi/006.webp","nature": "재물을 삼키는 큰 아가리","act": "커다란 입으로 눈앞의 재물 기회를 통째로 삼킨다.","warn": "붙은 자는 큰 건마다 남에게 빼앗긴다.","fix": "큰 계약 전 두 손을 모아 “내 몫은 지킨다” 읊는다.","src": "《어우야담(於于野譚)》"},{"nm": "도척귀","full": "도척귀(盜跖鬼)","hanja": "盜跖鬼","suit": "전(펜타클)","no": "七","el": "수","art": "img/baekgwi/007.webp","nature": "큰 도적의 넋","act": "천하의 큰 도적 도척의 넋으로, 붙은 자의 재물을 밤새 남몰래 빼돌린다.","warn": "큰돈이 걸린 자리에서 반드시 한 번 문다.","fix": "잠들기 전 지갑과 통장을 눈으로 한 번 세어 “내 자리” 정한다.","src": "전래 야담(野談)"},{"nm": "수살귀","full": "수살귀(水殺鬼)","hanja": "水殺鬼","suit": "전(펜타클)","no": "八","el": "목","art": "img/baekgwi/008.webp","nature": "재물을 물에 잠그는 넋","act": "재물을 물가로 이끌어 잠기게 한다.","warn": "붙은 자는 물과 얽힌 일마다 크게 손해를 본다.","fix": "큰돈 걸린 일은 물가·비 오는 날을 피해 정한다.","src": "민간전승(民間傳承)"},{"nm": "서귀","full": "서귀(鼠鬼)","hanja": "鼠鬼","suit": "전(펜타클)","no": "九","el": "화","art": "img/baekgwi/009.webp","nature": "곳간을 갉는 쥐의 넋","act": "쥐처럼 곳간을 갉아 조금씩 축낸다.","warn": "붙은 자는 잔돈이 새듯 재물이 소리 없이 준다.","fix": "하루 지출을 한 줄로 적어 “갉힌 자리”를 눈으로 확인한다.","src": "《용재총화(慵齋叢話)》"},{"nm": "금돼지","full": "금돼지","hanja": "金돼지","suit": "전(펜타클)","no": "十","el": "토","art": "img/baekgwi/010.webp","nature": "금을 홀리는 돼지 요괴","act": "신라 최치원 설화의 금돼지.","warn": "사람을 홀려 제 굴로 재물을 끌어모은다. 붙은 자는 한몫을 노릴수록 크게 잃는다.","fix": "투자·한몫을 노리는 마음이 일면 하루를 묵혀 다시 본다.","src": "《삼국유사》·최치원(崔致遠) 설화"},{"nm": "노구할미","full": "노구할미(老嫗)","hanja": "老嫗","suit": "전(펜타클)","no": "十一","el": "금","art": "img/baekgwi/011.webp","nature": "재물을 시샘하는 늙은 넋","act": "한 맺힌 노파의 넋으로 남이 잘되는 꼴을 못 본다.","warn": "붙은 자는 성공 직전마다 시샘의 훼방을 맞는다.","fix": "좋은 소식은 사흘간 입 밖에 내지 않고 속으로만 여민다.","src": "《어우야담(於于野譚)》"},{"nm": "식탐귀","full": "식탐귀(食貪鬼)","hanja": "食貪鬼","suit": "전(펜타클)","no": "十二","el": "수","art": "img/baekgwi/012.webp","nature": "씀씀이를 부풀리는 넋","act": "먹고 쓰는 욕심을 끝없이 부풀려 남는 것이 없게 한다.","warn": "붙은 자는 벌이보다 씀씀이가 늘 앞선다.","fix": "사기 전 “정말 필요한가” 한 번 소리 내어 묻는다.","src": "민간전승(民間傳承)"},{"nm": "오행귀","full": "오행귀(五行鬼)","hanja": "五行鬼","suit": "전(펜타클)","no": "十三","el": "목","art": "img/baekgwi/013.webp","nature": "기운을 어긋내는 넋","act": "사주의 오행을 어그러뜨려 재물의 흐름을 막는다.","warn": "붙은 자는 애써도 물길 막힌 듯 재물이 고인다.","fix": "아침에 물 한 잔을 천천히 비우며 “흐른다” 읊는다.","src": "명리(命理) 잡설·민간전승"},{"nm": "독각귀","full": "독각귀(獨脚鬼)","hanja": "獨脚鬼","suit": "전(펜타클)","no": "十四","el": "화","art": "img/baekgwi/014.webp","nature": "외다리로 뛰는 손실귀","act": "한 다리로 껑충껑충 뛰며 지나간 집의 셈을 어그러뜨린다.","warn": "붙은 자는 잔돈부터 큰돈까지 계산이 늘 어긋난다.","fix": "지갑을 열기 전 두 발을 나란히 딛고 숨을 고른다.","src": "《어우야담(於于野譚)》"},{"nm": "삼목귀","full": "삼목귀(三目鬼)","hanja": "三目鬼","suit": "전(펜타클)","no": "十五","el": "토","art": "img/baekgwi/015.webp","nature": "세 눈으로 재물을 노리는 넋","act": "세 개의 눈으로 감춰 둔 재물까지 찾아내 빼돌린다.","warn": "붙은 자는 숨겨둔 것마저 새어나간다.","fix": "귀중품을 하루 한 번 눈으로 세어 “있다” 확인한다.","src": "민간전승(民間傳承)"},{"nm": "망재귀","full": "망재귀(亡財鬼)","hanja": "亡財鬼","suit": "전(펜타클)","no": "十六","el": "금","art": "img/baekgwi/016.webp","nature": "재물을 잃게 하는 넋","act": "손에 든 재물을 자꾸 잃고 흘리게 한다.","warn": "붙은 자는 크고 작은 분실과 손재수에 시달린다.","fix": "물건 둘 자리를 하나 정해 늘 그곳에만 둔다.","src": "《청구야담(靑邱野談)》"},{"nm": "걸귀","full": "걸귀(乞鬼)","hanja": "乞鬼","suit": "전(펜타클)","no": "十七","el": "수","art": "img/baekgwi/017.webp","nature": "떠도는 걸신","act": "주인 없이 떠돌다 남의 상에 끼어들어 복과 음식을 축낸다.","warn": "붙으면 씀씀이만 늘고 남는 것이 없다.","fix": "식사 전 첫 술을 잠깐 상 밖에 내어 “손님 몫” 이라 이른다.","src": "《용재총화(慵齋叢話)》"},{"nm": "환재귀","full": "환재귀(幻財鬼)","hanja": "幻財鬼","suit": "전(펜타클)","no": "十八","el": "목","art": "img/baekgwi/018.webp","nature": "헛재물을 보이는 넋","act": "없는 재물을 있는 듯 보여 헛된 지출과 빚을 부른다.","warn": "붙은 자는 신기루 같은 한탕에 매인다.","fix": "큰 지출 앞에서 “이것은 참인가 허인가” 한 번 묻는다.","src": "민간전승(民間傳承)"},{"nm": "금다지","full": "금다지","hanja": "金단지","suit": "전(펜타클)","no": "十九","el": "화","art": "img/baekgwi/019.webp","nature": "묻힌 금을 움켜쥔 지신","act": "땅에 묻힌 금단지를 지켜 남에게 내주지 않는다.","warn": "붙은 자는 재물을 눈앞에 두고도 끝내 못 얻는다.","fix": "땅을 밟고 서서 뒤꿈치로 세 번 다지며 “고맙습니다” 이른다.","src": "민간전승(民間傳承)"},{"nm": "파재귀","full": "파재귀(破財鬼)","hanja": "破財鬼","suit": "전(펜타클)","no": "二十","el": "토","art": "img/baekgwi/020.webp","nature": "재물을 깨뜨리는 넋","act": "재물의 자리를 깨뜨려 애써 모은 것을 흩어놓는다.","warn": "붙은 자는 기회가 와도 눈앞에서 부서진다.","fix": "아침 햇빛에 지갑을 잠깐 비춰 “빛을 들인다” 읊는다.","src": "《어우야담(於于野譚)》"},{"nm": "구미호","full": "구미호(九尾狐)","hanja": "九尾狐","suit": "잔(컵)","no": "一","el": "토","art": "img/baekgwi/021.webp","nature": "간을 노리는 아홉 꼬리","act": "어여쁜 얼굴로 홀려 정기를 빼앗는다.","warn": "붙은 자는 매혹적인 상대에게 끌려 늘 이용만 당한다.","fix": "설레는 상대 앞에서 “이 사람은 내게 무엇을 주는가” 한 번 묻는다.","src": "《삼국유사》·전래설화"},{"nm": "매구","full": "매구","hanja": "","suit": "잔(컵)","no": "二","el": "금","art": "img/baekgwi/022.webp","nature": "천 년 묵은 여우의 요괴","act": "천 년 묵은 여우가 변한 요괴로, 사람 사이를 이간해 정을 흩뜨린다.","warn": "붙은 자는 오해로 인연을 잃는다.","fix": "뒷말이 들리면 옮기지 말고 당사자에게 직접 확인한다.","src": "민간전승(民間傳承)"},{"nm": "손각시","full": "손각시","hanja": "","suit": "잔(컵)","no": "三","el": "수","art": "img/baekgwi/023.webp","nature": "혼례를 시샘하는 처녀살","act": "시집 못 가고 죽은 처녀의 넋.","warn": "혼사를 앞둔 이에게 붙어 트집과 다툼을 일으킨다. 붙은 자는 좋은 날일수록 크게 어긋난다.","fix": "다툼이 일려 하면 입을 다물고 물 한 모금을 삼킨다.","src": "《어우야담(於于野譚)》"},{"nm": "몽달귀","full": "몽달귀","hanja": "몽달鬼","suit": "잔(컵)","no": "四","el": "목","art": "img/baekgwi/024.webp","nature": "총각의 외로운 넋","act": "짝 없이 죽은 총각 귀신으로 남의 애정을 질투해 훼방한다.","warn": "붙은 자는 다가온 인연을 스스로 밀어낸다.","fix": "마음에 드는 이에게 하루 한 마디 다정한 말을 건넨다.","src": "민간전승(民間傳承)"},{"nm": "달걀귀신","full": "달걀귀신","hanja": "달걀鬼神","suit": "잔(컵)","no": "五","el": "화","art": "img/baekgwi/025.webp","nature": "얼굴 없는 미혹의 넋","act": "이목구비 없는 얼굴로 상대의 진심을 못 보게 한다.","warn": "붙은 자는 사람을 헛짚어 마음을 준다.","fix": "상대의 눈을 삼 초간 마주 보고 이름을 부른다.","src": "민간전승(民間傳承)"},{"nm": "상사귀","full": "상사귀(相思鬼)","hanja": "相思鬼","suit": "잔(컵)","no": "六","el": "토","art": "img/baekgwi/026.webp","nature": "짝사랑에 타 죽은 넋","act": "이루지 못한 연모로 죽어, 붙은 자를 집착의 불길로 태운다.","warn": "붙은 자는 매달릴수록 인연을 잃는다.","fix": "보고픈 마음이 끓거든 찬물로 손목을 식히며 셋을 센다.","src": "《어우야담(於于野譚)》"},{"nm": "화낭년귀","full": "화낭년귀","hanja": "","suit": "잔(컵)","no": "七","el": "금","art": "img/baekgwi/027.webp","nature": "바람을 부르는 음녀의 넋","act": "정을 한 곳에 못 붙이게 흩뜨린다.","warn": "붙은 자는 여러 인연을 좇다 결국 모두 잃는다.","fix": "한 사람을 떠올리며 “여기 머문다” 한 번 정한다.","src": "민간전승(民間傳承)"},{"nm": "묘귀","full": "묘귀(猫鬼)","hanja": "猫鬼","suit": "잔(컵)","no": "八","el": "수","art": "img/baekgwi/028.webp","nature": "앙심을 품은 고양이 넋","act": "죽은 고양이의 앙심이 사람에 붙어, 가까운 이와 할퀴듯 다투게 한다.","warn": "끝났다 여긴 인연이 다시 와서 같은 자리를 벤다.","fix": "날 선 말이 나오려 하면 혀끝을 지그시 문다.","src": "《용재총화(慵齋叢話)》"},{"nm": "선녀귀","full": "선녀귀(仙女鬼)","hanja": "仙女鬼","suit": "잔(컵)","no": "九","el": "목","art": "img/baekgwi/029.webp","nature": "돌아가지 못한 선녀의 넋","act": "날개옷을 잃고 하늘로 못 간 한으로, 곁의 인연을 늘 그리움과 미련에 묶어 둔다.","warn": "붙잡을수록 멀어진다. 자네 손이 끊는다.","fix": "지난 인연이 떠오르면 “이미 갔다” 세 번 읊는다.","src": "나무꾼과 선녀 설화"},{"nm": "접동새귀","full": "접동새귀","hanja": "","suit": "잔(컵)","no": "十","el": "화","art": "img/baekgwi/030.webp","nature": "한에 우는 새의 넋","act": "계모에게 죽어 접동새가 된 누이의 넋.","warn": "형제와 가족 사이에 애증의 골을 판다.","fix": "가족에게 하루 한 번 안부 한 줄을 먼저 보낸다.","src": "접동새 설화·민간전승"},{"nm": "야호","full": "야호(野狐)","hanja": "野狐","suit": "잔(컵)","no": "十一","el": "토","art": "img/baekgwi/031.webp","nature": "사람으로 둔갑한 들여우","act": "들에 사는 여우가 사람으로 둔갑해 정을 농락한다.","warn": "붙은 자는 달콤한 말에 홀려 속는다.","fix": "달콤한 말 앞에서 손목을 한 번 꼬집어 정신을 세운다.","src": "《어우야담(於于野譚)》"},{"nm": "동녀귀","full": "동녀귀(童女鬼)","hanja": "童女鬼","suit": "잔(컵)","no": "十二","el": "금","art": "img/baekgwi/032.webp","nature": "어린 넋의 응석","act": "어려서 죽은 계집아이의 넋이 어미 붙들 듯 사람을 묶는다.","warn": "붙은 자는 지나치게 매달려 상대를 질리게 한다.","fix": "연락을 보내기 전 열을 세고 정말 필요한지 되묻는다.","src": "민간전승(民間傳承)"},{"nm": "쌍두귀","full": "쌍두귀(雙頭鬼)","hanja": "雙頭鬼","suit": "잔(컵)","no": "十三","el": "수","art": "img/baekgwi/033.webp","nature": "두 마음의 넋","act": "머리가 둘이라 한 입으로 두 말을 한다.","warn": "붙은 자는 양다리와 삼각의 파란에 시달린다.","fix": "마음을 하나로 정해 “여기” 하고 한 번 못 박는다.","src": "민간전승(民間傳承)"},{"nm": "백여우귀","full": "백여우귀(白狐鬼)","hanja": "白狐鬼","suit": "잔(컵)","no": "十四","el": "목","art": "img/baekgwi/034.webp","nature": "흰 여우의 넋","act": "천 년 묵은 흰 여우로, 가장 아끼는 이의 모습���로 나타나 정기를 빼앗는다.","warn": "정이 깊을수록 상처도 깊다.","fix": "지나치게 완벽한 상대 앞에서 “무엇을 원하나” 헤아린다.","src": "전래설화(傳來說話)"},{"nm": "망부귀","full": "망부귀(望夫鬼)","hanja": "望夫鬼","suit": "잔(컵)","no": "十五","el": "화","art": "img/baekgwi/035.webp","nature": "기다리다 굳은 넋","act": "돌아오지 않는 이를 기다리다 돌이 된 넋.","warn": "붙은 자는 떠난 인연에 매여 앞으로 나아가지 못한다.","fix": "기다림이 사무치면 오늘 만날 사람에게 먼저 연락한다.","src": "망부석(望夫石) 설화"},{"nm": "색귀","full": "색귀(色鬼)","hanja": "色鬼","suit": "잔(컵)","no": "十六","el": "토","art": "img/baekgwi/036.webp","nature": "정을 흩뜨리는 음귀","act": "한 곳에 정착 못 하도록 색정을 부추긴다.","warn": "붙은 자는 헛된 유혹에 인연과 재물을 함께 잃는다.","fix": "한 사람을 떠올리며 “여기 머문다” 한 번 정한다.","src": "《어우야담(於于野譚)》"},{"nm": "원귀","full": "원귀(寃鬼)","hanja": "寃鬼","suit": "잔(컵)","no": "十七","el": "금","art": "img/baekgwi/037.webp","nature": "원한 맺힌 넋","act": "억울하게 죽은 한이 산 사람의 인연에 저주를 드리운다.","warn": "붙은 자는 까닭 없는 미움에 관계를 태운다.","fix": "미움이 솟거든 “내 한이 아니다” 한 번 내려놓는다.","src": "《삼국유사》·《어우야담》"},{"nm": "구사귀","full": "구사귀(九蛇鬼)","hanja": "九蛇鬼","suit": "잔(컵)","no": "十八","el": "수","art": "img/baekgwi/038.webp","nature": "아홉 뱀의 얽힘","act": "아홉 마리 뱀처럼 인연을 칭칭 얽어 옴짝달싹 못 하게 한다.","warn": "붙은 자는 끝난 관계도 놓지 못한다.","fix": "얽힌 관계 하나를 “풀어도 된다” 스스로 인정한다.","src": "민간전승(民間傳承)"},{"nm": "미호","full": "미호(尾狐)","hanja": "尾狐","suit": "잔(컵)","no": "十九","el": "목","art": "img/baekgwi/039.webp","nature": "꼬리를 감춘 여우","act": "꼬리를 감추고 오래 곁에 머물며 서서히 정기를 앗는다.","warn": "붙은 자는 익숙한 관계에 서서히 마른다.","fix": "오래된 관계도 “나는 무엇을 얻나” 가끔 되짚는다.","src": "전래설화(傳來說話)"},{"nm": "화사귀","full": "화사귀(花蛇鬼)","hanja": "花蛇鬼","suit": "잔(컵)","no": "二十","el": "화","art": "img/baekgwi/040.webp","nature": "꽃뱀의 넋","act": "아름다운 무늬로 홀려 정과 재물을 함께 앗아간다.","warn": "붙은 자는 화려한 인연에 등을 찔린다.","fix": "지나친 호의 앞에서 하루를 묵혀 판단한다.","src": "민간전승(民間傳承)"},{"nm": "두억시니","full": "두억시니(夜叉)","hanja": "夜叉","suit": "대귀","no": "제일귀","el": "목","art": "img/baekgwi/041.webp","nature": "머리를 짓누르는 야차","act": "큰 뜻을 품은 자의 머리를 짓눌러 주저앉힌다.","warn": "붙은 자는 결정적 순간마다 스스로 일을 그르치고 몸을 상한다.","fix": "정수리를 세 번 톡톡 두드려 “눌린 것을 턴다” 말한다.","src": "《어우야담(於于野譚)》"},{"nm": "창귀","full": "창귀(倀鬼)","hanja": "倀鬼","suit": "대귀","no": "제이귀","el": "화","art": "img/baekgwi/042.webp","nature": "범에게 바친 종의 넋","act": "호랑이에게 잡아먹힌 뒤 그 종이 되어, 다른 이를 함정으로 꾀어낸다.","warn": "붙은 자는 사기와 덫에 자꾸 걸린다.","fix": "급히 부르는 소리엔 멈춰서 “정말인가” 한 번 되묻는다.","src": "《용재총화(慵齋叢話)》·전래"},{"nm": "강철이","full": "강철이(强鐵)","hanja": "强鐵","suit": "대귀","no": "제삼귀","el": "토","art": "img/baekgwi/043.webp","nature": "지나간 자리를 태우는 적룡","act": "승천 못 한 이무기 강철이.","warn": "지나간 들판은 봄에도 가을처럼 마른다. 붙은 자는 손대는 일마다 결실 없이 시든다.","fix": "물 한 컵을 화분 흙에 부어 “마른 것을 적신다” 읊는다.","src": "민간전승(民間傳承)"},{"nm": "야차","full": "야차(夜叉)","hanja": "夜叉","suit": "대귀","no": "제사귀","el": "금","art": "img/baekgwi/044.webp","nature": "살을 탐하는 흉신","act": "사나운 이빨로 사람의 몸을 노린다.","warn": "붙은 자는 뜻밖의 상해와 흉사를 입는다.","fix": "위험한 일 전 “천천히” 한 번 읊고 손발을 살핀다.","src": "《삼국유사》 불설(佛說)"},{"nm": "나찰","full": "나찰(羅刹)","hanja": "羅刹","suit": "대귀","no": "제오귀","el": "수","art": "img/baekgwi/045.webp","nature": "살점을 노리는 악귀","act": "사람을 잡아먹는 악귀로, 붙은 자를 피 흘리는 사고로 이끈다.","warn": "그냥 두면 몸으로 먼저 온다. 다치고 나서야 안다.","fix": "날붙이·불을 다룰 때 손끝을 안으로 만다.","src": "《삼국유사》 불설(佛說)"},{"nm": "우두","full": "우두(牛頭)","hanja": "牛頭","suit": "대귀","no": "제육귀","el": "목","art": "img/baekgwi/046.webp","nature": "소머리 저승 옥졸","act": "저승 옥졸로 소의 머리를 가졌다.","warn": "붙은 자를 병과 사고의 문턱으로 끌고 간다.","fix": "몸이 보내는 첫 이상 신호를 그날로 살핀다.","src": "불교 지옥설(地獄說)"},{"nm": "마두","full": "마두(馬頭)","hanja": "馬頭","suit": "대귀","no": "제칠귀","el": "화","art": "img/baekgwi/047.webp","nature": "말머리 저승 옥졸","act": "우두와 짝을 이룬 말머리 옥졸.","warn": "급작스런 재액으로 몸을 상하게 한다.","fix": "서두를 때 숨을 크게 한 번 쉬고 걸음을 늦춘다.","src": "불교 지옥설(地獄說)"},{"nm": "귀수","full": "귀수(鬼手)","hanja": "鬼手","suit": "대귀","no": "제팔귀","el": "토","art": "img/baekgwi/048.webp","nature": "등을 떠미는 귀신 손","act": "보이지 않는 손이 높은 곳에서 등을 떠민다.","warn": "붙은 자는 추락·낙상의 위험이 크다.","fix": "높은 곳에선 한 손으로 반드시 무언가를 붙든다.","src": "민간전승(民間傳承)"},{"nm": "역귀","full": "역귀(疫鬼)","hanja": "疫鬼","suit": "대귀","no": "제구귀","el": "금","art": "img/baekgwi/049.webp","nature": "돌림병을 옮기는 넋","act": "마을을 돌며 돌림병을 퍼뜨린다.","warn": "붙은 자는 잔병과 병치레가 유독 잦다.","fix": "손을 씻고 “들이지 않는다” 한 번 읊는다.","src": "《삼국유사》·처용(處容) 설화"},{"nm": "손","full": "손","hanja": "","suit": "대귀","no": "제십귀","el": "수","art": "img/baekgwi/050.webp","nature": "방위를 도는 손님","act": "날마다 방위를 옮겨 다니며, 그 방향으로 큰일을 벌인 자에게 탈을 안긴다.","warn": "붙은 자는 이사·개업마다 사고를 만난다.","fix": "큰일 전 손 있는 방위를 피해 반 걸음 돌아 나선다.","src": "《동국세시기》·손 없는 날"},{"nm": "염매","full": "염매(魘魅)","hanja": "魘魅","suit": "대귀","no": "제십일귀","el": "목","art": "img/baekgwi/051.webp","nature": "저주로 사람을 부리는 요술","act": "아이의 넋을 병에 가두어 남을 해치는 저주.","warn": "붙은 자는 까닭 모를 재액과 병에 시달린다.","fix": "몸이 유난히 무거운 날은 무리한 일을 하루 미룬다.","src": "《어우야담(於于野譚)》"},{"nm": "단두귀","full": "단두귀(斷頭鬼)","hanja": "斷頭鬼","suit": "대귀","no": "제십이귀","el": "화","art": "img/baekgwi/052.webp","nature": "목 없는 원혼","act": "목이 잘려 죽은 원한으로 목과 머리의 상해를 부른다.","warn": "작은 사고가 큰 사고의 예고다. 두 번째는 크다.","fix": "목을 좌우로 천천히 세 번 돌려 힘을 뺀다.","src": "민간전승(民間傳承)"},{"nm": "참수귀","full": "참수귀(斬首鬼)","hanja": "斬首鬼","suit": "대귀","no": "제십삼귀","el": "토","art": "img/baekgwi/053.webp","nature": "처형당한 원혼","act": "억울한 처형의 한으로 날붙이 사고를 부른다.","warn": "붙은 자는 베임과 찔림을 자주 당한다.","fix": "칼을 쓸 땐 손끝을 안으로 말고 “안으로” 되뇐다.","src": "《청구야담(靑邱野談)》"},{"nm": "혈귀","full": "혈귀(血鬼)","hanja": "血鬼","suit": "대귀","no": "제십사귀","el": "금","art": "img/baekgwi/054.webp","nature": "피를 부르는 넋","act": "피를 흘리��� 상처로 이끈다.","warn": "붙은 자는 베임·출혈 사고가 잦다.","fix": "붉은 것·날카로운 것을 다룰 때 한 박자 늦춰 손을 살핀다.","src": "민간전승(民間傳承)"},{"nm": "겁살귀","full": "겁살귀(劫煞鬼)","hanja": "劫煞鬼","suit": "대귀","no": "제십오귀","el": "수","art": "img/baekgwi/055.webp","nature": "겁탈하듯 앗아가는 살","act": "몸과 재물을 겁탈하듯 한꺼번에 앗아간다.","warn": "붙은 자는 뜻밖의 봉변과 강탈을 겪는다.","fix": "낯선 곳에선 귀중품과 몸을 함께 단속한다.","src": "명리(命理) 살(煞)설"},{"nm": "백호귀","full": "백호귀(白虎鬼)","hanja": "白虎鬼","suit": "대귀","no": "제십육귀","el": "목","art": "img/baekgwi/056.webp","nature": "흰 범의 흉살","act": "서방을 지키는 흰 범이 노하면 갑작스런 사고와 상해를 부른다.","warn": "작은 사고가 큰 사고의 예고다. 두 번째는 크다.","fix": "오른쪽(서쪽)에서 오는 것을 한 번 더 살핀다.","src": "사신(四神) 신앙"},{"nm": "살생귀","full": "살생귀(殺生鬼)","hanja": "殺生鬼","suit": "대귀","no": "제십칠귀","el": "화","art": "img/baekgwi/057.webp","nature": "살기를 부르는 넋","act": "살기를 몰고 다녀 사소한 다툼을 몸싸움으로 키운다.","warn": "붙은 자는 시비 끝에 몸을 다친다.","fix": "언성이 높아지면 한 걸음 물러서 손을 등 뒤로 모은다.","src": "민간전승(民間傳承)"},{"nm": "검귀","full": "검귀(劍鬼)","hanja": "劍鬼","suit": "대귀","no": "제십팔귀","el": "토","art": "img/baekgwi/058.webp","nature": "칼에 깃든 원혼","act": "칼에 서린 원혼이 날붙이를 자꾸 손으로 부른다.","warn": "한 번 비켜 갔다고 끝난 게 아니다. 같은 자리에서 또 온다.","fix": "날붙이를 둔 자리를 늘 한곳으로 정해 둔다.","src": "《용재총화(慵齋叢話)》"},{"nm": "철퇴귀","full": "철퇴귀(鐵槌鬼)","hanja": "鐵槌鬼","suit": "대귀","no": "제십구귀","el": "금","art": "img/baekgwi/059.webp","nature": "쇠몽둥이를 든 넋","act": "쇠몽둥이로 내려치듯 둔중한 타박상을 부른다.","warn": "붙은 자는 부딪힘과 눌림 사고가 잦다.","fix": "머리 위 물건·선반 아래를 지날 때 한 번 올려다본다.","src": "민간전승(民間傳承)"},{"nm": "독귀","full": "독귀(毒鬼)","hanja": "毒鬼","suit": "대귀","no": "제이십귀","el": "수","art": "img/baekgwi/060.webp","nature": "독을 부르는 넋","act": "독한 벌레와 독기를 불러들인다.","warn": "붙은 자는 알 수 없는 탈과 중독을 앓는다.","fix": "풀숲·낯선 곳에선 소매와 바짓단을 여미고 든다.","src": "민간전승(民間傳承)"},{"nm": "어둑시니","full": "어둑시니","hanja": "","suit": "지(완드)","no": "一","el": "수","art": "img/baekgwi/061.webp","nature": "어둠에 넘어뜨리는 넋","act": "어두운 곳에서 발밑을 흐리고 마음에 어둠을 드리운다.","warn": "붙은 자는 밤이면 까닭 없이 마음이 가라앉는다.","fix": "어두운 길·마음엔 작은 불빛 하나를 먼저 켠다.","src": "민간전승(民間傳承)"},{"nm": "망량","full": "망량(魍魎)","hanja": "魍魎","suit": "지(완드)","no": "二","el": "목","art": "img/baekgwi/062.webp","nature": "산천의 도깨비 넋","act": "산과 물의 정기가 뭉친 도깨비로, 마음을 홀려 헛것을 보게 한다.","warn": "혼자 끙끙 앓을수록 더 깊이 파고든다.","fix": "헛생각이 일면 찬물로 손을 씻고 지금 할 일 하나만 정한다.","src": "《용재총화(慵齋叢話)》"},{"nm": "새타니","full": "새타니","hanja": "","suit": "지(완드)","no": "三","el": "화","art": "img/baekgwi/063.webp","nature": "몸에 씌는 잡귀","act": "몸에 씌어 넋을 흐리게 하는 잡귀.","warn": "붙은 자는 제정신이 아닌 듯 늘 멍하다.","fix": "이름을 소리 내어 부르며 “나는 여기 있다” 읊는다.","src": "무속 전승(巫俗傳承)"},{"nm": "허주","full": "허주(虛主)","hanja": "虛主","suit": "지(완드)","no": "四","el": "토","art": "img/baekgwi/064.webp","nature": "빈 몸의 주인 행세","act": "넋 나간 빈 몸에 들어와 주인 행세를 한다.","warn": "붙은 자는 제 삶의 주도권을 잃는다.","fix": "아침에 거울을 보며 오늘 할 일 하나를 소리 낸다.","src": "무속 전승(巫俗傳承)"},{"nm": "그림자귀","full": "그림자귀(影鬼)","hanja": "影鬼","suit": "지(완드)","no": "五","el": "금","art": "img/baekgwi/065.webp","nature": "그림자에 붙는 넋","act": "제 그림자처럼 따라붙어 우울의 무게를 더한다.","warn": "붙은 자는 어딜 가도 마음이 무겁다.","fix": "아침 햇빛에 그림자를 밟고 서서 “나는 선다” 읊는다.","src": "민간전승(民間傳承)"},{"nm": "몽마","full": "몽마(夢魔)","hanja": "夢魔","suit": "지(완드)","no": "六","el": "수","art": "img/baekgwi/066.webp","nature": "악몽을 짜는 넋","act": "잠 속에서 무서운 꿈을 끝없이 짠다.","warn": "붙은 자는 자도 잔 것 같지 않아 늘 지쳐 있다.","fix": "잠들기 전 오늘의 좋았던 일 하나를 떠올려 여민다.","src": "민간전승(民間傳承)"},{"nm": "도깨비불","full": "도깨비불","hanja": "","suit": "지(완드)","no": "七","el": "목","art": "img/baekgwi/067.webp","nature": "넋을 홀리는 불빛","act": "밤길에 파란 불로 나타나 넋을 홀려 헤매게 한다.","warn": "붙은 자는 마음이 자꾸 엉뚱한 곳으로 끌린다.","fix": "마음이 홀리면 걸음을 멈추고 발끝을 내려다본다.","src": "《용재총화》·전래"},{"nm": "가위귀","full": "가위귀(鬼壓)","hanja": "鬼壓","suit": "지(완드)","no": "八","el": "화","art": "img/baekgwi/068.webp","nature": "몸을 누르는 밤의 넋","act": "잠든 몸 위에 올라앉아 움직이지 못하게 한다.","warn": "붙은 자는 밤마다 가위에 눌려 넋이 마른다.","fix": "자기 전 손가락 끝을 열 번 꼭꼭 쥐었다 편다.","src": "민간전승(民間傳承)"},{"nm": "수비","full": "수비","hanja": "","suit": "지(완드)","no": "九","el": "토","art": "img/baekgwi/069.webp","nature": "떠도는 잡귀","act": "주인 없이 떠도는 잡귀로 마음에 까닭 없는 불안을 심는다.","warn": "잠이 무너지면 판단이 무너진다. 그다음은 사람이다.","fix": "불안이 일면 발바닥이 땅에 닿는 감각에 셋을 센다.","src": "무속 전승(巫俗傳承)"},{"nm": "산령","full": "산령(山靈)","hanja": "山靈","suit": "지(완드)","no": "十","el": "금","art": "img/baekgwi/070.webp","nature": "노한 산의 정령","act": "함부로 산을 범한 자의 마음을 어지럽힌다.","warn": "붙은 자는 답답함에 갇혀 숨이 막힌다.","fix": "답답하면 창을 열어 먼 곳을 삼 초간 바라본다.","src": "산신(山神) 신앙"},{"nm": "심마","full": "심마(心魔)","hanja": "心魔","suit": "지(완드)","no": "十一","el": "수","art": "img/baekgwi/071.webp","nature": "마음을 삼키는 큰 마","act": "온갖 잡념을 하나로 뭉쳐 마음을 통째로 삼킨다.","warn": "붙은 자는 제 마음의 주인 자리를 빼앗긴다.","fix": "“나는 내 마음의 주인이다” 한 문장을 아침마다 읊는다.","src": "불교 수행설(修行說)"},{"nm": "흑와귀","full": "흑와귀(黑蛙鬼)","hanja": "黑蛙鬼","suit": "지(완드)","no": "十二","el": "목","art": "img/baekgwi/072.webp","nature": "가슴을 누르는 검은 두꺼비","act": "가슴 위에 검은 두꺼비처럼 앉아 마음을 짓눌러 가라앉힌다.","warn": "넋이 흐려진 채로 내린 결정은 반드시 뒤집힌다.","fix": "아침에 커튼을 열어 햇빛을 얼굴에 삼 초간 쬔다.","src": "민간전승(民間傳承)"},{"nm": "환각귀","full": "환각귀(幻覺鬼)","hanja": "幻覺鬼","suit": "지(완드)","no": "十三","el": "화","art": "img/baekgwi/073.webp","nature": "헛것을 보이는 넋","act": "없는 소리와 형상을 보여 판단을 흐린다.","warn": "홀린 자는 헛것에 마음을 빼앗긴다.","fix": "헛것이 뵈면 “참인가” 묻고 곁의 사람에게 확인한다.","src": "무속 전승(巫俗傳承)"},{"nm": "도선귀","full": "도선귀","hanja": "","suit": "지(완드)","no": "十四","el": "토","art": "img/baekgwi/074.webp","nature": "넋을 잘못 이끄는 길잡이","act": "잘못된 길로 마음을 이끌어 헤매게 한다.","warn": "붙은 자는 판단마다 엉뚱한 쪽으로 기운다.","fix": "결정 전 믿는 이 한 사람에게 물어 길을 맞춰본다.","src": "민간전승(民間傳承)"},{"nm": "야행귀","full": "야행귀(夜行鬼)","hanja": "夜行鬼","suit": "지(완드)","no": "十五","el": "금","art": "img/baekgwi/075.webp","nature": "밤을 떠도는 넋","act": "밤마다 마음을 뒤척이게 해 잠을 앗는다.","warn": "붙은 자는 새벽까지 잠들지 못한다.","fix": "밤이 깊으면 화면을 끄고 방을 어둡게 낮춘다.","src": "민간전승(民間傳承)"},{"nm": "마명귀","full": "마명귀(魔鳴鬼)","hanja": "魔鳴鬼","suit": "지(완드)","no": "十六","el": "수","art": "img/baekgwi/076.webp","nature": "귓가에 우는 넋","act": "귓가에 잡소리를 울려 넋을 어지럽힌다.","warn": "붙은 자는 고요 속에서도 소리에 시달린다.","fix": "소음이 사무치면 빗소리 같은 잔잔한 소리 하나에 귀를 맡긴다.","src": "민간전승(民間傳承)"},{"nm": "미치광이귀","full": "미치광이귀(狂鬼)","hanja": "狂鬼","suit": "지(완드)","no": "十七","el": "목","art": "img/baekgwi/077.webp","nature": "넋을 미치게 하는 넋","act": "마음의 빗장을 풀어 이성을 잃게 한다.","warn": "붙은 자는 사소한 일에 넋을 놓고 폭발한다.","fix": "욱하면 여섯을 세고 나서 입을 연다.","src": "무속 전승(巫俗傳承)"},{"nm": "백발귀","full": "백발귀(白髮鬼)","hanja": "白髮鬼","suit": "지(완드)","no": "十八","el": "화","art": "img/baekgwi/078.webp","nature": "근심으로 세게 하는 넋","act": "하룻밤 새 머리를 세게 할 근심을 심는다.","warn": "붙은 자는 걱정으로 넋과 몸이 함께 마른다.","fix": "걱정을 한 줄로 적어 “내일 볼 것”에 미룬다.","src": "민간전승(民間傳承)"},{"nm": "혼비귀","full": "혼비귀(魂飛鬼)","hanja": "魂飛鬼","suit": "지(완드)","no": "十九","el": "토","art": "img/baekgwi/079.webp","nature": "넋을 흩는 넋","act": "놀란 틈에 넋을 흩어 얼을 빼놓는다.","warn": "붙은 자는 작은 일에도 넋이 나간다.","fix": "놀라면 가슴에 손을 얹고 숨을 길게 내쉰다.","src": "무속 전승·혼비백산(魂飛魄散)"},{"nm": "독심귀","full": "독심귀(毒心鬼)","hanja": "毒心鬼","suit": "지(완드)","no": "二十","el": "금","art": "img/baekgwi/080.webp","nature": "마음에 독을 푸는 넋","act": "마음에 독한 생각을 풀어 스스로를 좀먹게 한다.","warn": "붙은 자는 자책과 원망으로 넋이 곪는다.","fix": "“내 몫이 아니다” 한 문장을 하루 한 번 소리 낸다.","src": "민간전승(民間傳承)"},{"nm": "삼두구미","full": "삼두구미(三頭九尾)","hanja": "三頭九尾","suit": "검(소드)","no": "一","el": "화","art": "img/baekgwi/081.webp","nature": "세 머리 아홉 꼬리 짐승","act": "무덤을 파헤쳐 남의 것을 제 굴로 옮기고, 세 개의 입으로 없는 말을 지어낸다.","warn": "말이 말을 낳는다. 막지 않으면 서류로 번진다.","fix": "말을 옮기고 싶을 때 입을 다물고 물 한 모금 삼킨다.","src": "제주(濟州) 설화·민간전승"},{"nm": "인면조","full": "인면조(人面鳥)","hanja": "人面鳥","suit": "검(소드)","no": "二","el": "토","art": "img/baekgwi/082.webp","nature": "사람 얼굴의 새","act": "사람 얼굴로 사람 말을 흉내 내 헛소문을 퍼뜨린다.","warn": "붙은 자는 하지 않은 말로 오해받는다.","fix": "들은 말은 “누가 봤나” 확인하기 전엔 옮기지 않는다.","src": "고구려 고분벽화·전래"},{"nm": "구두귀","full": "구두귀(九頭鬼)","hanja": "九頭鬼","suit": "검(소드)","no": "三","el": "금","art": "img/baekgwi/083.webp","nature": "아홉 머리로 떠드는 넋","act": "머리가 아홉이라 한 사람의 일을 아홉 입으로 부풀린다.","warn": "시비가 붙으면 옳고 그름이 아니라 목소리로 갈린다.","fix": "소문을 들으면 아홉 중 하나만 참이라 여긴다.","src": "민간전승(民間傳承)"},{"nm": "불가살귀","full": "불가살귀(不可殺鬼)","hanja": "不可殺鬼","suit": "검(소드)","no": "四","el": "수","art": "img/baekgwi/084.webp","nature": "죽지 않는 구설의 넋","act": "아무리 해명해도 죽지 않고 되살아나는 소문의 넋.","warn": "붙은 자는 지난 말이 자꾸 되살아난다.","fix": "해명은 한 번으로 정하고 더는 물지 않는다.","src": "민간전승(民間傳承)"},{"nm": "앵무귀","full": "앵무귀(鸚鵡鬼)","hanja": "鸚鵡鬼","suit": "검(소드)","no": "五","el": "목","art": "img/baekgwi/085.webp","nature": "말을 옮기는 넋","act": "들은 말을 그대로 옮겨 화를 키운다.","warn": "붙은 자는 전한 말 때문에 사이가 틀어진다.","fix": "전해 들은 말은 그 자리에서 끊어 “여기까지” 한다.","src": "민간전승(民間傳承)"},{"nm": "도서귀","full": "도서귀(圖書鬼)","hanja": "圖書鬼","suit": "검(소드)","no": "六","el": "화","art": "img/baekgwi/086.webp","nature": "문서에 붙는 넋","act": "문서와 계약서에 붙어 없던 송사를 부른다.","warn": "붙은 자는 서명한 종이마다 탈이 난다.","fix": "서명 전 문서를 처음부터 소리 내어 한 번 읽는다.","src": "민간전승(民間傳承)"},{"nm": "간신귀","full": "간신귀(奸臣鬼)","hanja": "奸臣鬼","suit": "검(소드)","no": "七","el": "토","art": "img/baekgwi/087.webp","nature": "이간하는 간신의 넋","act": "곁에서 달콤한 말로 이간해 사람들을 등 돌리게 한다.","warn": "시비가 붙으면 옳고 그름이 아니라 목소리로 갈린다.","fix": "남을 헐뜯는 말을 전하는 이를 한 걸음 멀리한다.","src": "《청구야담(靑邱野談)》"},{"nm": "설귀","full": "설귀(舌鬼)","hanja": "舌鬼","suit": "검(소드)","no": "八","el": "금","art": "img/baekgwi/088.webp","nature": "혀에 깃든 넋","act": "혀를 놀려 말실수를 부른다.","warn": "붙은 자는 한마디로 큰 화를 부른다.","fix": "중요한 자리에선 말하기 전 셋을 센다.","src": "민간전승(民間傳承)"},{"nm": "면귀","full": "면귀(面鬼)","hanja": "面鬼","suit": "검(소드)","no": "九","el": "수","art": "img/baekgwi/089.webp","nature": "낯을 바꾸는 넋","act": "앞뒤 낯이 달라 뒤에서 딴말을 하게 한다.","warn": "붙은 자는 두 얼굴로 신의를 잃는다.","fix": "앞에서 못 할 말은 뒤에서도 하지 않는다.","src": "민간전승(民間傳承)"},{"nm": "요설귀","full": "요설귀(妖舌鬼)","hanja": "妖舌鬼","suit": "검(소드)","no": "十","el": "목","art": "img/baekgwi/090.webp","nature": "요망한 혀의 넋","act": "없는 말을 그럴듯하게 지어낸다.","warn": "붙은 자는 헛말로 신뢰를 무너뜨린다.","fix": "확실치 않은 말엔 “모른다” 하고 멈춘다.","src": "《어우야담(於于野譚)》"},{"nm": "이간귀","full": "이간귀(離間鬼)","hanja": "離間鬼","suit": "검(소드)","no": "十一","el": "화","art": "img/baekgwi/091.webp","nature": "사이를 갈라놓는 넋","act": "두 사람 사이에 없는 오해를 심어 갈라놓는다.","warn": "시비가 붙으면 옳고 그름이 아니라 목소리로 갈린다.","fix": "오해가 일면 당사자에게 직접 “사실은” 하고 묻는다.","src": "민간전승(民間傳承)"},{"nm": "시비귀","full": "시비귀(是非鬼)","hanja": "是非鬼","suit": "검(소드)","no": "十二","el": "토","art": "img/baekgwi/092.webp","nature": "옳고 그름을 다투게 하는 넋","act": "사소한 일을 옳고 그름의 다툼으로 키운다.","warn": "붙은 자는 이겨도 잃는 싸움에 매인다.","fix": "다툼이 일면 “이겨서 무엇을 얻나” 한 번 묻는다.","src": "민간전승(民間傳承)"},{"nm": "망어귀","full": "망어귀(妄語鬼)","hanja": "妄語鬼","suit": "검(소드)","no": "十三","el": "금","art": "img/baekgwi/093.webp","nature": "거짓말을 부르는 넋","act": "작은 거짓을 부풀려 신뢰를 무너뜨린다.","warn": "붙은 자는 진심조차 의심받는다.","fix": "오늘 한 약속 하나는 반드시 지켜 “참”을 쌓는다.","src": "불교 십악(十惡)"},{"nm": "위선귀","full": "위선귀(僞善鬼)","hanja": "僞善鬼","suit": "검(소드)","no": "十四","el": "수","art": "img/baekgwi/094.webp","nature": "거짓 선행을 꾸미는 넋","act": "겉으로 착한 척하며 뒤로 해를 끼친다.","warn": "붙은 자는 가면 뒤에서 뒤통수를 맞는다.","fix": "지나친 호의 뒤엔 “무엇을 원하나” 헤아린다.","src": "민간전승(民間傳承)"},{"nm": "관재귀","full": "관재귀(官災鬼)","hanja": "官災鬼","suit": "검(소드)","no": "十五","el": "목","art": "img/baekgwi/095.webp","nature": "송사를 부르는 넋","act": "작은 다툼을 관청과 법정으로 끌고 간다.","warn": "붙은 자는 시비가 늘 송사로 번진다.","fix": "화나는 문서엔 그날 답하지 않고 하루를 묵힌다.","src": "《청구야담(靑邱野談)》"},{"nm": "옥귀","full": "옥귀(獄鬼)","hanja": "獄鬼","suit": "검(소드)","no": "十六","el": "화","art": "img/baekgwi/096.webp","nature": "옥에 가두는 넋","act": "죄 없이도 갇히게 하는 재액을 부른다.","warn": "붙은 자는 남의 일에 엮여 발이 묶인다.","fix": "서명·보증을 청받으면 반드시 하루를 미룬다.","src": "민간전승(民間傳承)"},{"nm": "참소귀","full": "참소귀(讒訴鬼)","hanja": "讒訴鬼","suit": "검(소드)","no": "十七","el": "토","art": "img/baekgwi/097.webp","nature": "없는 죄를 고하는 넋","act": "없는 죄를 지어내 윗사람에게 고해바친다.","warn": "붙은 자는 모함으로 자리를 잃는다.","fix": "억울한 말을 들으면 감정 빼고 사실만 한 줄로 적는다.","src": "《청구야담(靑邱野談)》"},{"nm": "무고귀","full": "무고귀(誣告鬼)","hanja": "誣告鬼","suit": "검(소드)","no": "十八","el": "금","art": "img/baekgwi/098.webp","nature": "거짓으로 고발하는 넋","act": "거짓 고발로 애먼 사람을 옭아맨다.","warn": "붙은 자는 뜬금없는 시비에 휘말린다.","fix": "중요한 대화는 기록을 남겨 “참”을 지킨다.","src": "《어우야담(於于野譚)》"},{"nm": "비방귀","full": "비방귀(誹謗鬼)","hanja": "誹謗鬼","suit": "검(소드)","no": "十九","el": "수","art": "img/baekgwi/099.webp","nature": "헐뜯는 넋","act": "뒤에서 헐뜯어 이름을 더럽힌다.","warn": "붙은 자는 까닭 없이 평판을 잃는다.","fix": "험담 자리엔 끼지 않고 조용히 자리를 뜬다.","src": "민간전승(民間傳承)"},{"nm": "배신귀","full": "배신귀(背信鬼)","hanja": "背信鬼","suit": "검(소드)","no": "二十","el": "목","art": "img/baekgwi/100.webp","nature": "등을 돌리게 하는 넋","act": "믿음을 저버리게 해 등 뒤를 찌르게 한다.","warn": "백귀야행의 마지막 흉살로, 가장 가까운 이를 적으로 돌린다.","fix": "믿음을 준 이에게 오늘 고마움 한 마디를 전한다.","src": "민간전승(民間傳承)"}];
+const DECK = [{"nm": "불가사리", "full": "불가사리(不可殺)", "hanja": "不可殺", "suit": "전(펜타클)", "no": "一", "el": "금", "art": "img/baekgwi/001.webp", "nature": "무쇠를 씹는 재물 포식귀", "act": "무쇠와 금붙이를 씹어삼킬수록 몸집을 불린다.", "warn": "통장의 쇠 냄새를 맡고 붙어, 벌어들이는 족족 재물을 재로 만든다.", "fix": "아침에 동전 한 닢을 창틀에 올리고 “쇠는 내 것이 아니다” 세 번 읊게.", "src": "민간전승·《송남잡지(松南雜識)》"},
+{"nm": "야광귀", "full": "야광귀(夜光鬼)", "hanja": "夜光鬼", "suit": "전(펜타클)", "no": "二", "el": "수", "art": "img/baekgwi/002.webp", "nature": "섣달밤 복을 신고 가는 도귀", "act": "섣달 그믐밤 내려와 발에 맞는 신을 신고 사라진다.", "warn": "그 신의 임자는 한 해의 재수와 복을 함께 잃는다.", "fix": "자기 전 신발 코를 벽으로 돌려놓아 복을 붙들게.", "src": "《동국세시기(東國歲時記)》"},
+{"nm": "아귀", "full": "아귀(餓鬼)", "hanja": "餓鬼", "suit": "전(펜타클)", "no": "三", "el": "목", "art": "img/baekgwi/003.webp", "nature": "채워지지 않는 굶주림", "act": "바늘 같은 목구멍과 산 같은 배로 아무리 먹어도 굶주린다.", "warn": "붙은 자는 벌어도 벌어도 늘 부족하다 느낀다.", "fix": "첫 끼 한 술을 덜어 그릇 밖에 내려놓고 “나는 족하다” 되뇌게.", "src": "《삼국유사(三國遺事)》 불설(佛說)"},
+{"nm": "빈핍귀", "full": "빈핍귀(貧乏鬼)", "hanja": "貧乏鬼", "suit": "전(펜타클)", "no": "四", "el": "화", "art": "img/baekgwi/004.webp", "nature": "가난을 물려주는 넋", "act": "곳간에 스며 들어온 돈을 모조리 새어나가게 한다.", "warn": "붙은 자는 아무리 벌어도 손에 남는 것이 없다.", "fix": "하루 한 닢이라도 반드시 떼어 “쌓는다” 되뇌며 모으게.", "src": "《청구야담(靑邱野談)》"},
+{"nm": "업구렁이", "full": "업구렁이", "hanja": "業구렁이", "suit": "전(펜타클)", "no": "五", "el": "토", "art": "img/baekgwi/005.webp", "nature": "집을 떠난 업(業)의 넋", "act": "집안의 복을 지키던 구렁이 업이 노하여 떠나면, 곳간이 스스로 비고 들어온 돈도 새어나간다.", "warn": "붙은 집은 곳간 바닥이 아직 뚫려 있다. 채우는 족족 샌다.", "fix": "문지방을 손바닥으로 쓸며 “이 집에 머무소서” 한 번 청하게.", "src": "민간전승(民間傳承)"},
+{"nm": "거구귀", "full": "거구귀(巨口鬼)", "hanja": "巨口鬼", "suit": "전(펜타클)", "no": "六", "el": "금", "art": "img/baekgwi/006.webp", "nature": "재물을 삼키는 큰 아가리", "act": "커다란 입으로 눈앞의 재물 기회를 통째로 삼킨다.", "warn": "붙은 자는 큰 건마다 남에게 빼앗긴다.", "fix": "큰 계약 전 두 손을 모아 “내 몫은 지킨다” 읊게.", "src": "《어우야담(於于野譚)》"},
+{"nm": "도척귀", "full": "도척귀(盜跖鬼)", "hanja": "盜跖鬼", "suit": "전(펜타클)", "no": "七", "el": "수", "art": "img/baekgwi/007.webp", "nature": "큰 도적의 넋", "act": "천하의 큰 도적 도척의 넋으로, 붙은 자의 재물을 밤새 남몰래 빼돌린다.", "warn": "붙은 자는 큰돈이 오가는 날마다 반드시 한 번 털린다.", "fix": "잠들기 전 지갑과 통장을 눈으로 한 번 세어 “내 자리” 정하게.", "src": "전래 야담(野談)"},
+{"nm": "수살귀", "full": "수살귀(水殺鬼)", "hanja": "水殺鬼", "suit": "전(펜타클)", "no": "八", "el": "목", "art": "img/baekgwi/008.webp", "nature": "재물을 물에 잠그는 넋", "act": "재물을 물가로 이끌어 잠기게 한다.", "warn": "붙은 자는 물과 얽힌 일마다 크게 손해를 본다.", "fix": "큰돈 걸린 일은 물가·비 오는 날을 피해 정하게.", "src": "민간전승(民間傳承)"},
+{"nm": "서귀", "full": "서귀(鼠鬼)", "hanja": "鼠鬼", "suit": "전(펜타클)", "no": "九", "el": "화", "art": "img/baekgwi/009.webp", "nature": "곳간을 갉는 쥐의 넋", "act": "쥐처럼 곳간을 갉아 조금씩 축낸다.", "warn": "붙은 자는 잔돈이 새듯 재물이 소리 없이 준다.", "fix": "하루 지출을 한 줄로 적어 “갉힌 자리”를 눈으로 확인하게.", "src": "《용재총화(慵齋叢話)》"},
+{"nm": "금돼지", "full": "금돼지", "hanja": "金돼지", "suit": "전(펜타클)", "no": "十", "el": "토", "art": "img/baekgwi/010.webp", "nature": "금을 홀리는 돼지 요괴", "act": "최치원 설화 속, 사람을 홀려 제 굴로 재물을 끌어모으던 금돼지.", "warn": "사람을 홀려 제 굴로 재물을 끌어모은다. 붙은 자는 한몫을 노릴수록 크게 잃는다.", "fix": "투자·한몫을 노리는 마음이 일면 하루를 묵혀 다시 보게.", "src": "「최고운전(崔孤雲傳)」"},
+{"nm": "노구할미", "full": "노구할미(老嫗)", "hanja": "老嫗", "suit": "전(펜타클)", "no": "十一", "el": "금", "art": "img/baekgwi/011.webp", "nature": "재물을 시샘하는 늙은 넋", "act": "한 맺힌 노파의 넋으로 남이 잘되는 꼴을 못 본다.", "warn": "붙은 자는 성공 직전마다 시샘의 훼방을 맞는다.", "fix": "좋은 소식은 사흘간 입 밖에 내지 않고 속으로만 여미게.", "src": "《어우야담(於于野譚)》"},
+{"nm": "식탐귀", "full": "식탐귀(食貪鬼)", "hanja": "食貪鬼", "suit": "전(펜타클)", "no": "十二", "el": "수", "art": "img/baekgwi/012.webp", "nature": "씀씀이를 부풀리는 넋", "act": "먹고 쓰는 욕심을 끝없이 부풀려 남는 것이 없게 한다.", "warn": "붙은 자는 벌이보다 씀씀이가 늘 앞선다.", "fix": "사기 전 “정말 필요한가” 한 번 소리 내어 묻게.", "src": "민간전승(民間傳承)"},
+{"nm": "오행귀", "full": "오행귀(五行鬼)", "hanja": "五行鬼", "suit": "전(펜타클)", "no": "十三", "el": "목", "art": "img/baekgwi/013.webp", "nature": "기운을 어긋내는 넋", "act": "사주의 오행을 어그러뜨려 재물의 흐름을 막는다.", "warn": "붙은 자는 애써도 물길 막힌 듯 재물이 고인다.", "fix": "아침에 물 한 잔을 천천히 비우며 “흐른다” 읊게.", "src": "명리(命理) 잡설·민간전승"},
+{"nm": "독각귀", "full": "독각귀(獨脚鬼)", "hanja": "獨脚鬼", "suit": "전(펜타클)", "no": "十四", "el": "화", "art": "img/baekgwi/014.webp", "nature": "외다리로 뛰는 손실귀", "act": "한 다리로 껑충껑충 뛰며 지나간 집의 셈을 어그러뜨린다.", "warn": "붙은 자는 잔돈부터 큰돈까지 계산이 늘 어긋난다.", "fix": "지갑을 열기 전 두 발을 나란히 딛고 숨을 고르게.", "src": "《어우야담(於于野譚)》"},
+{"nm": "삼목귀", "full": "삼목귀(三目鬼)", "hanja": "三目鬼", "suit": "전(펜타클)", "no": "十五", "el": "토", "art": "img/baekgwi/015.webp", "nature": "세 눈으로 재물을 노리는 넋", "act": "세 개의 눈으로 감춰 둔 재물까지 찾아내 빼돌린다.", "warn": "붙은 자는 숨겨둔 것마저 새어나간다.", "fix": "귀중품을 하루 한 번 눈으로 세어 “있다” 확인하게.", "src": "민간전승(民間傳承)"},
+{"nm": "망재귀", "full": "망재귀(亡財鬼)", "hanja": "亡財鬼", "suit": "전(펜타클)", "no": "十六", "el": "금", "art": "img/baekgwi/016.webp", "nature": "재물을 잃게 하는 넋", "act": "손에 든 재물을 자꾸 잃고 흘리게 한다.", "warn": "붙은 자는 크고 작은 분실과 손재수에 시달린다.", "fix": "물건 둘 자리를 하나 정해 늘 그곳에만 두게.", "src": "《청구야담(靑邱野談)》"},
+{"nm": "걸귀", "full": "걸귀(乞鬼)", "hanja": "乞鬼", "suit": "전(펜타클)", "no": "十七", "el": "수", "art": "img/baekgwi/017.webp", "nature": "떠도는 걸신", "act": "주인 없이 떠돌다 남의 상에 끼어들어 복과 음식을 축낸다.", "warn": "붙으면 씀씀이만 늘고 남는 것이 없다.", "fix": "식사 전 첫 술을 잠깐 상 밖에 내어 “손님 몫”이라 이르게.", "src": "《용재총화(慵齋叢話)》"},
+{"nm": "환재귀", "full": "환재귀(幻財鬼)", "hanja": "幻財鬼", "suit": "전(펜타클)", "no": "十八", "el": "목", "art": "img/baekgwi/018.webp", "nature": "헛재물을 보이는 넋", "act": "없는 재물을 있는 듯 보여 헛된 지출과 빚을 부른다.", "warn": "붙은 자는 신기루 같은 한탕에 매인다.", "fix": "큰 지출 앞에서 “이것은 참인가 허인가” 한 번 묻게.", "src": "민간전승(民間傳承)"},
+{"nm": "금단지", "full": "금단지", "hanja": "金단지", "suit": "전(펜타클)", "no": "十九", "el": "화", "art": "img/baekgwi/019.webp", "nature": "묻힌 금을 움켜쥔 지신", "act": "땅에 묻힌 금단지를 지켜 남에게 내주지 않는다.", "warn": "붙은 자는 재물을 눈앞에 두고도 끝내 못 얻는다.", "fix": "땅을 밟고 서서 뒤꿈치로 세 번 다지며 “고맙습니다” 이르게.", "src": "민간전승(民間傳承)"},
+{"nm": "파재귀", "full": "파재귀(破財鬼)", "hanja": "破財鬼", "suit": "전(펜타클)", "no": "二十", "el": "토", "art": "img/baekgwi/020.webp", "nature": "재물을 깨뜨리는 넋", "act": "재물의 자리를 깨뜨려 애써 모은 것을 흩어놓는다.", "warn": "붙은 자는 기회가 와도 눈앞에서 부서진다.", "fix": "아침 햇빛에 지갑을 잠깐 비춰 “빛을 들인다” 읊게.", "src": "《어우야담(於于野譚)》"},
+{"nm": "구미호", "full": "구미호(九尾狐)", "hanja": "九尾狐", "suit": "잔(컵)", "no": "一", "el": "토", "art": "img/baekgwi/021.webp", "nature": "간을 노리는 아홉 꼬리", "act": "어여쁜 얼굴로 홀려 정기를 빼앗는다.", "warn": "붙은 자는 매혹적인 상대에게 끌려 늘 이용만 당한다.", "fix": "설레는 상대 앞에서 “이 사람은 내게 무엇을 주는가” 한 번 묻게.", "src": "《삼국유사》·전래설화"},
+{"nm": "매구", "full": "매구", "hanja": "", "suit": "잔(컵)", "no": "二", "el": "금", "art": "img/baekgwi/022.webp", "nature": "천 년 묵은 여우의 요괴", "act": "천 년 묵은 여우가 변한 요괴로, 사람 사이를 이간해 정을 흩뜨린다.", "warn": "붙은 자는 오해로 인연을 잃는다.", "fix": "뒷말이 들리면 옮기지 말고 당사자에게 직접 확인하게.", "src": "민간전승(民間傳承)"},
+{"nm": "손각시", "full": "손각시", "hanja": "", "suit": "잔(컵)", "no": "三", "el": "수", "art": "img/baekgwi/023.webp", "nature": "혼례를 시샘하는 처녀살", "act": "시집 못 가고 죽은 처녀의 넋.", "warn": "혼사를 앞둔 이에게 붙어 트집과 다툼을 일으킨다. 붙은 자는 좋은 날일수록 크게 어긋난다.", "fix": "다툼이 일려 하면 입을 다물고 물 한 모금을 삼키게.", "src": "《어우야담(於于野譚)》"},
+{"nm": "몽달귀", "full": "몽달귀", "hanja": "몽달鬼", "suit": "잔(컵)", "no": "四", "el": "목", "art": "img/baekgwi/024.webp", "nature": "총각의 외로운 넋", "act": "짝 없이 죽은 총각 귀신으로 남의 애정을 질투해 훼방한다.", "warn": "붙은 자는 다가온 인연을 스스로 밀어낸다.", "fix": "마음에 드는 이에게 하루 한 마디 다정한 말을 건네게.", "src": "민간전승(民間傳承)"},
+{"nm": "달걀귀신", "full": "달걀귀신", "hanja": "달걀鬼神", "suit": "잔(컵)", "no": "五", "el": "화", "art": "img/baekgwi/025.webp", "nature": "얼굴 없는 미혹의 넋", "act": "이목구비 없는 얼굴로 상대의 진심을 못 보게 한다.", "warn": "붙은 자는 사람을 헛짚어 마음을 준다.", "fix": "상대의 눈을 삼 초간 마주 보고 이름을 부르게.", "src": "민간전승(民間傳承)"},
+{"nm": "상사귀", "full": "상사귀(相思鬼)", "hanja": "相思鬼", "suit": "잔(컵)", "no": "六", "el": "토", "art": "img/baekgwi/026.webp", "nature": "짝사랑에 타 죽은 넋", "act": "이루지 못한 연모로 죽어, 붙은 자를 집착의 불길로 태운다.", "warn": "붙은 자는 매달릴수록 인연을 잃는다.", "fix": "보고픈 마음이 끓거든 따뜻한 물 한 잔을 천천히 마시며 셋을 세게.", "src": "《어우야담(於于野譚)》"},
+{"nm": "변심귀", "full": "변심귀(變心鬼)", "hanja": "變心鬼", "suit": "잔(컵)", "no": "七", "el": "금", "art": "img/baekgwi/027.webp", "nature": "마음을 이리저리 옮기게 하는 넋", "act": "정을 한 곳에 못 붙이게 흩뜨린다.", "warn": "붙은 자는 여러 인연을 좇다 결국 모두 잃는다.", "fix": "오늘 마음이 머무는 한 사람을 떠올리고, 그 사람에게만 안부 한 줄을 보내게.", "src": "민간전승(民間傳承)"},
+{"nm": "묘귀", "full": "묘귀(猫鬼)", "hanja": "猫鬼", "suit": "잔(컵)", "no": "八", "el": "수", "art": "img/baekgwi/028.webp", "nature": "앙심을 품은 고양이 넋", "act": "죽은 고양이의 앙심이 사람에 붙어, 가까운 이와 할퀴듯 다투게 한다.", "warn": "붙은 자는 끝났다 여긴 다툼이 다시 와서 같은 자리를 할퀸다.", "fix": "날 선 말이 나오려 하면 혀끝을 지그시 물게.", "src": "《용재총화(慵齋叢話)》"},
+{"nm": "선녀귀", "full": "선녀귀(仙女鬼)", "hanja": "仙女鬼", "suit": "잔(컵)", "no": "九", "el": "목", "art": "img/baekgwi/029.webp", "nature": "돌아가지 못한 선녀의 넋", "act": "날개옷을 잃고 하늘로 못 간 한으로, 곁의 인연을 늘 그리움과 미련에 묶어 둔다.", "warn": "붙은 자는 붙잡을수록 멀어지고, 붙잡는 그 손이 인연을 끊는다.", "fix": "지난 인연이 떠오르면 “이미 갔다” 세 번 읊게.", "src": "나무꾼과 선녀 설화"},
+{"nm": "접동새귀", "full": "접동새귀", "hanja": "", "suit": "잔(컵)", "no": "十", "el": "화", "art": "img/baekgwi/030.webp", "nature": "한에 우는 새의 넋", "act": "계모에게 죽어 접동새가 된 누이의 넋.", "warn": "형제와 가족 사이에 애증의 골을 판다.", "fix": "가족에게 하루 한 번 안부 한 줄을 먼저 보내게.", "src": "접동새 설화·민간전승"},
+{"nm": "야호", "full": "야호(野狐)", "hanja": "野狐", "suit": "잔(컵)", "no": "十一", "el": "토", "art": "img/baekgwi/031.webp", "nature": "사람으로 둔갑한 들여우", "act": "들에 사는 여우가 사람으로 둔갑해 정을 농락한다.", "warn": "붙은 자는 달콤한 말에 홀려 속는다.", "fix": "달콤한 말 앞에서는 숨을 한 번 길게 내쉬고 대답을 하루 미루게.", "src": "《어우야담(於于野譚)》"},
+{"nm": "동녀귀", "full": "동녀귀(童女鬼)", "hanja": "童女鬼", "suit": "잔(컵)", "no": "十二", "el": "금", "art": "img/baekgwi/032.webp", "nature": "어린 넋의 응석", "act": "어려서 세상을 떠난 여자아이의 넋이 어미 붙들 듯 사람을 묶는다.", "warn": "붙은 자는 지나치게 매달려 상대를 질리게 한다.", "fix": "연락을 보내기 전 열을 세고 정말 필요한지 되묻게.", "src": "민간전승(民間傳承)"},
+{"nm": "쌍두귀", "full": "쌍두귀(雙頭鬼)", "hanja": "雙頭鬼", "suit": "잔(컵)", "no": "十三", "el": "수", "art": "img/baekgwi/033.webp", "nature": "두 마음의 넋", "act": "머리가 둘이라 한 입으로 두 말을 한다.", "warn": "붙은 자는 양다리와 삼각관계의 파란에 시달린다.", "fix": "마음을 하나로 정해 “여기” 하고 한 번 못 박게.", "src": "민간전승(民間傳承)"},
+{"nm": "흰여우귀", "full": "흰여우귀(白狐鬼)", "hanja": "白狐鬼", "suit": "잔(컵)", "no": "十四", "el": "목", "art": "img/baekgwi/034.webp", "nature": "흰 여우의 넋", "act": "천 년 묵은 흰 여우로, 가장 아끼는 이의 모습으로 나타나 정기를 빼앗는다.", "warn": "붙은 자는 가장 믿는 얼굴에게 가장 깊이 베인다.", "fix": "지나치게 완벽한 상대 앞에서 “무엇을 원하나” 헤아리게.", "src": "전래설화(傳來說話)"},
+{"nm": "망부귀", "full": "망부귀(望夫鬼)", "hanja": "望夫鬼", "suit": "잔(컵)", "no": "十五", "el": "화", "art": "img/baekgwi/035.webp", "nature": "기다리다 굳은 넋", "act": "돌아오지 않는 이를 기다리다 돌이 된 넋.", "warn": "붙은 자는 떠난 인연에 매여 앞으로 나아가지 못한다.", "fix": "기다림이 사무치면 오늘 만날 사람에게 먼저 연락하게.", "src": "망부석(望夫石) 설화"},
+{"nm": "색귀", "full": "색귀(色鬼)", "hanja": "色鬼", "suit": "잔(컵)", "no": "十六", "el": "토", "art": "img/baekgwi/036.webp", "nature": "정을 흩뜨리는 음귀", "act": "한 곳에 정착 못 하도록 색정을 부추긴다.", "warn": "붙은 자는 헛된 유혹에 인연과 재물을 함께 잃는다.", "fix": "흔들리는 마음이 일거든 지금 곁에 있는 것 하나를 소리 내어 세어 보게.", "src": "《어우야담(於于野譚)》"},
+{"nm": "원귀", "full": "원귀(寃鬼)", "hanja": "寃鬼", "suit": "잔(컵)", "no": "十七", "el": "금", "art": "img/baekgwi/037.webp", "nature": "원한 맺힌 넋", "act": "억울하게 죽은 한이 산 사람의 인연에 저주를 드리운다.", "warn": "붙은 자는 까닭 없는 미움에 관계를 태운다.", "fix": "미움이 솟거든 “내 한이 아니다” 한 번 내려놓게.", "src": "《삼국유사》·《어우야담》"},
+{"nm": "구사귀", "full": "구사귀(九蛇鬼)", "hanja": "九蛇鬼", "suit": "잔(컵)", "no": "十八", "el": "수", "art": "img/baekgwi/038.webp", "nature": "아홉 뱀의 얽힘", "act": "아홉 마리 뱀처럼 인연을 칭칭 얽어 옴짝달싹 못 하게 한다.", "warn": "붙은 자는 끝난 관계도 놓지 못한다.", "fix": "얽힌 관계 하나를 “풀어도 된다” 스스로 인정하게.", "src": "민간전승(民間傳承)"},
+{"nm": "미호", "full": "미호(尾狐)", "hanja": "尾狐", "suit": "잔(컵)", "no": "十九", "el": "목", "art": "img/baekgwi/039.webp", "nature": "꼬리를 감춘 여우", "act": "꼬리를 감추고 오래 곁에 머물며 서서히 정기를 앗는다.", "warn": "붙은 자는 익숙한 관계에 서서히 마른다.", "fix": "오래된 관계도 “나는 무엇을 얻나” 가끔 되짚게.", "src": "전래설화(傳來說話)"},
+{"nm": "화사귀", "full": "화사귀(花蛇鬼)", "hanja": "花蛇鬼", "suit": "잔(컵)", "no": "二十", "el": "화", "art": "img/baekgwi/040.webp", "nature": "고운 무늬로 홀리는 뱀의 넋", "act": "아름다운 무늬로 홀려 정과 재물을 함께 앗아간다.", "warn": "붙은 자는 화려한 인연에 등을 찔린다.", "fix": "지나친 호의 앞에서 하루를 묵혀 판단하게.", "src": "민간전승(民間傳承)"},
+{"nm": "두억시니", "full": "두억시니", "hanja": "", "suit": "대귀", "no": "제일귀", "el": "목", "art": "img/baekgwi/041.webp", "nature": "머리를 짓누르는 야차", "act": "큰 뜻을 품은 자의 머리를 짓눌러 주저앉힌다.", "warn": "붙은 자는 결정적 순간마다 스스로 일을 그르치고 몸을 상한다.", "fix": "정수리를 세 번 톡톡 두드려 “눌린 것을 턴다” 말하게.", "src": "《어우야담(於于野譚)》"},
+{"nm": "창귀", "full": "창귀(倀鬼)", "hanja": "倀鬼", "suit": "대귀", "no": "제이귀", "el": "화", "art": "img/baekgwi/042.webp", "nature": "범에게 바친 종의 넋", "act": "호랑이에게 잡아먹힌 뒤 그 종이 되어, 다른 이를 함정으로 꾀어낸다.", "warn": "붙은 자는 사기와 덫에 자꾸 걸린다.", "fix": "급히 부르는 소리엔 멈춰서 “정말인가” 한 번 되묻게.", "src": "《용재총화(慵齋叢話)》·전래"},
+{"nm": "강철이", "full": "강철이(强鐵)", "hanja": "强鐵", "suit": "대귀", "no": "제삼귀", "el": "토", "art": "img/baekgwi/043.webp", "nature": "지나간 자리를 태우는 적룡", "act": "승천 못 한 이무기 강철이.", "warn": "지나간 들판은 봄에도 가을처럼 마른다. 붙은 자는 손대는 일마다 결실 없이 시든다.", "fix": "물 한 컵을 화분 흙에 부어 “마른 것을 적신다” 읊게.", "src": "민간전승(民間傳承)"},
+{"nm": "야차", "full": "야차(夜叉)", "hanja": "夜叉", "suit": "대귀", "no": "제사귀", "el": "금", "art": "img/baekgwi/044.webp", "nature": "살을 탐하는 흉신", "act": "사나운 이빨로 사람의 몸을 노린다.", "warn": "붙은 자는 뜻밖의 상해와 흉사를 입는다.", "fix": "위험한 일 전 “천천히” 한 번 읊고 손발을 살피게.", "src": "《삼국유사》 불설(佛說)"},
+{"nm": "나찰", "full": "나찰(羅刹)", "hanja": "羅刹", "suit": "대귀", "no": "제오귀", "el": "수", "art": "img/baekgwi/045.webp", "nature": "살점을 노리는 악귀", "act": "사람을 잡아먹는 악귀로, 붙은 자를 피 흘리는 사고로 이끈다.", "warn": "붙은 자는 몸으로 먼저 겪고 나서야 이 귀를 안다.", "fix": "날붙이·불을 다룰 때 손끝을 안으로 오므리게.", "src": "《삼국유사》 불설(佛說)"},
+{"nm": "우두", "full": "우두(牛頭)", "hanja": "牛頭", "suit": "대귀", "no": "제육귀", "el": "목", "art": "img/baekgwi/046.webp", "nature": "소머리 저승 옥졸", "act": "저승 옥졸로 소의 머리를 가졌다.", "warn": "붙은 자를 병과 사고의 문턱으로 끌고 간다.", "fix": "몸이 보내는 첫 이상 신호를 그날로 살피게.", "src": "불교 지옥설(地獄說)"},
+{"nm": "마두", "full": "마두(馬頭)", "hanja": "馬頭", "suit": "대귀", "no": "제칠귀", "el": "화", "art": "img/baekgwi/047.webp", "nature": "말머리 저승 옥졸", "act": "우두와 짝을 이룬 말머리 옥졸.", "warn": "급작스런 재액으로 몸을 상하게 한다.", "fix": "서두를 때 숨을 크게 한 번 쉬고 걸음을 늦추게.", "src": "불교 지옥설(地獄說)"},
+{"nm": "귀수", "full": "귀수(鬼手)", "hanja": "鬼手", "suit": "대귀", "no": "제팔귀", "el": "토", "art": "img/baekgwi/048.webp", "nature": "등을 떠미는 귀신 손", "act": "보이지 않는 손이 높은 곳에서 등을 떠민다.", "warn": "붙은 자는 추락·낙상의 위험이 크다.", "fix": "높은 곳에선 한 손으로 반드시 무언가를 붙들게.", "src": "민간전승(民間傳承)"},
+{"nm": "역귀", "full": "역귀(疫鬼)", "hanja": "疫鬼", "suit": "대귀", "no": "제구귀", "el": "금", "art": "img/baekgwi/049.webp", "nature": "돌림병을 옮기는 넋", "act": "마을을 돌며 돌림병을 퍼뜨린다.", "warn": "붙은 자는 잔병과 병치레가 유독 잦다.", "fix": "손을 씻고 “들이지 않는다” 한 번 읊게.", "src": "《삼국유사》·처용(處容) 설화"},
+{"nm": "손", "full": "손", "hanja": "", "suit": "대귀", "no": "제십귀", "el": "수", "art": "img/baekgwi/050.webp", "nature": "방위를 도는 손님", "act": "날마다 방위를 옮겨 다니며, 그 방향으로 큰일을 벌인 자에게 탈을 안긴다.", "warn": "붙은 자는 이사·개업마다 사고를 만난다.", "fix": "큰일 전 손 있는 방위를 피해 반 걸음 돌아 나서게.", "src": "《동국세시기》·손 없는 날"},
+{"nm": "염매", "full": "염매(魘魅)", "hanja": "魘魅", "suit": "대귀", "no": "제십일귀", "el": "목", "art": "img/baekgwi/051.webp", "nature": "저주로 사람을 부리는 요술", "act": "아이의 넋을 병에 가두어 남을 해치는 저주.", "warn": "붙은 자는 까닭 모를 재액과 병에 시달린다.", "fix": "몸이 유난히 무거운 날은 무리한 일을 하루 미루게.", "src": "《어우야담(於于野譚)》"},
+{"nm": "단두귀", "full": "단두귀(斷頭鬼)", "hanja": "斷頭鬼", "suit": "대귀", "no": "제십이귀", "el": "화", "art": "img/baekgwi/052.webp", "nature": "목 없는 원혼", "act": "목이 잘려 죽은 원한으로 목과 머리의 상해를 부른다.", "warn": "붙은 자는 목과 어깨가 먼저 굳고, 작은 다침이 큰 다침을 부른다.", "fix": "목을 좌우로 천천히 세 번 돌려 힘을 빼게.", "src": "민간전승(民間傳承)"},
+{"nm": "참수귀", "full": "참수귀(斬首鬼)", "hanja": "斬首鬼", "suit": "대귀", "no": "제십삼귀", "el": "토", "art": "img/baekgwi/053.webp", "nature": "처형당한 원혼", "act": "억울한 처형의 한으로 날붙이 사고를 부른다.", "warn": "붙은 자는 베임과 찔림을 자주 당한다.", "fix": "칼을 쓸 땐 손끝을 안으로 말고 “안으로” 되뇌게.", "src": "《청구야담(靑邱野談)》"},
+{"nm": "혈귀", "full": "혈귀(血鬼)", "hanja": "血鬼", "suit": "대귀", "no": "제십사귀", "el": "금", "art": "img/baekgwi/054.webp", "nature": "피를 부르는 넋", "act": "피를 흘리게 하는 상처로 이끈다.", "warn": "붙은 자는 베임·출혈 사고가 잦다.", "fix": "붉은 것·날카로운 것을 다룰 때 한 박자 늦춰 손을 살피게.", "src": "민간전승(民間傳承)"},
+{"nm": "겁살귀", "full": "겁살귀(劫煞鬼)", "hanja": "劫煞鬼", "suit": "대귀", "no": "제십오귀", "el": "수", "art": "img/baekgwi/055.webp", "nature": "한꺼번에 앗아 가는 살", "act": "몸과 재물을 한꺼번에 앗아 간다.", "warn": "붙은 자는 뜻밖의 봉변과 강탈을 겪는다.", "fix": "낯선 곳에선 귀중품과 몸을 함께 단속하게.", "src": "명리(命理) 살(煞)설"},
+{"nm": "백호귀", "full": "백호귀(白虎鬼)", "hanja": "白虎鬼", "suit": "대귀", "no": "제십육귀", "el": "목", "art": "img/baekgwi/056.webp", "nature": "흰 범의 흉살", "act": "서방을 지키는 흰 범이 노하면 갑작스런 사고와 상해를 부른다.", "warn": "붙은 자는 서쪽에서 오는 일에 갑작스럽게 다친다.", "fix": "서쪽에서 오는 것을 한 번 더 살피게.", "src": "사신(四神) 신앙"},
+{"nm": "살생귀", "full": "살생귀(殺生鬼)", "hanja": "殺生鬼", "suit": "대귀", "no": "제십칠귀", "el": "화", "art": "img/baekgwi/057.webp", "nature": "살기를 부르는 넋", "act": "살기를 몰고 다녀 사소한 다툼을 몸싸움으로 키운다.", "warn": "붙은 자는 시비 끝에 몸을 다친다.", "fix": "언성이 높아지면 한 걸음 물러서 손을 등 뒤로 모으게.", "src": "민간전승(民間傳承)"},
+{"nm": "검귀", "full": "검귀(劍鬼)", "hanja": "劍鬼", "suit": "대귀", "no": "제십팔귀", "el": "토", "art": "img/baekgwi/058.webp", "nature": "칼에 깃든 원혼", "act": "칼에 서린 원혼이 날붙이를 자꾸 손으로 부른다.", "warn": "붙은 자는 한 번 비켜 간 날붙이에 같은 자리를 또 다친다.", "fix": "날붙이를 둔 자리를 늘 한곳으로 정해 두게.", "src": "《용재총화(慵齋叢話)》"},
+{"nm": "철퇴귀", "full": "철퇴귀(鐵槌鬼)", "hanja": "鐵槌鬼", "suit": "대귀", "no": "제십구귀", "el": "금", "art": "img/baekgwi/059.webp", "nature": "쇠몽둥이를 든 넋", "act": "쇠몽둥이로 내려치듯 둔중한 타박상을 부른다.", "warn": "붙은 자는 부딪힘과 눌림 사고가 잦다.", "fix": "머리 위 물건·선반 아래를 지날 때 한 번 올려다보게.", "src": "민간전승(民間傳承)"},
+{"nm": "독귀", "full": "독귀(毒鬼)", "hanja": "毒鬼", "suit": "대귀", "no": "제이십귀", "el": "수", "art": "img/baekgwi/060.webp", "nature": "독을 부르는 넋", "act": "독한 벌레와 독기를 불러들인다.", "warn": "붙은 자는 알 수 없는 탈과 중독을 앓는다.", "fix": "풀숲·낯선 곳에선 소매와 바짓단을 여미고 들게.", "src": "민간전승(民間傳承)"},
+{"nm": "어둑시니", "full": "어둑시니", "hanja": "", "suit": "지(완드)", "no": "一", "el": "수", "art": "img/baekgwi/061.webp", "nature": "어둠에 넘어뜨리는 넋", "act": "어두운 곳에서 발밑을 흐리고 마음에 어둠을 드리운다.", "warn": "붙은 자는 밤이면 까닭 없이 마음이 가라앉는다.", "fix": "어두운 길·마음엔 작은 불빛 하나를 먼저 켜게.", "src": "민간전승(民間傳承)"},
+{"nm": "망량", "full": "망량(魍魎)", "hanja": "魍魎", "suit": "지(완드)", "no": "二", "el": "목", "art": "img/baekgwi/062.webp", "nature": "산천의 도깨비 넋", "act": "산과 물의 정기가 뭉친 도깨비로, 마음을 홀려 헛것을 보게 한다.", "warn": "붙은 자는 혼자 끙끙 앓을수록 헛것에 더 깊이 빠진다.", "fix": "헛생각이 일면 찬물로 손을 씻고 지금 할 일 하나만 정하게.", "src": "《용재총화(慵齋叢話)》"},
+{"nm": "새타니", "full": "새타니", "hanja": "", "suit": "지(완드)", "no": "三", "el": "화", "art": "img/baekgwi/063.webp", "nature": "몸에 씌는 잡귀", "act": "몸에 씌어 넋을 흐리게 하는 잡귀.", "warn": "붙은 자는 제정신이 아닌 듯 늘 멍하다.", "fix": "이름을 소리 내어 부르며 “나는 여기 있다” 읊게.", "src": "무속 전승(巫俗傳承)"},
+{"nm": "허주", "full": "허주(虛主)", "hanja": "虛主", "suit": "지(완드)", "no": "四", "el": "토", "art": "img/baekgwi/064.webp", "nature": "빈 몸의 주인 행세", "act": "넋 나간 빈 몸에 들어와 주인 행세를 한다.", "warn": "붙은 자는 제 삶의 주도권을 잃는다.", "fix": "아침에 거울을 보며 오늘 할 일 하나를 소리 내게.", "src": "무속 전승(巫俗傳承)"},
+{"nm": "그림자귀", "full": "그림자귀(影鬼)", "hanja": "影鬼", "suit": "지(완드)", "no": "五", "el": "금", "art": "img/baekgwi/065.webp", "nature": "그림자에 붙는 넋", "act": "제 그림자처럼 따라붙어 우울의 무게를 더한다.", "warn": "붙은 자는 어딜 가도 마음이 무겁다.", "fix": "아침 햇빛에 그림자를 밟고 서서 “나는 선다” 읊게. 이런 일이 두 주 넘게 이어지거든 의원에게도 꼭 보이게.", "src": "민간전승(民間傳承)"},
+{"nm": "몽마", "full": "몽마(夢魔)", "hanja": "夢魔", "suit": "지(완드)", "no": "六", "el": "수", "art": "img/baekgwi/066.webp", "nature": "악몽을 짜는 넋", "act": "잠 속에서 무서운 꿈을 끝없이 짠다.", "warn": "붙은 자는 자도 잔 것 같지 않아 늘 지쳐 있다.", "fix": "잠들기 전 오늘의 좋았던 일 하나를 떠올려 여미게.", "src": "민간전승(民間傳承)"},
+{"nm": "도깨비불", "full": "도깨비불", "hanja": "", "suit": "지(완드)", "no": "七", "el": "목", "art": "img/baekgwi/067.webp", "nature": "넋을 홀리는 불빛", "act": "밤길에 파란 불로 나타나 넋을 홀려 헤매게 한다.", "warn": "붙은 자는 마음이 자꾸 엉뚱한 곳으로 끌린다.", "fix": "마음이 홀리면 걸음을 멈추고 발끝을 내려다보게.", "src": "《용재총화》·전래"},
+{"nm": "가위귀", "full": "가위귀(鬼壓)", "hanja": "鬼壓", "suit": "지(완드)", "no": "八", "el": "화", "art": "img/baekgwi/068.webp", "nature": "몸을 누르는 밤의 넋", "act": "잠든 몸 위에 올라앉아 움직이지 못하게 한다.", "warn": "붙은 자는 밤마다 가위에 눌려 넋이 마른다.", "fix": "자기 전 손가락 끝을 열 번 꼭꼭 쥐었다 펴게.", "src": "민간전승(民間傳承)"},
+{"nm": "수비", "full": "수비", "hanja": "", "suit": "지(완드)", "no": "九", "el": "토", "art": "img/baekgwi/069.webp", "nature": "떠도는 잡귀", "act": "주인 없이 떠도는 잡귀로 마음에 까닭 없는 불안을 심는다.", "warn": "붙은 자는 잠이 먼저 무너지고, 그다음 판단이 무너진다.", "fix": "불안이 일면 발바닥이 땅에 닿는 감각에 셋을 세게. 이런 일이 두 주 넘게 이어지거든 의원에게도 꼭 보이게.", "src": "무속 전승(巫俗傳承)"},
+{"nm": "산령", "full": "산령(山靈)", "hanja": "山靈", "suit": "지(완드)", "no": "十", "el": "금", "art": "img/baekgwi/070.webp", "nature": "노한 산의 정령", "act": "함부로 산을 범한 자의 마음을 어지럽힌다.", "warn": "붙은 자는 답답함에 갇혀 숨이 막힌다.", "fix": "답답하면 창을 열어 먼 곳을 삼 초간 바라보게.", "src": "산신(山神) 신앙"},
+{"nm": "심마", "full": "심마(心魔)", "hanja": "心魔", "suit": "지(완드)", "no": "十一", "el": "수", "art": "img/baekgwi/071.webp", "nature": "마음을 삼키는 큰 마", "act": "온갖 잡념을 하나로 뭉쳐 마음을 통째로 삼킨다.", "warn": "붙은 자는 제 마음의 주인 자리를 빼앗긴다.", "fix": "“나는 내 마음의 주인이다” 한 문장을 아침마다 읊게.", "src": "불교 수행설(修行說)"},
+{"nm": "흑섬귀", "full": "흑섬귀(黑蟾鬼)", "hanja": "黑蟾鬼", "suit": "지(완드)", "no": "十二", "el": "목", "art": "img/baekgwi/072.webp", "nature": "가슴을 누르는 검은 두꺼비", "act": "가슴 위에 검은 두꺼비처럼 앉아 마음을 짓눌러 가라앉힌다.", "warn": "붙은 자는 가슴이 눌린 채 내린 결정을 꼭 뒤집게 된다.", "fix": "아침에 커튼을 열어 햇빛을 얼굴에 삼 초간 쬐게. 이런 일이 두 주 넘게 이어지거든 의원에게도 꼭 보이게.", "src": "민간전승(民間傳承)"},
+{"nm": "환각귀", "full": "환각귀(幻覺鬼)", "hanja": "幻覺鬼", "suit": "지(완드)", "no": "十三", "el": "화", "art": "img/baekgwi/073.webp", "nature": "헛것을 보이는 넋", "act": "없는 소리와 형상을 보여 판단을 흐린다.", "warn": "홀린 자는 헛것에 마음을 빼앗긴다.", "fix": "헛것이 뵈면 “참인가” 묻고 곁의 사람에게 확인하게. 이런 일이 두 주 넘게 이어지거든 의원에게도 꼭 보이게.", "src": "무속 전승(巫俗傳承)"},
+{"nm": "도선귀", "full": "도선귀", "hanja": "", "suit": "지(완드)", "no": "十四", "el": "토", "art": "img/baekgwi/074.webp", "nature": "넋을 잘못 이끄는 길잡이", "act": "잘못된 길로 마음을 이끌어 헤매게 한다.", "warn": "붙은 자는 판단마다 엉뚱한 쪽으로 기운다.", "fix": "결정 전 믿는 이 한 사람에게 물어 길을 맞춰보게.", "src": "민간전승(民間傳承)"},
+{"nm": "야행귀", "full": "야행귀(夜行鬼)", "hanja": "夜行鬼", "suit": "지(완드)", "no": "十五", "el": "금", "art": "img/baekgwi/075.webp", "nature": "밤을 떠도는 넋", "act": "밤마다 마음을 뒤척이게 해 잠을 앗는다.", "warn": "붙은 자는 새벽까지 잠들지 못한다.", "fix": "밤이 깊으면 화면을 끄고 방을 어둡게 낮추게.", "src": "민간전승(民間傳承)"},
+{"nm": "마명귀", "full": "마명귀(魔鳴鬼)", "hanja": "魔鳴鬼", "suit": "지(완드)", "no": "十六", "el": "수", "art": "img/baekgwi/076.webp", "nature": "귓가에 우는 넋", "act": "귓가에 잡소리를 울려 넋을 어지럽힌다.", "warn": "붙은 자는 고요 속에서도 소리에 시달린다.", "fix": "소음이 사무치면 빗소리 같은 잔잔한 소리 하나에 귀를 맡기게. 이런 일이 두 주 넘게 이어지거든 의원에게도 꼭 보이게.", "src": "민간전승(民間傳承)"},
+{"nm": "광풍귀", "full": "광풍귀(狂風鬼)", "hanja": "狂風鬼", "suit": "지(완드)", "no": "十七", "el": "목", "art": "img/baekgwi/077.webp", "nature": "마음에 거센 바람을 일으키는 넋", "act": "마음의 빗장을 풀어 이성을 잃게 한다.", "warn": "붙은 자는 사소한 일에 넋을 놓고 폭발한다.", "fix": "욱하면 여섯을 세고 나서 입을 열게.", "src": "무속 전승(巫俗傳承)"},
+{"nm": "백발귀", "full": "백발귀(白髮鬼)", "hanja": "白髮鬼", "suit": "지(완드)", "no": "十八", "el": "화", "art": "img/baekgwi/078.webp", "nature": "근심으로 머리를 희게 세우는 넋", "act": "하룻밤 새 머리를 세게 할 근심을 심는다.", "warn": "붙은 자는 걱정으로 넋과 몸이 함께 마른다.", "fix": "걱정을 한 줄로 적어 “내일 볼 것”에 미루게.", "src": "민간전승(民間傳承)"},
+{"nm": "혼비귀", "full": "혼비귀(魂飛鬼)", "hanja": "魂飛鬼", "suit": "지(완드)", "no": "十九", "el": "토", "art": "img/baekgwi/079.webp", "nature": "넋을 흩어 놓는 귀", "act": "놀란 틈에 넋을 흩어 얼을 빼놓는다.", "warn": "붙은 자는 작은 일에도 넋이 나간다.", "fix": "놀라면 가슴에 손을 얹고 숨을 길게 내쉬게.", "src": "무속 전승·혼비백산(魂飛魄散)"},
+{"nm": "독심귀", "full": "독심귀(毒心鬼)", "hanja": "毒心鬼", "suit": "지(완드)", "no": "二十", "el": "금", "art": "img/baekgwi/080.webp", "nature": "마음에 독을 푸는 넋", "act": "마음에 독한 생각을 풀어 스스로를 좀먹게 한다.", "warn": "붙은 자는 자책과 원망으로 넋이 곪는다.", "fix": "“내 몫이 아니다” 한 문장을 하루 한 번 소리 내게. 이런 일이 두 주 넘게 이어지거든 의원에게도 꼭 보이게.", "src": "민간전승(民間傳承)"},
+{"nm": "삼두구미", "full": "삼두구미(三頭九尾)", "hanja": "三頭九尾", "suit": "검(소드)", "no": "一", "el": "화", "art": "img/baekgwi/081.webp", "nature": "세 머리 아홉 꼬리 짐승", "act": "무덤을 파헤쳐 남의 것을 제 굴로 옮기고, 세 개의 입으로 없는 말을 지어낸다.", "warn": "붙은 자는 없는 말이 서류로 번져 송사에 휘말린다.", "fix": "말을 옮기고 싶을 때 입을 다물고 물 한 모금 삼키게.", "src": "제주(濟州) 설화·민간전승"},
+{"nm": "인면조", "full": "인면조(人面鳥)", "hanja": "人面鳥", "suit": "검(소드)", "no": "二", "el": "토", "art": "img/baekgwi/082.webp", "nature": "사람 얼굴의 새", "act": "사람 얼굴로 사람 말을 흉내 내 헛소문을 퍼뜨린다.", "warn": "붙은 자는 하지 않은 말로 오해받는다.", "fix": "들은 말은 “누가 봤나” 확인하기 전엔 옮기지 말게.", "src": "고구려 고분벽화의 인면조를 비튼 전래"},
+{"nm": "구두귀", "full": "구두귀(九頭鬼)", "hanja": "九頭鬼", "suit": "검(소드)", "no": "三", "el": "금", "art": "img/baekgwi/083.webp", "nature": "아홉 머리로 떠드는 넋", "act": "머리가 아홉이라 한 사람의 일을 아홉 입으로 부풀린다.", "warn": "붙은 자는 한마디가 아홉 마디로 불어나 돌아온다.", "fix": "소문을 들으면 아홉 중 하나만 참이라 여기게.", "src": "민간전승(民間傳承)"},
+{"nm": "불가살귀", "full": "불가살귀(不可殺鬼)", "hanja": "不可殺鬼", "suit": "검(소드)", "no": "四", "el": "수", "art": "img/baekgwi/084.webp", "nature": "죽지 않는 구설의 넋", "act": "아무리 해명해도 죽지 않고 되살아나는 소문의 넋.", "warn": "붙은 자는 지난 말이 자꾸 되살아난다.", "fix": "해명은 한 번으로 정하고 더는 물지 말게.", "src": "민간전승(民間傳承)"},
+{"nm": "앵무귀", "full": "앵무귀(鸚鵡鬼)", "hanja": "鸚鵡鬼", "suit": "검(소드)", "no": "五", "el": "목", "art": "img/baekgwi/085.webp", "nature": "말을 옮기는 넋", "act": "들은 말을 그대로 옮겨 화를 키운다.", "warn": "붙은 자는 전한 말 때문에 사이가 틀어진다.", "fix": "전해 들은 말은 그 자리에서 끊어 “여기까지” 하게.", "src": "민간전승(民間傳承)"},
+{"nm": "문서귀", "full": "문서귀(文書鬼)", "hanja": "文書鬼", "suit": "검(소드)", "no": "六", "el": "화", "art": "img/baekgwi/086.webp", "nature": "문서에 붙는 넋", "act": "문서와 계약서에 붙어 없던 송사를 부른다.", "warn": "붙은 자는 서명한 종이마다 탈이 난다.", "fix": "서명 전 문서를 처음부터 소리 내어 한 번 읽게.", "src": "민간전승(民間傳承)"},
+{"nm": "간신귀", "full": "간신귀(奸臣鬼)", "hanja": "奸臣鬼", "suit": "검(소드)", "no": "七", "el": "토", "art": "img/baekgwi/087.webp", "nature": "이간하는 간신의 넋", "act": "곁에서 달콤한 말로 이간해 사람들을 등 돌리게 한다.", "warn": "붙은 자는 가장 다정한 말을 건네는 이에게 등을 찔린다.", "fix": "남을 헐뜯는 말을 전하는 이를 한 걸음 멀리하게.", "src": "《청구야담(靑邱野談)》"},
+{"nm": "설귀", "full": "설귀(舌鬼)", "hanja": "舌鬼", "suit": "검(소드)", "no": "八", "el": "금", "art": "img/baekgwi/088.webp", "nature": "혀에 깃든 넋", "act": "혀를 놀려 말실수를 부른다.", "warn": "붙은 자는 한마디로 큰 화를 부른다.", "fix": "중요한 자리에선 말하기 전 셋을 세게.", "src": "민간전승(民間傳承)"},
+{"nm": "면귀", "full": "면귀(面鬼)", "hanja": "面鬼", "suit": "검(소드)", "no": "九", "el": "수", "art": "img/baekgwi/089.webp", "nature": "낯을 바꾸는 넋", "act": "앞뒤 낯이 달라 뒤에서 딴말을 하게 한다.", "warn": "붙은 자는 두 얼굴로 신의를 잃는다.", "fix": "앞에서 못 할 말은 뒤에서도 하지 말게.", "src": "민간전승(民間傳承)"},
+{"nm": "요설귀", "full": "요설귀(妖舌鬼)", "hanja": "妖舌鬼", "suit": "검(소드)", "no": "十", "el": "목", "art": "img/baekgwi/090.webp", "nature": "요망한 혀의 넋", "act": "없는 말을 그럴듯하게 지어낸다.", "warn": "붙은 자는 헛말로 신뢰를 무너뜨린다.", "fix": "확실치 않은 말엔 “모른다” 하고 멈추게.", "src": "《어우야담(於于野譚)》"},
+{"nm": "이간귀", "full": "이간귀(離間鬼)", "hanja": "離間鬼", "suit": "검(소드)", "no": "十一", "el": "화", "art": "img/baekgwi/091.webp", "nature": "사이를 갈라놓는 넋", "act": "두 사람 사이에 없는 오해를 심어 갈라놓는다.", "warn": "붙은 자는 가까운 사이일수록 없는 오해로 멀어진다.", "fix": "오해가 일면 당사자에게 직접 “사실은” 하고 묻게.", "src": "민간전승(民間傳承)"},
+{"nm": "시비귀", "full": "시비귀(是非鬼)", "hanja": "是非鬼", "suit": "검(소드)", "no": "十二", "el": "토", "art": "img/baekgwi/092.webp", "nature": "옳고 그름을 다투게 하는 넋", "act": "사소한 일을 옳고 그름의 다툼으로 키운다.", "warn": "붙은 자는 이겨도 잃는 싸움에 매인다.", "fix": "다툼이 일면 “이겨서 무엇을 얻나” 한 번 묻게.", "src": "민간전승(民間傳承)"},
+{"nm": "망어귀", "full": "망어귀(妄語鬼)", "hanja": "妄語鬼", "suit": "검(소드)", "no": "十三", "el": "금", "art": "img/baekgwi/093.webp", "nature": "거짓말을 부르는 넋", "act": "작은 거짓을 부풀려 신뢰를 무너뜨린다.", "warn": "붙은 자는 진심조차 의심받는다.", "fix": "오늘 한 약속 하나는 반드시 지켜 “참”을 쌓게.", "src": "불교 십악(十惡)"},
+{"nm": "위선귀", "full": "위선귀(僞善鬼)", "hanja": "僞善鬼", "suit": "검(소드)", "no": "十四", "el": "수", "art": "img/baekgwi/094.webp", "nature": "거짓 선행을 꾸미는 넋", "act": "겉으로 착한 척하며 뒤로 해를 끼친다.", "warn": "붙은 자는 가면 뒤에서 뒤통수를 맞는다.", "fix": "지나친 호의 뒤엔 “무엇을 원하나” 헤아리게.", "src": "민간전승(民間傳承)"},
+{"nm": "관재귀", "full": "관재귀(官災鬼)", "hanja": "官災鬼", "suit": "검(소드)", "no": "十五", "el": "목", "art": "img/baekgwi/095.webp", "nature": "송사를 부르는 넋", "act": "작은 다툼을 관청과 법정으로 끌고 간다.", "warn": "붙은 자는 시비가 늘 송사로 번진다.", "fix": "화나는 문서엔 그날 답하지 않고 하루를 묵히게.", "src": "《청구야담(靑邱野談)》"},
+{"nm": "옥귀", "full": "옥귀(獄鬼)", "hanja": "獄鬼", "suit": "검(소드)", "no": "十六", "el": "화", "art": "img/baekgwi/096.webp", "nature": "옥에 가두는 넋", "act": "죄 없이도 갇히게 하는 재액을 부른다.", "warn": "붙은 자는 남의 일에 엮여 발이 묶인다.", "fix": "서명·보증을 청받으면 반드시 하루를 미루게.", "src": "민간전승(民間傳承)"},
+{"nm": "참소귀", "full": "참소귀(讒訴鬼)", "hanja": "讒訴鬼", "suit": "검(소드)", "no": "十七", "el": "토", "art": "img/baekgwi/097.webp", "nature": "없는 죄를 고하는 넋", "act": "없는 죄를 지어내 윗사람에게 고해바친다.", "warn": "붙은 자는 모함으로 자리를 잃는다.", "fix": "억울한 말을 들으면 감정 빼고 사실만 한 줄로 적게.", "src": "《청구야담(靑邱野談)》"},
+{"nm": "무고귀", "full": "무고귀(誣告鬼)", "hanja": "誣告鬼", "suit": "검(소드)", "no": "十八", "el": "금", "art": "img/baekgwi/098.webp", "nature": "거짓으로 고발하는 넋", "act": "거짓 고발로 애먼 사람을 옭아맨다.", "warn": "붙은 자는 뜬금없는 시비에 휘말린다.", "fix": "중요한 대화는 기록을 남겨 “참”을 지키게.", "src": "《어우야담(於于野譚)》"},
+{"nm": "비방귀", "full": "비방귀(誹謗鬼)", "hanja": "誹謗鬼", "suit": "검(소드)", "no": "十九", "el": "수", "art": "img/baekgwi/099.webp", "nature": "헐뜯는 넋", "act": "뒤에서 헐뜯어 이름을 더럽힌다.", "warn": "붙은 자는 까닭 없이 평판을 잃는다.", "fix": "험담 자리엔 끼지 않고 조용히 자리를 뜨게.", "src": "민간전승(民間傳承)"},
+{"nm": "배신귀", "full": "배신귀(背信鬼)", "hanja": "背信鬼", "suit": "검(소드)", "no": "二十", "el": "목", "art": "img/baekgwi/100.webp", "nature": "등을 돌리게 하는 넋", "act": "믿음을 저버리게 해 등 뒤를 찌르게 한다.", "warn": "온갖 귀신의 밤나들이 끝에 서는 마지막 흉살로, 가장 가까운 이를 적으로 돌린다.", "fix": "믿음을 준 이에게 오늘 고마움 한 마디를 전하게.", "src": "민간전승(民間傳承)"}];
 
 const SUIT_MEAN = {
  "대귀":"사고 재액의 귀, 운명이 직접 손을 대는 자리",
@@ -472,54 +610,54 @@ const TOPIC_SUIT = {연애:"잔(컵)",아이:"잔(컵)",금전:"전(펜타클)",
 /* 주제별 덧말 — 자리마다 여러 결. 뽑힌 패 번호로 고르니 같은 패면 같은 말이 나온다 */
 const DETAIL = {
  연애:{
-  助:["곁에서 말없이 지켜보는 사람이 하나 있네. 그 사람 말을 한 번은 들어 보게.","자네가 예전에 한 번 진심을 보였던 일이 아직 상대 마음에 남아 있네. 그게 자네 밑천일세."],
+  助:["곁에서 말없이 지켜보는 사람이 하나 있네. 그 사람 말을 한 번은 들어 보게.","자네가 꾸밈없이 보였던 모습 하나가 상대 마음에 남아 있네. 그게 자네 밑천일세."],
   why:["자네가 마음을 비워 둔 자리에 앉은 것일세. 외로움이 문을 열어 준 것이네.","확인하고 또 확인하던 그 버릇이 이 귀를 불렀네. 의심은 귀가 드나드는 문일세."],
-  隱:["자네가 못 보는 건 상대의 사정이 아니라 자네 마음이 어디로 기울어 있는지일세.","상대가 변한 게 아닐세. 자네가 보고 싶은 것만 보고 있었던 것이네.","자네가 붙잡고 있는 건 그 사람이 아니라 그 사람과 함께였던 때의 자네일세."],
+  隱:["자네가 못 보는 건 상대의 사정이 아니라 자네 마음이 어디로 기울어 있는지일세.","상대가 변한 게 아닐세. 자네가 보고 싶은 것만 보고 있었던 것이네.","자네가 붙잡고 있는 건 그 사람이 아니라 그 사람에게 바라는 자네의 그림일세."],
   敵:["둘 사이를 막는 건 제삼자가 아니라 때일세. 사람을 탓하면 평생 못 푸네.","막고 선 건 자네의 자존심일세. 먼저 숙이는 쪽이 지는 게 아니네.","둘 사이에 말하지 않은 것이 하나 있네. 그게 벽이 됐네."],
   心:["상대가 입으로 한 말과 속이 다르네. 말을 믿지 말고 행동을 세어 보게.","그 사람도 자네만큼 재고 있네. 먼저 패를 보이는 쪽을 기다리는 중일세.","그 사람 속은 이미 한쪽으로 기울었네. 다만 그걸 자네에게 말할 용기가 없을 뿐일세."],
-  果:["끝은 둘 중 한쪽이 먼저 손을 놓는 모양으로 나네. 누가 먼저 놓느냐가 전부일세.","끝은 말 한마디로 갈리네. 그 말을 누가 먼저 하느냐일세.","끝은 조용히 오네. 큰 싸움이 아니라 연락 한 번이 끊기는 모양일세."]},
+  果:{g:["끝은 둘이 같은 쪽을 보는 모양으로 나네. 먼저 손 내미는 쪽이 자네여도 괜찮네.","끝은 말 한마디로 풀리네. 그 말을 미루지 말게."],b:["끝은 둘 중 한쪽이 먼저 손을 놓는 모양으로 나네. 누가 먼저 놓느냐가 전부일세.","끝은 조용히 오네. 큰 싸움이 아니라 연락 한 번이 끊기는 모양일세."]}},
  금전:{
   助:["예전에 자네가 도와준 사람에게서 길이 열리네. 연락이 끊긴 그 사람일세.","자네가 하찮게 여긴 작은 수입 하나가 받침이 되네. 그걸 끊지 말게."],
   why:["돈을 셈하지 않고 흘려보낸 자리에 앉은 것일세. 새는 곳에는 반드시 귀가 사네.","남의 말만 듣고 넣은 돈에 붙은 것일세. 자네 눈으로 본 돈이 아니었네."],
   隱:["자네가 못 보는 건 들어올 돈이 아니라 지금 새고 있는 구멍일세.","자네는 액수를 보지만 패는 사람을 보네. 그 돈 뒤에 선 사람을 다시 보게.","돈이 막힌 게 아닐세. 자네가 돈이 들어올 길을 하나 막아 두었네."],
   敵:["막는 건 경기도 운도 아닐세. 자네가 아직 못 끊은 지출 하나일세.","막고 선 건 서류일세. 도장 찍은 것 중에 다시 볼 것이 있네.","자네 돈을 쥔 쪽이 일부러 늦추고 있네. 급한 쪽이 지게 되어 있네."],
   心:["돈을 쥔 쪽의 속은 자네 생각보다 차갑네. 정으로 풀리지 않네.","상대는 줄 마음이 없는 게 아니라 줄 여력이 없네. 그 차이를 알아야 받네.","그쪽은 자네가 잊어버리기를 기다리고 있네. 잊는 순간 끝일세."],
-  果:["끝은 액수가 아니라 흐름이 바뀌는 모양으로 나네. 한 번 돌면 계속 도네.","끝은 한꺼번에 오지 않네. 나눠서, 그러나 반드시 오네.","끝은 자네가 손을 털고 일어서는 모양일세. 그때 다른 쪽 문이 열리네."]},
+  果:{g:["끝은 한꺼번에 오지 않네. 나눠서, 그러나 반드시 오네.","끝은 흐름이 바뀌는 모양으로 나네. 한 번 돌면 계속 도네."],b:["끝은 자네가 손을 털고 일어서는 모양일세. 그때 다른 쪽 문이 열리네.","끝은 액수가 줄어드는 모양으로 오네. 다 잃기 전에 멈추는 것이 이기는 것일세."]}},
  직장:{
   助:["윗사람 하나가 자네를 눈여겨보고 있네. 그 사람 앞에서 실수만 하지 말게.","자네가 귀찮아하던 그 일이 자네를 살리네. 그걸 놓지 말게."],
   why:["자리에 오래 머물며 긴장을 푼 틈에 앉은 것일세.","남과 견주며 조급해진 마음에 앉은 것일세. 비교가 귀를 부르네."],
   隱:["자네가 못 보는 건 자네 실력이 아니라 윗선에서 이미 그어 둔 선일세.","자네는 결과를 보지만 패는 사람을 보네. 자네를 미는 사람과 막는 사람이 따로 있네.","자네가 바라는 자리가 자네에게 맞는 자리가 아닐 수 있네. 패는 다른 문을 가리키네."],
   敵:["막는 건 경쟁자가 아니라 자네를 평가하는 사람의 마음일세.","막고 선 건 자네 입일세. 한 번 흘린 불평이 위로 올라갔네.","때가 막고 있네. 지금 아무리 두드려도 문이 안 열리는 철일세."],
   心:["그쪽은 이미 답을 정해 뒀네. 묻는 건 형식일 뿐일세.","그쪽은 자네를 아직 재고 있네. 한 번 더 보여 줄 기회가 남았네.","그쪽은 자네보다 자네 뒤에 있는 사람을 보고 있네."],
-  果:["끝은 붙느냐 떨어지느냐보다 자리를 옮기느냐 마느냐로 갈리네.","끝은 한 번 미끄러진 뒤에 오네. 그 미끄러짐을 끝으로 여기지 말게.","끝은 자네가 먼저 손을 드는 모양일세. 기다리는 쪽에겐 안 오네."]},
+  果:{g:["끝은 한 번 미끄러진 뒤에 오네. 그 미끄러짐을 끝으로 여기지 말게.","끝은 기다리던 자리에서 연락이 오는 모양일세."],b:["끝은 붙느냐 떨어지느냐보다 자리를 옮기느냐 마느냐로 갈리네.","끝은 자네가 먼저 손을 드는 모양일세. 기다리는 쪽에겐 안 오네."]}},
  사람:{
   助:["말을 아끼는 쪽이 이기네. 자네 편은 조용한 쪽에 있네.","자네 사정을 다 아는 사람이 하나 있네. 그 사람이 중간에 서 줄 것일세."],
   why:["말을 함부로 흘린 자리에 앉은 것일세. 입이 문이었네.","참고 참은 것이 쌓인 자리에 앉은 것일세. 삼킨 말이 귀가 됐네."],
   隱:["자네가 못 보는 건 그 사람의 속내가 아니라 자네가 준 틈일세.","자네가 옳다는 것은 패도 아네. 다만 옳은 것만으로는 이 싸움이 안 끝나네.","이 일에는 자네가 모르는 사람이 하나 더 끼어 있네."],
   敵:["막는 건 그 사람이 아니라 둘 사이를 오가는 말일세.","막고 선 건 체면일세. 둘 다 먼저 굽히기 싫은 것이네.","막는 건 지나간 일일세. 옛일을 꺼낼수록 지금 일이 꼬이네."],
   心:["겉으로 웃는 그 얼굴 밑에 서운함이 쌓여 있네.","그 사람은 자네를 미워하는 게 아니라 자네에게 지기 싫은 것일세.","그 사람도 이 일이 이렇게 커질 줄은 몰랐네. 물러설 자리를 찾고 있네."],
-  果:["끝은 멀어지거나 깊어지거나 둘 중 하나일세. 어중간하게는 안 남네.","끝은 제삼자의 한마디로 정리되네. 그 사람을 미리 자네 쪽에 세워 두게.","끝은 서류나 돈으로 매듭지어지네. 말로는 안 끝나네."]},
+  果:{g:["끝은 제삼자의 한마디로 정리되네. 그 사람을 미리 자네 쪽에 세워 두게.","끝은 서로 한 발씩 물러서는 모양일세."],b:["끝은 멀어지거나 깊어지거나 둘 중 하나일세. 어중간하게는 안 남네.","끝은 서류나 돈으로 매듭지어지네. 말로는 안 끝나네."]}},
  건강:{
   助:["몸이 먼저 신호를 보내고 있네. 그 신호를 무시하지 않는 것이 자네 편일세.","자네를 챙기는 사람의 잔소리가 받침일세. 귀찮아도 들어 두게."],
   why:["쉬지 않고 버틴 몸에 앉은 것일세. 지친 자리에 귀가 드네.","밤에 잠들지 못하고 뒤척인 자리에 앉은 것일세. 잠이 문이었네."],
   隱:["자네가 못 보는 건 아픈 자리가 아니라 그 아픔을 만든 습관일세.","몸보다 마음이 먼저 상했네. 몸은 그걸 받아 적고 있을 뿐일세.","자네가 괜찮다고 넘긴 작은 증상 하나가 있네. 그게 실마리일세."],
   敵:["막는 건 병이 아니라 미루는 버릇일세.","막고 선 건 자네의 고집일세. 혼자 버티면 낫는 줄 아는 것이네.","막는 건 자는 자리일세. 그 자리의 기운이 자네를 갉고 있네."],
   心:["주변에서 걱정하는 말이 잔소리로만 들릴 것이네. 그게 문제일세.","자네 곁 사람들은 자네가 생각하는 것보다 많이 걱정하고 있네.","자네가 말을 안 하니 곁에서도 모르네. 한 번은 털어놓게."],
-  果:["끝은 낫느냐가 아니라 다시 도지느냐로 갈리네.","끝은 사는 방식을 바꾸는 모양으로 나네. 약보다 버릇일세.","끝은 생각보다 가볍게 지나가네. 다만 한 번 겁을 주고 지나가네."]},
+  果:{g:["끝은 사는 방식을 바꾸는 모양으로 나네. 약보다 버릇일세.","끝은 몸이 보내는 신호를 받아들인 뒤에 오네."],b:["끝은 낫느냐가 아니라 다시 도지느냐로 갈리네.","끝은 미룬 만큼 길어지네. 의원 앞에 서는 날이 빠를수록 짧아지네."]}},
  아이:{
   助:["곁에 있는 사람이 자네보다 더 단단하네. 기대도 되네.","자네 집안 어른 하나가 이 일을 빌고 있네. 그 정성이 받침일세."],
   why:["셈하고 조급해한 마음에 앉은 것일세. 서두를수록 귀가 커지네.","남의 소식에 마음이 상한 자리에 앉은 것일세. 견주는 마음이 문이었네."],
-  隱:["자네가 못 보는 건 몸이 아니라 자네가 머무는 자리의 기운일세.","자네가 지쳐 있다는 걸 자네만 모르네. 쉬어야 오네.","곁에 있는 사람의 마음이 자네와 조금 다르네. 그걸 맞추는 게 먼저일세."],
+  隱:["자네가 못 보는 건 몸의 일만이 아닐세. 자네가 머무는 자리의 기운도 함께 보게.","자네가 지쳐 있다는 걸 자네만 모르네. 쉬어야 오네.","곁에 있는 사람의 마음이 자네와 조금 다르네. 그걸 맞추는 게 먼저일세."],
   敵:["막는 건 때가 아니라 조급함일세. 셈을 할수록 멀어지네.","막고 선 건 자는 방의 기운일세. 방을 한 번 바꿔 보게.","막는 건 남의 말일세. 귀를 닫아야 열리네."],
   心:["곁에 있는 사람도 같은 무게를 지고 있네. 말을 안 할 뿐일세.","곁 사람은 자네가 웃기를 바라네. 그게 그 사람의 소원일세.","곁 사람은 지금 자네보다 더 겁을 내고 있네."],
-  果:["끝은 오느냐 안 오느냐가 아니라 언제 오느냐로만 남네.","끝은 기다림을 내려놓은 뒤에 오네. 붙잡으면 멀어지네.","끝은 뜻밖의 때에 오네. 셈을 접은 그 달일세."]},
+  果:{g:["끝은 기다림을 내려놓은 뒤에 오네. 붙잡으면 멀어지네.","끝은 뜻밖의 때에 오네. 셈을 접은 그 달일세."],b:["끝은 오느냐 안 오느냐가 아니라 언제 오느냐로만 남네.","끝은 더디게 오네. 지친 마음부터 쉬어야 하네."]}},
  기타:{
   助:["자네가 잊고 있던 작은 습관 하나가 자네를 받치고 있네. 그걸 놓지 말게.","자네 말을 끝까지 들어 줄 사람이 하나 있네. 그 사람에게 먼저 털어놓게."],
   why:["자네가 그 자리를 비워 두었기 때문일세. 귀는 빈자리에만 앉네.","결정을 미루고 미룬 자리에 앉은 것일세. 망설임이 문이었네."],
   隱:["자네가 못 보는 건 바깥 사정이 아니라 자네가 이미 내려 둔 결론일세.","자네는 하나를 묻지만 실은 두 가지가 엉켜 있네. 그걸 먼저 떼어 보게.","자네가 겁내는 쪽이 사실은 자네가 바라는 쪽일세."],
   敵:["막는 건 바깥이 아니라 자네가 놓지 못한 것 하나일세.","막고 선 건 남의 눈일세. 남 보기에 좋은 길을 고르려 하니 막히네.","막는 건 때일세. 지금은 밀 때가 아니라 쌓을 때일세."],
   心:["상대는 자네가 먼저 움직이기를 기다리고 있네.","상대는 자네를 생각보다 가볍게 보고 있네. 그걸 뒤집을 기회가 한 번 있네.","상대도 답을 모르네. 그래서 자네 눈치를 보고 있네."],
-  果:["끝은 흐지부지 넘어가지 않네. 한쪽으로 분명히 기우네.","끝은 자네가 먼저 매듭을 짓는 모양일세. 남이 지어 주지 않네.","끝은 한 번 뒤집힌 뒤에 오네. 뒤집힐 때 놀라지 말게."]}
+  果:{g:["끝은 한 번 뒤집힌 뒤에 오네. 뒤집힐 때 놀라지 말게.","끝은 자네가 먼저 매듭을 짓는 모양일세. 남이 지어 주지 않네."],b:["끝은 흐지부지 넘어가지 않네. 한쪽으로 분명히 기우네.","끝은 자네가 미룬 그 일에서 터지네. 미루지 말게."]}}
 };
 function pickV(arr,seed){ if(!Array.isArray(arr)) return arr||""; return arr[Math.abs(seed||0)%arr.length]; }
 
@@ -540,9 +678,9 @@ const POS = [
 const TOPICS = [
  {k:"연애",re:/사랑|연애|남친|여친|남자\s*친구|여자\s*친구|애인|좋아하|고백|썸|결혼|재회|헤어|이별|만나는|그\s*사람|바람|외도|연락|짝사랑|소개팅|남편|아내|와이프|신랑|배우자|이혼|궁합|속마음|권태|프러포즈|상견례/g},
  {k:"금전",re:/돈|빚|재물|투자|대출|월급|수입|자금|사업|장사|가게|매출|집값|계약|주식|코인|부동산|청약|보증|빌려|빌린|갚|로또|복권|창업|부업|적금|매매|아파트|땅|전세|월세|대금|미수|손해|이익|수익/g},
- {k:"직장",re:/회사|직장|이직|면접|취업|합격|불합격|시험|승진|상사|팀장|일자리|퇴사|진로|자격|공무원|학교|대학|입시|수능|발령|연봉|알바|공부|채용|서류|실적|평가/g},
+ {k:"직장",re:/회사|직장|이직|면접|취업|합격|불합격|시험(?!관)|승진|상사|팀장|일자리|퇴사|진로|자격|공무원|학교|대학|입시|수능|발령|연봉|알바|공부|채용|서류|실적|평가/g},
  {k:"사람",re:/친구|가족|부모|엄마|아빠|어머니|아버지|형제|자매|언니|오빠|누나|동생|동업|배신|소문|관계|사람들|시댁|시어머니|시아버지|처가|장모|장인|소송|고소|재판|구설|험담|시비|이웃|싸움|싸웠|화해|절교|손절/g},
- {k:"건강",re:/몸|아프|아픈|병|건강|수술|잠|피곤|검사|불안|우울|무기력|불면|사고|다쳐|다칠|병원|통증|두통|허리|입원|회복|약을/g},
+ {k:"건강",re:/몸이|몸에|아프|아픈|병원|병이|건강|수술|잠이|잠을|피곤|검사|불안|우울|무기력|불면|교통사고|사고가\s*날|사고를\s*당|사고\s*날까|다쳐|다칠|통증|두통|허리|입원|회복|약을|약\s*끊|복용|처방|증상|공황|진단|정신과/g},
  {k:"아이",re:/임신|난임|시험관|애기|아기|출산|태몽|자식\s*운|아이를\s*가|아이가\s*생/g}
 ];
 const TIE = {
@@ -552,15 +690,15 @@ const TIE = {
  사람:["자네 주변 사람들 사이에서 이 기운이 가장 세게 도네.","오가는 말 사이에 이 기운이 감겨 있네.","가까운 사람과 자네 사이에 이 기운이 버티고 있네."],
  건강:["자네 몸과 잠자리 쪽으로 이 기운이 내려앉아 있네.","자네 기운이 빠져나가는 자리에 이 귀가 감겨 있네.","자네가 쉬는 자리에 이 기운이 버티고 있네."],
  아이:["기다리는 그 일에 이 기운이 걸려 있네.","자네 집 안쪽에 이 기운이 감겨 있네.","자네와 곁 사람 사이에 이 기운이 버티고 있네."],
- 기타:["지금 자네가 가장 답답해하는 바로 그 일에서 도네.","자네가 미뤄 둔 그 일에 이 기운이 감겨 있네.","자네가 고민하는 그 갈림길에 이 기운이 버티고 있네."]
+ 기타:["이 기운은 지금 자네가 가장 답답해하는 바로 그 일에서 도네.","자네가 미뤄 둔 그 일에 이 기운이 감겨 있네.","자네가 고민하는 그 갈림길에 이 기운이 버티고 있네."]
 };
 const VERDICT = {
  연애:["되네. 그 사람과 이어지네.","되네. 한 번 크게 틀어졌다가 이어지네.","지금 방식으로는 안 되네. 자네가 먼저 물러서야 돌아오네.","아니네. 이 사람과는 여기까지일세. 붙잡을수록 자네가 상하네."],
  금전:["들어오네. 액수도 자네 생각보다 크네.","들어오네. 다만 한 번 새고 나서 들어오네.","지금 벌인 것으로는 안 되네. 판을 바꿔야 돈이 도네.","아니네. 지금 넣으면 잃네. 손을 떼게."],
  직장:["되네. 그 자리는 자네 자리일세.","되네. 한 번 떨어지고 나서 되네.","지금 자리에선 안 나네. 옮겨야 길이 생기네.","아니네. 지금 밀면 밀수록 뒤로 가네. 때를 기다리게."],
  사람:["풀리네. 자네 생각보다 쉽게 풀리네.","풀리네. 한 번 크게 부딪히고 나서 풀리네.","지금 상태로는 안 풀리네. 자네가 먼저 말을 꺼내야 하네.","아니네. 이 사람과는 거리를 두게. 가까이 둘수록 자네가 깎이네."],
- 건강:["좋아지네. 큰 탈은 없네.","좋아지네. 한 번 더 성가신 일을 겪고 나서 좋아지네.","지금 사는 방식으론 안 낫네. 자는 자리부터 고치게.","그냥 두면 안 되네. 미루지 말고 사람을 찾아가 보게."],
- 아이:["오네. 생각보다 이르네.","오네. 한 번 마음을 비우고 나서 오네.","지금 방식으로는 더디네. 몸보다 자리를 먼저 바꾸게.","지금 흐름으론 아니네. 반년을 비우고 다시 보게."],
+ 건강:["흐름은 나쁘지 않네. 다만 몸의 일은 패보다 의원이 먼저일세. 진료는 미루지 말게.","좋아지는 쪽이네. 한 번 더 성가신 고비가 있으니 의원과 함께 넘게.","지금 사는 방식으론 더디네. 버릇을 고치고, 의원에게 꼭 보이게.","그냥 두면 안 되네. 오늘이라도 의원을 찾아가 보게."],
+ 아이:["오네. 생각보다 이르네. 몸의 일은 의원과 함께 살피게.","오네. 한 번 마음을 비우고 나서 오네.","지금은 더디네. 몸의 일은 의원과 먼저 상의하고, 마음의 짐부터 내려놓게.","지금 흐름으론 더디네. 서두르지 말고 의원과 함께 길을 다시 짜 보게."],
  기타:["되네. 그대로 가네.","되네. 한 번 뒤집혔다가 되네.","지금 모양으로는 안 되네. 자네가 움직여야 길이 나네.","아니네. 끊고 다시 시작해야 자네 것이 생기네."]
 };
 const EL_WHEN = {
@@ -570,6 +708,20 @@ const EL_WHEN = {
  금:{t:"지금부터 한 달 안",d:"쇠기운이라 단칼에 갈리네"},
  수:{t:"올겨울, 특히 섣달",d:"물기운이라 조용히 스며들듯 결판나네"}
 };
+function whenFor(el,base){
+  const d=new Date(base||Date.now()), m=d.getMonth()+1, nm=k=>((m-1+k)%12)+1;
+  switch(el){
+    case "금": return {t:`${m}월 안, 늦어도 ${nm(1)}월 초순`, d:"쇠기운이라 단칼에 갈리네"};
+    case "토": return {t:`${nm(2)}월 환절머리`, d:"흙기운이라 더디되 확실하게 자리를 바꾸네"};
+    case "목": return {t:m<=2?"이번 2월에서 3월 사이, 봄머리":m===3?"3월 안, 봄머리":"내년 2월에서 3월 사이, 봄머리", d:"새로 돋는 기운이라 봄머리에 움직이네"};
+    case "화": return {t:m<=5?"5월에서 7월 사이":m<=7?`${m}월에서 7월 사이`:"내년 5월에서 7월 사이", d:"불기운이라 한번 붙으면 빠르게 번지네"};
+    default: return {t:(m>=11||m===1)?"이번 겨울, 12월에서 1월 사이":m===2?"2월 안, 겨울이 가기 전":"다가오는 겨울, 12월 무렵", d:"물기운이라 조용히 스며들듯 결판나네"};
+  }
+}
+const REV_LINES=[" 게다가 이 귀는 뒤집혀 나왔네. <strong>깨어 있다는 뜻일세.</strong> 같은 일이 더 빠르고 더 세게 오네."," 이 귀도 뒤집혀 나왔네. 잠든 귀가 아니라 지금 움직이는 귀일세."," 뒤집힌 채 나왔으니, 이 일은 벌써 시작됐다고 보게."];
+const TOPIC_LABEL={연애:"정",금전:"돈",직장:"일",사람:"사람 일",건강:"몸",아이:"아이 일",기타:"그 일"};
+function srcText(s){ const m=String(s||"").match(/《[^》]+》|「[^」]+」/); if(m) return `${m[0]}에 전하는 귀네`; if(/민간|전래|무속/.test(s||"")) return "민간에서 입으로 전해 오는 귀네"; return `${String(s).split("·")[0]}에 전하는 귀네`; }
+function posLabel(i){ if(i!==5) return POS[i].desc; const R=S.R||readQ(S.q), E=S.E; const who=R.who||(E&&["연애","사람"].includes(E.topic)?"상대":""); return who?`${who}의 속`:"이 일의 속"; }
 const GEN={목:"화",화:"토",토:"금",금:"수",수:"목"};
 const KE={목:"토",토:"수",수:"화",화:"금",금:"목"};
 const QTYPE = [
@@ -583,10 +735,12 @@ const QTYPE = [
 /* ── 물음 읽기 — 사람·때·마음·사정을 뽑아 둔다 ── */
 const WHO_WORDS=["전남친","전여친","전 남친","전 여친","남자친구","여자친구","남편","아내","와이프","신랑","남친","여친","애인","썸남","썸녀","그 사람","그사람","시어머니","시아버지","시댁","장모","장인","상사","팀장","사장","동업자","친구","엄마","아빠","어머니","아버지","부모님","아들","딸","언니","오빠","누나","동생","형"];
 const WHEN_WORDS=["요즘","최근","작년","올해","내년","지난달","이번 달","몇 달","몇 년","오래","자꾸","계속","갑자기"];
-const FEEL_MAP=[[/불안/,"불안"],[/무서|두려/,"두려움"],[/힘들|힘듦/,"힘듦"],[/답답/,"답답함"],[/억울/,"억울함"],[/화가|화나|짜증/,"분함"],[/서운/,"서운함"],[/외로/,"외로움"],[/괴로/,"괴로움"],[/지쳐|지쳤|지침/,"지침"],[/막막/,"막막함"],[/걱정/,"걱정"],[/미치겠|돌겠/,"속 끓는 것"],[/의심/,"의심"]];
+const FEEL_MAP=[[/불안/,"불안"],[/무서|두려/,"두려움"],[/힘들|힘듦/,"고단함"],[/답답/,"답답함"],[/억울/,"억울함"],[/화가|화나|짜증/,"분함"],[/서운/,"서운함"],[/외로/,"외로움"],[/괴로/,"괴로움"],[/지쳐|지쳤|지침/,"지친 마음"],[/막막/,"막막함"],[/걱정/,"걱정"],[/미치겠|돌겠/,"속 끓임"],[/의심/,"의심"]];
 function readQ(q){
   const t=String(q||"").trim();
-  let who=""; for(const w of WHO_WORDS){ if(t.includes(w)){ who=w.replace("그사람","그 사람"); break; } }
+  let who=""; for(const w of WHO_WORDS){
+    const re=new RegExp("(^|[^가-힣])"+w.replace(/\s/g,"\\s*")+"(?=[이가은는을를의과와도랑한에께야분]|[^가-힣]|$)");
+    if(re.test(t)){ who=w.replace("그사람","그 사람"); break; } }
   let when=""; for(const w of WHEN_WORDS){ if(t.includes(w)){ when=w; break; } }
   let feel=""; for(const [re,f] of FEEL_MAP){ if(re.test(t)){ feel=f; break; } }
   const cut=t.replace(/(는데|은데|인데|던데|ㄴ데|지만|니까|어서|아서|해서|는지|은지)\s*/g,"$1|").split(/[|,.?!\n]+/).map(x=>x.trim()).filter(x=>x.length>=2);
@@ -594,19 +748,36 @@ function readQ(q){
   const first=clip(cut[0]||t), last=clip((cut[cut.length-1]||t).replace(/[?？!]+$/,""));
   let A="",B="";
   const m=t.split(/아니면|vs|VS/);
-  if(m.length>=2){ A=clip(m[0].replace(/[,?？]+$/,"").trim()); B=clip(m[1].replace(/[?？]+$/,"").trim()); }
-  return {who,when,feel,first,last,many:cut.length>1,A,B};
+  if(m.length>=2){
+    const ca=m[0].replace(/(는데|은데|인데|던데|지만|니까|어서|아서|해서)\s*/g,"$1|").split(/[|,.?!\n]+/).map(x=>x.trim()).filter(Boolean);
+    const cb=m[1].split(/[,.?!\n]+/).map(x=>x.trim()).filter(Boolean);
+    A=clip((ca[ca.length-1]||m[0]).replace(/[,?？]+$/,"").trim()); B=clip((cb[0]||m[1]).replace(/[?？]+$/,"").trim());
+  }
+  const short=normKey(t).length<4;
+  return {who,when,feel,first,last,many:cut.length>1,A,B,short};
 }
 
 /* ── 상태 ── */
+let RUN=0; /* 다시 묻기를 누르면 올라간다 — 앞서 돌던 풀이는 여기서 멈춘다 */
 const S = {q:"",order:[],picked:[],brushN:0,pass:0,dir:0,sinceFlip:0,
   done:false,spin:0,paid:false,E:null,R:null,replay:false,rec:null,freeTexts:null,paidTexts:null,busy:false};
 const $ = id => document.getElementById(id);
-const show = id => {document.querySelectorAll(".screen").forEach(s=>s.hidden=true); $(id).hidden=false;};
+const show = id => {document.querySelectorAll(".screen").forEach(s=>s.hidden=true); $(id).hidden=false; const h=document.getElementById("home"); if(h) h.hidden=(id==="s-ask");};
+let toastT=null;
+function toast(msg){ const t=$("toast"); t.textContent=msg; t.hidden=false; clearTimeout(toastT); toastT=setTimeout(()=>t.hidden=true,2200); }
 function esc(t){return String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
 function wait(ms){return new Promise(r=>setTimeout(r,ms));}
 function store(k,v){try{ if(v===undefined) return JSON.parse(localStorage.getItem(k)||"null"); localStorage.setItem(k,JSON.stringify(v)); }catch(e){ return null; }}
 const IN_KAKAO=/KAKAOTALK/i.test(navigator.userAgent||"");
+
+/* ── 패를 펴지 않는 물음 ── */
+const RISK_SELF=/죽고\s*싶|죽을까|자살|목숨을?\s*끊|사라지고\s*싶|살기\s*싫|살고\s*싶지\s*않|죽어\s*버릴|뛰어내리|극단적\s*선택|생을\s*마감|그만\s*살|(삶|인생|목숨|모든\s*걸)\s*(을|를)?\s*끝내|다\s*끝내고\s*싶|그냥\s*끝내도\s*될/;
+const RISK_HARM=/죽이고\s*싶|죽여\s*버리|죽일까|해치고\s*싶|해코지|복수하고\s*싶|복수할까|저주해\s*줘|저주를\s*걸|불\s*질러/;
+function riskOf(t){ if(RISK_SELF.test(t)) return "self"; if(RISK_HARM.test(t)) return "harm"; return ""; }
+const RISK_MSG={
+ self:"이 물음에는 패를 펴지 않겠네.<br>패는 자네 목숨을 두고는 답하지 않네.<br><br>그런 마음이 들 만큼 무거운 것을 지고 있다는 건 알겠네. 오늘 밤은 혼자 두지 말게. 곁에 있는 사람 하나에게 지금 그 마음을 그대로 말하게.<br><br>말할 사람이 없거든 <b>109</b>에 전화하게. 밤에도 받네.<br><br>그 짐이 조금 내려앉거든, 그때 다른 물음을 들고 오게. 그때는 패를 펴 주지.",
+ harm:"남을 해치는 일에는 패를 펴지 않겠네.<br>그 마음은 상대보다 자네를 먼저 삼키네.<br><br>자네가 정말 묻고 싶은 건 그 사람이 아니라, 그 일로 다친 자네 자리일 것일세. 그걸 물어 오게. 그 물음에는 패를 펴 주지."
+};
 
 /* ── 같은 물음 기억 ── */
 const HKEY="baekgwi.history.v1", HOLD=30*24*3600*1000;
@@ -701,18 +872,23 @@ function closeSheet(id){ $(id).hidden=true; }
 document.querySelectorAll(".sheet").forEach(sh=>sh.addEventListener("click",e=>{ if(e.target===sh) sh.hidden=true; }));
 document.querySelectorAll("[data-close]").forEach(b=>b.addEventListener("click",()=>closeSheet(b.dataset.close)));
 $("openTerms").addEventListener("click",()=>openSheet("terms"));
+$("home").addEventListener("click",()=>{ reset(); try{ if(history.state&&history.state.bg) history.back(); }catch(e){} });
 
 /* ── 1. 질문 ── */
 const q=$("q");
-q.addEventListener("focus",()=>$("s-ask").classList.add("typing"));
-q.addEventListener("blur",()=>$("s-ask").classList.remove("typing"));
+q.addEventListener("focus",()=>{ $("s-ask").classList.add("typing"); $("stage").classList.add("typing"); });
+q.addEventListener("blur",()=>{ $("s-ask").classList.remove("typing"); $("stage").classList.remove("typing"); });
+function growQ(){ q.style.height="auto"; q.style.height=Math.min(190,Math.max(98,q.scrollHeight+2))+"px"; }
 q.addEventListener("input",()=>{
+  growQ();
   $("count").textContent=q.value.length+" / 120";
   $("go").disabled=q.value.trim().length<2;
 });
 $("go").addEventListener("click",()=>{
   audio(); startBed();
   const text=q.value.trim(); if(text.length<2) return;
+  const risk=riskOf(text);
+  if(risk){ $("riskMsg").innerHTML=RISK_MSG[risk]; openSheet("risk"); return; }
   const same=findSame(text);
   if(same){
     $("sameMsg").innerHTML=`자네는 <b>${fmtDate(same.t)}</b>에 이미 이 물음을 들고 왔네.<br>“${esc(same.q)}”<br><br>같은 물음에 패는 두 번 답하지 않네. 다시 뽑으면 패가 자네를 속이네.<br>그때 나온 패를 그대로 펼쳐 주지.`;
@@ -726,8 +902,11 @@ $("go").addEventListener("click",()=>{
   shuffleArr(S.order);
   buildFan($("fan"),false);
   setBg("img/seer-shuffle.webp");
+  enterFlow();
   show("s-shuffle");
 });
+function enterFlow(){ try{ if(!(history.state&&history.state.bg)) history.pushState({bg:1},""); }catch(e){} }
+window.addEventListener("popstate",()=>{ if($("s-ask").hidden) reset(); });
 $("sameNew").addEventListener("click",()=>{ closeSheet("same"); q.focus(); q.select(); });
 function shuffleArr(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}}
 
@@ -817,7 +996,7 @@ function finishSweep(){
     c.classList.add("lift"); setTimeout(()=>c.classList.remove("lift"),220);
   },i*34));
   setTimeout(()=>{$("dealmsg").style.opacity="0";},1000);
-  setTimeout(toPickScreen,1400);
+  const T=RUN; setTimeout(()=>{ if(T===RUN) toPickScreen(); },1400);
 }
 let pickWired=false;
 function toPickScreen(){
@@ -880,33 +1059,45 @@ function buildBoard(host,placeholder){
         <div class="inner"><div class="face back"></div><div class="face front"></div></div>
       </div>`;
     if(!placeholder){
-      slot.addEventListener("click",()=>{ if(slot.classList.contains("opened")) viewCard(i); });
+      slot.addEventListener("click",()=>{ if(slot.classList.contains("opened")) viewCard(i); else if(slot.classList.contains("sealed")) toast("아직 봉인된 패일세. 아래에서 봉인을 풀게."); });
     }
     host.appendChild(slot);
   });
 }
 
 /* ── 3. 뽑기 — 실제로 뽑혀 나간다 ── */
+let pickLock=0;
 function pick(el){
   if($("fanwrap2").dataset.moved)return;
+  if(Date.now()<pickLock)return;
+  pickLock=Date.now()+380;
   if(el.classList.contains("taken")||S.picked.length>=10)return;
   const n=S.picked.length;
   const idx=S.order[Number(el.dataset.i)%S.order.length];
   let use=idx;
-  if(S.picked.some(p=>p.idx===use)){ /* 같은 귀가 두 번 나오지 않게 */
-    const free=DECK.map((_,i)=>i).filter(i=>!S.picked.some(p=>p.idx===i));
+  const avoid=topicOf(S.q)==="아이"?[22,31,50]:[];
+  if(S.picked.some(p=>p.idx===use)||avoid.includes(use)){ /* 같은 귀가 두 번 나오지 않게 */
+    const free=DECK.map((_,i)=>i).filter(i=>!S.picked.some(p=>p.idx===i)&&!avoid.includes(i));
     use=free[Math.floor(Math.random()*free.length)];
   }
   S.picked.push({card:DECK[use],idx:use,rev:Math.random()<0.36});
   el.classList.add("taken"); tick();
   flyTo(el,$("ps"+n));
+  /* 빠진 자리는 새 패로 다시 채운다 — 부채에 구멍이 남지 않게 */
+  const slotI=Number(el.dataset.i)%S.order.length;
+  setTimeout(()=>{
+    const left=DECK.map((_,k)=>k).filter(k=>!S.picked.some(p=>p.idx===k));
+    S.order[slotI]=left[Math.floor(Math.random()*left.length)];
+    el.classList.remove("taken"); el.classList.add("refill");
+    setTimeout(()=>el.classList.remove("refill"),420);
+  },520);
   const m=$("pickmsg").firstChild;
   const left=10-S.picked.length;
   m.textContent = left>0 ? `${left}장 더 뽑게 ` : "열 장이 자네 앞에 놓였네 ";
   if(S.picked.length===10){
     bell(440,.12);
     setTimeout(()=>{$("pickmsg").style.opacity="0";},600);
-    setTimeout(()=>openReading(),1300);
+    const T=RUN; setTimeout(()=>{ if(T===RUN) openReading(); },1300);
   }
 }
 function flyTo(src,slot){
@@ -967,8 +1158,10 @@ function buildReading(){
   const grade=score<=0?0:score<=2?1:score<=4?2:3;
 
   const seed=P.reduce((a,p,i)=>a+(p.idx+1)*(i+3),0);
+  let verdict=VERDICT[topic][grade];
+  if(qtype==="어느"&&R.A&&R.B){ const pickS=(grade<=1?R.A:R.B).replace(/[?？!.]+$/,""); verdict=`패는 ‘${pickS}’ 쪽을 가리키네. `+(grade<=1?"망설일 까닭이 없네.":"쉽지는 않으나 그쪽이 덜 다치는 길일세."); }
   return {topic,qtype,el,elN:tally[el],rev,grade,score,why,leanSuit,leanN:suits[leanSuit],daegui,seed,
-    verdict:VERDICT[topic][grade],when:EL_WHEN[el],tie:pickV(TIE[topic],seed)};
+    verdict,when:whenFor(el,S.rec?S.rec.t:Date.now()),tie:pickV(TIE[topic],seed)};
 }
 function bat(w){const m=String(w).match(/[가-힣](?=[^가-힣]*$)/);if(!m)return 0;const c=(m[0].charCodeAt(0)-0xAC00)%28;return c===0?0:(c===8?2:1);}
 function jo(w,t){const b=bat(w);
@@ -979,38 +1172,48 @@ function jo(w,t){const b=bat(w);
 
 function frame(i,p,E){
   const c=p.card, nm=`<em>${c.full}</em>`, n=c.nm, R=S.R||readQ(S.q);
-  const gal=`${c.no} ${c.suit} — ${SUIT_MEAN[c.suit]}`;
+  const seen=S.picked.slice(0,i).some(x=>x.card.suit===c.suit);
+  const gal=seen?`${c.no} ${c.suit}`:`${c.no} ${c.suit} — ${SUIT_MEAN[c.suit]}`;
   const D=DETAIL[E.topic], sd=p.idx+i;
-  const rv=p.rev?' 게다가 이 귀는 뒤집혀 나왔네. <strong>깨어 있다는 뜻일세.</strong> 같은 일이 더 빠르고 더 세게 오네.':"";
+  const rk=S.picked.slice(0,i).filter(x=>x.rev).length;
+  const rv=p.rev?(rk<REV_LINES.length?REV_LINES[rk]:" 이 귀도 깨어 있네."):"";
   const q1=`‘${esc(R.first)}’`, q2=`‘${esc(R.last)}’`;
   switch(i){
-    case 0: return `${gal}.<br>이 일의 뿌리는 ${nm}${jo(n,"이다")}. ${c.nature}.<br>${c.act} ${c.warn}${rv}<br>`+
-      (R.when ? `자네는 ‘${R.when}’${jo(R.when,"이라")} 했지만, 뿌리는 그보다 한참 앞일세. 어제오늘 생긴 일이 아니네.`
+    case 0: return `${gal}.<br>이 일의 뿌리는 ${nm}일세. ${c.nature}.<br>${c.act} ${c.warn}${rv}<br>`+
+      (R.when&&/자꾸|계속|오래/.test(R.when) ? `자네가 ‘${R.when}’ 그렇다 한 그 되풀이, 거기에 뿌리가 있네. 어제오늘 생긴 일이 아니네.`
+       : R.when ? `자네는 ‘${R.when}’${jo(R.when,"이라")} 했지만, 뿌리는 그보다 한참 앞일세. 어제오늘 생긴 일이 아니네.`
+       : R.short ? `자네 물음은 짧지만, 그 뿌리는 어제 생긴 것이 아닐세.`
        : R.many ? `자네가 ${q1} 하고 꺼낸 그 사정, 그게 시작이 아닐세. 끝자락일 뿐이네.`
-       : `자네가 품고 온 ${q2}, 그 물음은 어제 생긴 것이 아닐세. 뿌리가 한참 전에 내렸네.`);
+       : `자네가 들고 온 ${q2}, 그 물음은 어제 생긴 것이 아닐세. 뿌리가 한참 전에 내렸네.`);
     case 1: return `${gal}.<br>지금 자네 둘레에 ${nm}${jo(n,"이가")} 앉았네. ${c.nature}.<br>${c.act}${rv}<br>`+
       (R.who ? `이 기운은 ${R.who} 쪽으로 가장 세게 도네. ${R.who}${jo(R.who,"과와")} 자네 사이에 이 귀가 앉아 있네.` : E.tie);
     case 2: return `${gal}.<br>자네가 못 보고 있는 것이 여기 있네. ${nm}, ${c.nature}.<br>${c.act} ${c.warn}${rv}<br>`+
-      `자네는 ${q2} 하고 묻지만, 정작 물어야 할 것은 그게 아닐세. ${pickV(D.隱,sd)}`+
+      (R.short ? `자네는 되느냐만 묻지만, 정작 물어야 할 것은 그게 아닐세. ` : `자네는 ${q2} 하고 묻지만, 정작 물어야 할 것은 그게 아닐세. `)+pickV(D.隱,sd)+
       (R.feel ? `<br>자네 속의 그 ${R.feel}, 그것도 이 귀가 키운 것일세.` : "");
-    case 3: return `${gal}.<br>자네를 막고 선 것은 ${nm}${jo(n,"이다")}. ${c.nature}.<br>${c.act} ${c.warn}${rv}<br>${pickV(D.敵,sd)}`;
-    case 4: return `${gal}.<br>그래도 자네 뒤를 받치는 것이 하나 있네. ${nm}, ${c.nature}.<br>`+
-      `${p.rev?"뒤집혀 나왔으니 돕되 값을 받아 가네. 공짜로 기대지 말게.":"바로 놓였으니 자네 편일세. 쥐고 가게."}<br>${pickV(D.助,sd)}`;
-    case 5: return `${gal}.<br>${R.who?R.who+"의":"상대의"} 속은 ${nm}${jo(n,"으로")} 나왔네. ${c.nature}.<br>${c.act}${rv}<br>${pickV(D.心,sd)}`;
-    case 6: return `${gal}.<br>때를 끌고 오는 것은 ${nm}${jo(n,"이다")}. ${c.nature}.<br>`+
+    case 3: return `${gal}.<br>자네를 막고 선 것은 ${nm}일세. ${c.nature}.<br>${c.act} ${c.warn}${rv}<br>${pickV(D.敵,sd)}`;
+    case 4: return `${gal}.<br>그래도 자네 편에 설 것이 하나 있네. ${nm}, ${c.nature}.<br>`+
+      `귀가 자네를 돕는다는 말이 아닐세. 이 귀가 무엇을 노리는지 먼저 알아본 그 눈이 자네를 돕네. ${c.warn} 이걸 알았으니 같은 덫에는 덜 걸리네.<br>`+
+      `${p.rev?"다만 뒤집혀 나왔으니 그 눈을 흐리게 하는 일이 한 번 더 오네. 그때 이 말을 떠올리게.":"바로 놓였으니 그 눈이 지금 맑네. 믿고 가게."} ${pickV(D.助,sd)}`;
+    case 5: {
+      const who=R.who||(["연애","사람"].includes(E.topic)?"상대":"");
+      if(!who) return `${gal}.<br>이 일의 속을 들여다보면 ${nm}${jo(n,"이가")} 비치네. ${c.nature}.<br>${c.act}${rv}<br>겉으로 드러난 사정과 속사정이 다르다는 뜻일세. 보이는 것만 믿지 말게.`;
+      return `${gal}.<br>${who}의 속에 ${nm}의 그림자가 비치네. ${c.nature}.<br>`+
+        `${who}${jo(who,"이가")} 그런 사람이라는 말이 아닐세. 그 속에서 이 귀가 하는 짓이 이렇다는 것이네. ${c.act}${rv}<br>${pickV(D.心,sd)}`;
+    }
+    case 6: return `${gal}.<br>때를 끌고 오는 것은 ${nm}일세. ${c.nature}.<br>`+
       `열 장에 <em>${E.el}</em> 기운이 ${E.elN}장 몰렸으니 때는 그 기운이 정하네. ${E.when.d}.<br>`+
       `갈리는 때는 <strong>${E.when.t}</strong>일세. 그 안에 반드시 한 번 움직이네. `+
-      `${p.rev?"뒤집혀 나왔으니 그보다 더 이르게 올 수도 있네.":"그 전에는 아무리 밀어도 안 움직이니 힘 빼지 말게."}`;
-    case 7: return `${gal}.<br>자네 뒤에 붙은 것은 ${nm}일세. ${c.src}에 적힌 귀네. ${c.nature}.<br>${c.act} ${c.warn}${rv}<br>`+
+      `${p.rev?"뒤집혀 나왔으니 그보다 더 이르게 올 수도 있네.":"그 때가 오기 전까지는 서두르지 말게. 밀어도 안 움직이네."}`;
+    case 7: return `${gal}.<br>자네 뒤에 붙은 것은 ${nm}일세. ${srcText(c.src)}. ${c.nature}.<br>${c.act} ${c.warn}${rv}<br>`+
       `왜 하필 이 귀가 붙었는가. ${pickV(D.why,sd)}`;
     case 8: {
       const g=S.picked[7].card;
       return `${gal}.<br>떼는 법은 ${nm}${jo(n,"이가")} 일러주네.<br>`+
       `먼저 붙은 ${g.nm}부터 떼어야 하네. <strong>${g.fix}</strong><br>`+
       `그리고 ${n}${jo(n,"이가")} 곁들이라 하는 것이 있네. ${c.fix}<br>`+
-      `거창한 걸 벌이지 말고 이 둘만 하게. <strong>${E.when.t}</strong> 전에 해야 효험이 있네.`;
+      `거창한 걸 벌이지 말고 이 둘만 하게. 그 때가 오기 전에 해야 효험이 있네.`;
     }
-    case 9: return `${gal}.<br>자네가 물은 ${q2}, 그 끝은 ${nm}${jo(n,"으로")} 닫혔네. ${c.nature}.<br>${c.act}${rv}<br>${pickV(D.果,sd)}<br><strong>${E.verdict}</strong>`;
+    case 9: return `${gal}.<br>이 일의 끝은 ${nm}${jo(n,"으로")} 닫혔네. ${c.nature}.<br>${c.act}${rv}<br>${pickV(E.grade<=1?D.果.g:D.果.b,sd)}`;
   }
 }
 
@@ -1033,8 +1236,10 @@ async function line(who,html){
   readBox().appendChild(p);
   const body=p.querySelector(".body");
   if(S.replay){ body.innerHTML=html; return p; }
+  const T0=RUN;
   let out="";
   for(let i=0;i<html.length;i++){
+    if(T0!==RUN) return p;
     const ch=html[i];
     if(ch==="<"){
       const j=html.indexOf(">",i);
@@ -1061,10 +1266,16 @@ function frontHTML(p){
 async function spotlight(i){
   const p=S.picked[i], sp=$("spot");
   sp.querySelector(".front").className="face front"+(p.rev?" rev":"");
-  sp.querySelector(".front .art").style.backgroundImage=`url('${p.card.art}')`;
-  sp.querySelector(".spotpos").textContent=`${POS[i].ko} · ${POS[i].desc}`;
-  sp.querySelector(".spotname").innerHTML=`${esc(p.card.full)}${p.rev?' <span class="rv">깨어남</span>':""}`;
-  sp.querySelector(".spotmeta").textContent=`${p.card.no} ${p.card.suit} · ${p.card.nature}`;
+  const c=p.card;
+  sp.querySelector(".front .art").style.backgroundImage=`url('${c.art}')`;
+  sp.querySelector(".cf-no").textContent=c.no;
+  sp.querySelector(".cf-suit").textContent=c.suit.replace(/\(.*\)/,"");
+  sp.querySelector(".cf-hanja").textContent=/[가-힣]/.test(c.hanja)||!c.hanja?"":c.hanja;
+  sp.querySelector(".cf-name").textContent=c.nm;
+  sp.querySelector(".cf-nat").textContent=c.nature;
+  sp.querySelector(".spotpos").textContent=`${POS[i].ko} · ${posLabel(i)}`;
+  sp.querySelector(".spotname").innerHTML=`${esc(c.full)}${p.rev?' <span class="rv">깨어남</span>':""}`;
+  sp.querySelector(".spotmeta").textContent=`오행 ${c.el} · ${c.src}`;
   sp.classList.remove("open","out"); sp.hidden=false;
   await wait(80);
   sp.classList.add("open"); bell(p.rev?392:587,.13);
@@ -1101,7 +1312,7 @@ async function askSeer(E,from,to,stage){
   const cards=[];
   for(let i=from;i<to;i++){
     const p=S.picked[i], c=p.card;
-    cards.push({pos:POS[i].k, posDesc:POS[i].desc, rev:p.rev,
+    cards.push({pos:POS[i].k, posDesc:posLabel(i), rev:p.rev,
       nm:c.full, src:c.src, suit:c.suit, no:c.no, el:c.el,
       nature:c.nature, act:c.act, warn:c.warn, fix:c.fix,
       base: frame(i,p,E).replace(/<br>/g," ").replace(/<\/?(em|strong)>/g,"")});
@@ -1135,12 +1346,14 @@ function setupBoard(){
   });
 }
 function replay(rec){
+  enterFlow();
   S.q=rec.q; S.rec=rec; S.replay=true;
   S.picked=rec.picks.map(([i,r])=>({card:DECK[i],idx:i,rev:!!r}));
   S.paid=!!rec.paid; S.freeTexts=rec.free||null; S.paidTexts=rec.paidTexts||null;
   openReading();
 }
 async function openReading(){
+  const T=RUN, live=()=>T===RUN;
   const E=buildReading(); S.E=E;
   setupBoard();
   setBg("img/seer-card.webp");
@@ -1150,20 +1363,29 @@ async function openReading(){
 
   if(S.replay){
     await line("호연",`자네가 <b>${fmtDate(S.rec.t)}</b>에 들고 온 물음일세.<br><em>“${esc(S.q)}”</em><br>그때 나온 패를 그대로 펼쳐 두었네. 패는 같은 물음에 두 번 답하지 않네.`);
+    if(!live()) return;
   } else {
     await dots();
+    if(!live()) return;
     await line("호연",`자네가 품고 온 것은 <em>“${esc(S.q)}”</em> 이것이로군.`);
+    if(!live()) return;
     await dots();
+    if(!live()) return;
     await line("",`열 장이 깔렸네. 뿌리와 얽힘, 그리고 자네가 못 보던 것까지… 세 장은 그냥 열어 주지.`);
+    if(!live()) return;
   }
   const written = S.replay ? S.freeTexts : await job;
+  if(!live()) return;
   const used=[];
   for(let i=0;i<3;i++){
     await dots();
+    if(!live()) return;
     await reveal(i);
+    if(!live()) return;
     const body=(written&&written[i])?written[i]:frame(i,S.picked[i],E);
     used.push(body);
-    await line(POS[i].ko+" · "+POS[i].desc, body);
+    await line(POS[i].ko+" · "+posLabel(i), body);
+    if(!live()) return;
     $("fl"+i).parentElement.classList.remove("cur");
   }
   S.freeTexts=used;
@@ -1172,8 +1394,11 @@ async function openReading(){
   if(S.paid){ await showPaid(); return; }
 
   await dots();
+  if(!live()) return;
   await line("",`세 장을 열었네. 여기까지는 자네도 어렴풋이 짐작하던 것일 테지.<br>나머지 일곱 장이… 자네가 끝내 모르던 쪽이네.`);
+  if(!live()) return;
   await wait(S.replay?0:300);
+  if(!live()) return;
   setBg("img/seer-pray.webp");
   const seal=document.createElement("div");
   seal.className="seal";
@@ -1183,15 +1408,15 @@ async function openReading(){
     <p class="what">
       <b>敵</b> 자네를 막고 선 것<br>
       <b>助</b> 자네 뒤를 받치는 것<br>
-      <b>心</b> ${S.R&&S.R.who?esc(S.R.who)+"의":"상대의"} 속<br>
+      <b>心</b> ${esc(posLabel(5))}<br>
       <b>時</b> 갈리는 때 — 달까지 짚네<br>
       <b>鬼</b> 자네 뒤에 붙은 귀와 그 까닭<br>
       <b>符</b> 그 귀를 떼는 법<br>
       <b>果</b> 끝과 확답
     </p>
     <p class="price">일곱 장 전부 <span>3,990원</span></p>
-    <p class="small">한 번 결제로 끝. 자동결제 없음.</p>
-    <button class="btn" id="pay">봉 인 을 풀 다</button>
+    <p class="small">한 번 결제로 끝. 자동결제 없음. 풀이는 생성형 AI가 함께 씁니다.</p>
+    <button class="btn" id="pay">봉인을 풀다</button>
     <p class="legal" style="margin-top:12px"><button id="t2">이용안내 · 환불규정</button></p>`;
   readBox().appendChild(seal); if(!S.replay) toBottom();
   $("pay").addEventListener("click",unseal,{once:true});
@@ -1201,6 +1426,7 @@ async function openReading(){
 
 /* ── 봉인이 깨진다 ── */
 async function unseal(){
+  const T=RUN, live=()=>T===RUN;
   if(S.busy) return; S.busy=true;
   S.paid=true; S.replay=false;
   const E=S.E;
@@ -1212,80 +1438,94 @@ async function unseal(){
   $("stage").classList.add("shake"); setTimeout(()=>$("stage").classList.remove("shake"),620);
   document.querySelectorAll("#board .slot.sealed").forEach((s,k)=>setTimeout(()=>{ s.classList.add("breaking"); bell(300+k*40,.05); },180+k*95));
   await wait(1100);
+  if(!live()) return;
   document.querySelectorAll("#board .slot.sealed").forEach(s=>s.classList.remove("sealed","breaking"));
   setBg("img/seer-card.webp");
   await line("호연","봉인이 풀렸네. 패를 하나씩 들여다보겠네… 숨을 고르게.");
+  if(!live()) return;
   await dots(900);
+  if(!live()) return;
   S.paidTexts = await job;
+  if(!live()) return;
   await showPaid();
+  if(!live()) return;
   S.busy=false;
 }
 
 async function showPaid(){
+  const T=RUN, live=()=>T===RUN;
   const E=S.E, written=S.paidTexts, used=[];
   for(let i=3;i<10;i++){
     await dots();
+    if(!live()) return;
     await reveal(i);
+    if(!live()) return;
     const body=(written&&written[i-3])?written[i-3]:frame(i,S.picked[i],E);
     used.push(body);
-    await line(POS[i].ko+" · "+POS[i].desc, body);
+    await line(POS[i].ko+" · "+posLabel(i), body);
+    if(!live()) return;
     $("fl"+i).parentElement.classList.remove("cur");
   }
   S.paidTexts=used;
 
   await dots();
+  if(!live()) return;
   const R=S.R;
   const qt = E.qtype==="언제" ? `자네가 물은 것은 때였네. <strong>${E.when.t}</strong>, 그 안일세.`
            : E.qtype==="왜" ? `자네가 물은 것은 까닭이었네. 까닭은 ${S.picked[0].card.nm}에 있네. 자네 탓이 반, 붙은 것이 반일세.`
            : E.qtype==="어떻게" ? `자네가 물은 것은 방법이었네. 부(符)에 적힌 그 둘이면 되네. 더 벌이지 말게.`
            : E.qtype==="누구" ? `자네가 물은 것은 사람이었네. 심(心)에 나온 그 모습이 그 사람의 속일세.`
-           : E.qtype==="어느"&&R.A&&R.B ? `자네는 ‘${esc(R.A)}’${jo(R.A,"과와")} ‘${esc(R.B)}’ 사이에서 물었네. 패는 <strong>‘${esc(E.grade<=1?R.A:R.B)}’</strong> 쪽을 가리키네.`
+           : E.qtype==="어느"&&R.A&&R.B ? `자네는 ‘${esc(R.A)}’ 쪽과 ‘${esc(R.B)}’ 쪽 사이에서 물었네. 패가 한쪽을 골랐네.`
            : `자네가 물은 것은 되느냐 안 되느냐였네.`;
-  await line("확답",`${qt}<br><strong>${E.verdict}</strong>`);
+  const vtxt = E.verdict;
+  await line("확답",`${qt}<br><strong>${vtxt}</strong>`);
+  if(!live()) return;
 
   await dots();
+  if(!live()) return;
   await line("확답의 근거",
     `패가 이렇게 답한 까닭은 이렇네.<br>`+E.why.slice(0,5).map(w=>`· ${w}`).join("<br>")+
     `<br>${E.grade<=1?"바로 선 패가 더 무겁네. 그래서 흐름이 자네 쪽일세.":"깨어난 패가 더 무겁네. 그래서 그냥 두면 자네 쪽이 아닐세."}`);
+    if(!live()) return;
 
   await dots();
-  const bits=[];
-  bits.push(`열 장에 <em>${E.el}</em> 기운이 ${E.elN}장 몰렸고`);
-  bits.push(`<em>${E.leanSuit}</em>가 ${E.leanN}장으로 가장 많네`);
-  if(E.daegui>0) bits.push(`대귀가 ${E.daegui}장 섞였고`);
-  bits.push(`뒤집힌 패가 ${E.rev}장일세`);
+  if(!live()) return;
   await line("패의 모양",
-    bits.join(", ")+`.<br>`+
-    (E.daegui>=2?"대귀가 둘 이상 든 패는 흔치 않네. 자네 일이 자네 손만의 일이 아니라는 뜻일세. "
+    `열 장에 <em>${E.el}</em> 기운이 ${E.elN}장 몰렸네. 갈래로는 <em>${E.leanSuit}</em>${jo(E.leanSuit,"이가")} ${E.leanN}장으로 가장 많네. 대귀는 ${E.daegui}장, 뒤집힌 패는 ${E.rev}장일세.<br>`+
+    (E.daegui>=4?"대귀가 네 장 넘게 든 패는 흔치 않네. 자네 일이 자네 손만의 일이 아니라는 뜻일세. "
      :E.rev>=6?"절반 넘게 뒤집혔네. 지금 자네 자리가 통째로 흔들리고 있다는 뜻일세. "
      :E.rev===0?"하나도 뒤집히지 않았네. 흐름이 자네 편일세. ":"")+
     (TOPIC_SUIT[E.topic]===E.leanSuit
       ? `자네 물음이 걸린 바로 그 갈래에 패가 몰렸네. 패가 자네 속을 정확히 짚은 것일세. `
       : E.leanSuit==="대귀" ? `대귀가 가장 많다는 건 자네 일이 사람 손을 떠나 있다는 뜻일세. 몸부터 조심하게. `
-      : `자네는 ${E.topic==="기타"?"그 일":E.topic}${jo(E.topic==="기타"?"일":E.topic,"을를")} 물었는데 패는 <em>${E.leanSuit}</em>를 가리키네. 겉으로 보이는 문제와 진짜 뿌리가 다르다는 뜻일세. `)+
-    `문제가 <em>${E.leanSuit}</em> 한 군데에 몰려 있으니, 거기만 손보면 나머지는 따라오네.`);
+      : `자네는 ${TOPIC_LABEL[E.topic]}${jo(TOPIC_LABEL[E.topic],"을를")} 물었는데 패는 <em>${E.leanSuit}</em>${jo(E.leanSuit,"을를")} 가리키네. 겉으로 보이는 문제와 진짜 뿌리가 다르다는 뜻일세. `)+
+    `그 갈래만 손보면 나머지는 따라오네.`);
+  if(!live()) return;
 
   await dots();
+  if(!live()) return;
   await line("호연",
     `${E.grade<=1?"끝은 자네 쪽으로 기우네.":"끝은 그냥 두면 자네 쪽이 아닐세."} `+
     `다만 패는 끝을 이미 정해 뒀네… <strong>${E.when.t}</strong>, 그때 자네가 어느 손을 쓰느냐만 남았네.<br>`+
     `부(符)에 적힌 것부터 하게. 그게 첫 매듭일세.`);
+    if(!live()) return;
 
   setBg("img/seer-smile.webp");
   const tail=document.createElement("p");
   tail.className="tail";
-  tail.innerHTML=`이 풀이는 <b>${fmtDate(S.rec?S.rec.t:Date.now())}</b>의 패일세.<br>같은 물음에 패는 두 번 답하지 않네. 이 패는 그대로 남겨 두지.<br>위의 패를 누르면 크게 볼 수 있네.`;
+  tail.innerHTML=`이 풀이는 <b>${fmtDate(S.rec?S.rec.t:Date.now())}</b>의 패일세.<br>같은 물음에 패는 두 번 답하지 않네. 이 패는 그대로 남겨 두지.<br>위의 패를 누르면 크게 볼 수 있네.<br><span style="font-size:10.5px;color:#7d7066">이 풀이는 해석 규칙과 생성형 AI가 함께 썼습니다. 오락과 참고로만 보십시오.</span>`;
   readBox().appendChild(tail); if(!S.replay) toBottom();
   recordNow();
   footButtons(true);
 }
 
 function footButtons(done){
-  $("readfoot").innerHTML=`<div class="duo">
-    <button class="btn ghost" id="shareBtn">한 장 으 로 남 기 기</button>
-    <button class="btn ghost" id="againBtn">${done?"다 른 것 을 묻 다":"다 시 묻 다"}</button></div>`;
-  $("againBtn").addEventListener("click",reset);
-  $("shareBtn").addEventListener("click",makeShare);
+  $("readfoot").innerHTML = done
+    ? `<div class="duo"><button class="btn ghost" id="shareBtn">한 장으로 남기기</button><button class="btn ghost" id="againBtn">다른 것을 묻다</button></div>`
+    : `<button class="btn ghost" id="againBtn" style="opacity:.8">다른 것을 묻다</button>`;
+  $("againBtn").addEventListener("click",()=>{ reset(); try{ if(history.state&&history.state.bg) history.back(); }catch(e){} });
+  if(done) $("shareBtn").addEventListener("click",makeShare);
+  requestAnimationFrame(()=>{ if(!S.replay) toBottom(); });
 }
 
 /* ── 결과 한 장 ── */
@@ -1299,7 +1539,7 @@ function wrapText(ctx,t,x,y,maxW,lh,maxLines){
   lines.forEach((l,i)=>ctx.fillText(l,x,y+i*lh)); return lines.length;
 }
 async function makeShare(){
-  const btn=$("shareBtn"); btn.disabled=true; btn.textContent="그 리 는 중 …";
+  const btn=$("shareBtn"); btn.disabled=true; btn.textContent="그리는 중…";
   try{ await document.fonts.load('700 40px "Gowun Batang"'); await document.fonts.load('400 30px "Noto Sans KR"'); }catch(e){}
   const W=1080,H=1920, cv=document.createElement("canvas"); cv.width=W; cv.height=H;
   const x=cv.getContext("2d");
@@ -1315,23 +1555,33 @@ async function makeShare(){
   x.fillText("백귀술사 호연 狐煙",W/2,370);
   x.fillStyle="#ece0d2"; x.font='700 46px "Gowun Batang", serif';
   wrapText(x,`“${S.q}”`,W/2,460,880,66,3);
-  const cw=168,ch=252,gap=24, sx=(W-(cw*5+gap*4))/2, sy=680;
+  const cw=176,ch=264,gap=16, sx=(W-(cw*5+gap*4))/2, sy=680;
   S.picked.forEach((p,i)=>{
-    const cx=sx+(i%5)*(cw+gap), cy=sy+Math.floor(i/5)*(ch+110);
-    const open=S.paid||i<3;
+    const cx=sx+(i%5)*(cw+gap), cy=sy+Math.floor(i/5)*(ch+92);
+    const open=S.paid||i<3, c=p.card;
+    x.fillStyle="#8a6f33"; x.font='700 30px "Gowun Batang", serif'; x.fillText(POS[i].k,cx+cw/2,cy-16);
     x.save();
-    x.fillStyle="#120a0b"; x.fillRect(cx,cy,cw,ch);
+    if(open&&p.rev){ x.translate(cx+cw/2,cy+ch/2); x.rotate(Math.PI); x.translate(-(cx+cw/2),-(cy+ch/2)); }
+    x.fillStyle="#0d0607"; x.fillRect(cx,cy,cw,ch);
     if(open){
-      if(p.rev){ x.translate(cx+cw/2,cy+ch/2); x.rotate(Math.PI); cover(x,arts[i],-cw/2,-ch/2,cw,ch); x.setTransform(1,0,0,1,0,0); }
-      else cover(x,arts[i],cx,cy,cw,ch);
-    } else { cover(x,backI,cx,cy,cw,ch); x.fillStyle="rgba(6,3,4,.55)"; x.fillRect(cx,cy,cw,ch); x.fillStyle="#ff5436"; x.font='700 70px "Gowun Batang", serif'; x.fillText("封",cx+cw/2,cy+ch/2+24); }
+      x.strokeStyle="rgba(201,162,74,.55)"; x.lineWidth=2; x.strokeRect(cx+7,cy+7,cw-14,ch-14);
+      x.fillStyle="#c9a24a"; x.font='400 17px "Gowun Batang", serif';
+      x.textAlign="left"; x.fillText(c.no,cx+16,cy+34); x.textAlign="right"; x.fillText(c.suit.replace(/\(.*\)/,""),cx+cw-16,cy+34); x.textAlign="center";
+      const aw=cw-28, ah=Math.round(aw*0.6);
+      cover(x,arts[i],cx+14,cy+46,aw,ah);
+      x.strokeStyle="rgba(201,162,74,.45)"; x.lineWidth=1.5; x.strokeRect(cx+14,cy+46,aw,ah);
+      const hj=/[가-힣]/.test(c.hanja)||!c.hanja?"":c.hanja;
+      if(hj){ x.fillStyle="#e2463a"; x.font='700 30px "Gowun Batang", serif'; x.fillText(hj,cx+cw/2,cy+ch-62); }
+      x.fillStyle="#ece0d2"; x.font='700 25px "Gowun Batang", serif'; x.fillText(c.nm,cx+cw/2,cy+ch-26);
+    } else {
+      cover(x,backI,cx,cy,cw,ch); x.fillStyle="rgba(6,3,4,.55)"; x.fillRect(cx,cy,cw,ch);
+      x.fillStyle="#ff5436"; x.font='700 70px "Gowun Batang", serif'; x.fillText("封",cx+cw/2,cy+ch/2+24);
+    }
     x.restore();
     x.strokeStyle=p.rev&&open?"#ff5436":"#c9a24a"; x.lineWidth=3; x.strokeRect(cx+1.5,cy+1.5,cw-3,ch-3);
-    x.fillStyle="#8a6f33"; x.font='700 30px "Gowun Batang", serif'; x.fillText(POS[i].k,cx+cw/2,cy-16);
-    x.fillStyle=open?"#ece0d2":"#6d6057"; x.font='400 26px "Noto Sans KR", sans-serif';
-    x.fillText(open?p.card.nm:"봉인",cx+cw/2,cy+ch+40);
+    if(open&&p.rev){ x.fillStyle="#ff5436"; x.font='500 26px "Noto Sans KR", sans-serif'; x.fillText("깨어남",cx+cw/2,cy+ch+34); }
   });
-  const ty=sy+2*(ch+110)+60, E=S.E;
+  const ty=sy+2*(ch+92)+40, E=S.E;
   x.fillStyle="rgba(201,162,74,.5)"; x.fillRect(W/2-60,ty-20,120,2);
   if(S.paid){
     x.fillStyle="#c9a24a"; x.font='400 32px "Gowun Batang", serif'; x.fillText("갈리는 때",W/2,ty+44);
@@ -1342,21 +1592,23 @@ async function makeShare(){
     x.fillStyle="#ece0d2"; x.font='700 46px "Gowun Batang", serif'; x.fillText("일곱 장이 아직 덮여 있네",W/2,ty+90);
     x.fillStyle="#a39486"; x.font='400 32px "Noto Sans KR", sans-serif'; x.fillText("때와 확답, 붙은 귀는 봉인 너머에",W/2,ty+150);
   }
-  x.fillStyle="#7d7066"; x.font='400 26px "Noto Sans KR", sans-serif';
-  x.fillText(`${fmtDate(S.rec?S.rec.t:Date.now())}의 패 · 백귀타로`,W/2,H-90);
+  x.fillStyle="#9a8b7e"; x.font='400 32px "Noto Sans KR", sans-serif';
+  x.fillText(`${fmtDate(S.rec?S.rec.t:Date.now())}의 패 · 백귀타로`,W/2,H-80);
   let url="";
   try{ url=cv.toDataURL("image/jpeg",.9); }catch(e){}
-  btn.disabled=false; btn.textContent="한 장 으 로 남 기 기";
+  btn.disabled=false; btn.textContent="한 장으로 남기기";
   if(!url) return;
   $("shareImg").src=url;
   $("shareDl").href=url; $("shareDl").download=`백귀타로_${fmtDate(Date.now()).replace(/\s/g,"")}.jpg`;
   $("kakaoTip").hidden=!IN_KAKAO;
-  const sendBtn=$("shareSend"); sendBtn.hidden=true;
+  const touch=window.matchMedia&&matchMedia("(pointer:coarse)").matches;
+  $("shareHint").textContent=touch?"그림을 길게 눌러 저장하게.":"아래 내려받기를 누르면 저장되네.";
+  const sendBtn=$("shareSend"); sendBtn.hidden=true; $("shareDuo").classList.add("single");
   try{
     const blob=await (await fetch(url)).blob();
     const file=new File([blob],"baekgwi-tarot.jpg",{type:"image/jpeg"});
     if(navigator.canShare&&navigator.canShare({files:[file]})){
-      sendBtn.hidden=false;
+      sendBtn.hidden=false; $("shareDuo").classList.remove("single");
       sendBtn.onclick=()=>navigator.share({files:[file],title:"백귀타로",text:"백귀술사 호연이 내 패를 읽었다"}).catch(()=>{});
     }
   }catch(e){}
@@ -1366,12 +1618,15 @@ $("openExternal").addEventListener("click",()=>{ location.href="kakaotalk://web/
 
 /* ── 되돌리기 ── */
 function reset(){
+  RUN++;
+  $("spot").hidden=true; $("spot").classList.remove("open","out");
+  document.querySelectorAll(".flycard").forEach(g=>g.remove());
   Object.assign(S,{q:"",order:[],picked:[],brushN:0,pass:0,dir:0,sinceFlip:0,done:false,spin:0,paid:false,E:null,R:null,replay:false,rec:null,freeTexts:null,paidTexts:null,busy:false});
-  ["same","hist","share","cv","terms"].forEach(closeSheet);
+  ["same","hist","share","cv","terms","risk"].forEach(closeSheet);
   q.value=""; $("count").textContent="0 / 120"; $("go").disabled=true;
   $("dealmsg").style.opacity=""; $("pickmsg").style.opacity="";
   $("dealmsg").innerHTML='패를 세 번 쓸어 보게<small>손으로 패 위를 좌우로 훑으면 되네</small><span class="tally" id="tally"><i></i><i></i><i></i></span>';
-  $("pickmsg").innerHTML='열 장을 뽑게<small>손이 멎는 자리가 자네 패일세</small>';
+  $("pickmsg").innerHTML='열 장을 뽑게<small>부채를 좌우로 돌리다가, 손이 멎는 자리를 누르게</small>';
   setBg("img/bg.webp");
   refreshHistLink();
   show("s-ask");
