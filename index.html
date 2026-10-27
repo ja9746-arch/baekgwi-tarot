@@ -3,19 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="백 귀신의 패로 보는 타로. 질문 하나를 넣으면 패를 흩고 세 장을 뽑아 인·연·과로 풀어준다.">
+<meta name="description" content="백귀술사 호연이 백 귀신의 패로 보는 타로. 질문 하나를 넣으면 열 장을 뽑아 인·연·과로 풀어준다.">
 <meta property="og:title" content="백귀타로">
-<meta property="og:description" content="질문 하나를 넣어라. 백 귀신이 네 패를 연다.">
+<meta property="og:description" content="자네가 품고 온 이야기를 들려주게. 카드는 이미 알고 있을지도 모르니.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="img/title.webp">
 <style>
-  :root{
-    color-scheme:dark;
-    padding-top:env(safe-area-inset-top, 0px);
-    padding-bottom:env(safe-area-inset-bottom, 0px);
-  }
+  :root{color-scheme:dark;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
   html,body{height:100%}
-  body{margin:0; font:14px/1.5 -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", sans-serif}
+  body{margin:0;font:14px/1.5 -apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo",sans-serif}
   img{max-width:100%}
   [hidden]{display:none !important}
 </style>
@@ -26,904 +22,896 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@200;300;400;500&display=swap">
 <style>
-/* 레이아웃: 한 화면짜리 무대 — 배경 고정, 아래 부채꼴 패, 위쪽은 글이 올라앉는 빈 하늘 */
+/* 레이아웃: 한 화면짜리 무대 — 배경이 단계마다 바뀌고, 아래는 늘 패 */
 :root{
-  color-scheme: dark;
-  --mook:#0a0507;        /* 먹 */
-  --mook-2:#160a0c;      /* 먹 옅은 쪽 */
-  --jusa:#c0362a;        /* 주사 붉은색 */
-  --jusa-hot:#ff5436;    /* 불빛 */
-  --geum:#c9a24a;        /* 금 */
-  --geum-dim:#8a6f33;
-  --jae:#ece0d2;         /* 재 — 본문 */
-  --jae-dim:#9b8b7d;     /* 흐린 글 */
+  color-scheme:dark;
+  --mook:#0a0507; --jusa:#c0362a; --jusa-hot:#ff5436;
+  --geum:#c9a24a; --geum-dim:#8a6f33;
+  --jae:#ece0d2; --jae-dim:#a39486;
   --line:rgba(201,162,74,.28);
-  --serif:"Gowun Batang", "Apple SD Gothic Neo", serif;
-  --sans:"Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
+  --serif:"Gowun Batang","Apple SD Gothic Neo",serif;
+  --sans:"Noto Sans KR","Apple SD Gothic Neo",sans-serif;
 }
 *{box-sizing:border-box}
 html,body{height:100%}
-body{
-  margin:0; background:var(--mook); color:var(--jae);
-  font-family:var(--sans); font-weight:300; line-height:1.75;
-  -webkit-font-smoothing:antialiased; overflow:hidden;
-}
-button{font-family:inherit; color:inherit; cursor:pointer}
-:focus-visible{outline:2px solid var(--geum); outline-offset:3px}
-
-/* ── 무대 ───────────────────────────────── */
-#stage{
-  position:relative; height:100%; width:100%; max-width:520px; margin:0 auto;
-  overflow:hidden; isolation:isolate;
-}
-#bg{position:absolute; inset:0; z-index:0; background:#070406; overflow:hidden}
-#bg .plate{
-  position:absolute; inset:0;
-  background:#070406 url("img/bg.webp") center bottom/cover no-repeat;
-  transition:opacity .7s ease;
-}
-#bg .plate.seer{
-  background-image:url("img/seer.webp");
-  background-position:center 14%;
-  opacity:0;
-}
-#bg.seer .plate.night{opacity:0}
-#bg.seer .plate.seer{opacity:1}
-#bg::after{
-  content:""; position:absolute; inset:0; z-index:1;
-  background:
-    radial-gradient(86% 40% at 50% 6%, rgba(10,5,7,.92) 0%, rgba(10,5,7,.48) 56%, rgba(10,5,7,0) 100%),
-    radial-gradient(74% 26% at 50% 47%, rgba(8,4,6,.74), transparent 72%),
-    linear-gradient(180deg, rgba(10,5,7,.52) 0%, rgba(10,5,7,.16) 22%, rgba(10,5,7,.56) 58%, rgba(10,5,7,.94) 86%, #0a0507 100%);
-}
-#bg::before{
-  content:""; position:absolute; inset:0; z-index:2; pointer-events:none;
-  background:radial-gradient(58% 32% at 50% 44%, rgba(255,84,54,.08), transparent 72%);
-}
-.screen{
-  position:absolute; inset:0; z-index:2; overflow:hidden;
-  display:flex; flex-direction:column;
-  padding-left:max(22px, env(safe-area-inset-left,0px));
-  padding-right:max(22px, env(safe-area-inset-right,0px));
-  padding-block:0;
-  animation:fade .7s ease both;
-}
-@keyframes fade{from{opacity:0}to{opacity:1}}
+body{margin:0;background:var(--mook);color:var(--jae);font-family:var(--sans);
+  font-weight:300;line-height:1.75;-webkit-font-smoothing:antialiased;overflow:hidden}
+button{font-family:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--geum);outline-offset:3px}
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 
-/* ── 머리글 ─────────────────────────────── */
-.brand{
-  padding-top:calc(8vh + 10px); text-align:center; flex:none;
-  transition:opacity .25s, max-height .3s ease, padding-top .3s ease;
-  max-height:220px; overflow:hidden;
-}
-/* 글 쓸 때는 제목을 접어 자리를 내준다 */
-.screen.typing .brand{max-height:0; opacity:0; padding-top:0}
-.brand .mark{margin:0; line-height:0}
-.brand .mark{position:relative}
-.brand .mark::before{
-  content:""; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
-  width:86vw; height:190px; pointer-events:none;
-  background:radial-gradient(52% 50% at 50% 50%, rgba(4,2,3,.92), rgba(4,2,3,.55) 58%, transparent 78%);
-}
-.brand .mark img{
-  position:relative; width:min(66vw, 268px); height:auto; display:inline-block;
-  filter:brightness(1.5) contrast(1.12)
-         drop-shadow(0 0 30px rgba(255,84,54,.55))
-         drop-shadow(0 2px 6px #000);
-}
-.brand .sub{
-  margin:15px 0 0; font-family:var(--serif); font-size:12.5px;
-  letter-spacing:.26em; color:var(--geum-dim); text-indent:.26em;
-}
-.brand .echo{
-  margin:15px 0 0; font-family:var(--serif); font-size:14px; font-weight:400;
-  letter-spacing:0; color:var(--jae-dim); text-indent:0;
-  max-width:300px; margin-inline:auto; line-height:1.6;
-}
-.brand .echo::before{content:"「 "; color:var(--geum-dim)}
-.brand .echo::after{content:" 」"; color:var(--geum-dim)}
-.rule{width:58px; height:1px; margin:18px auto 0; background:linear-gradient(90deg,transparent,var(--geum-dim),transparent)}
+#stage{position:relative;height:100%;width:100%;max-width:520px;margin:0 auto;overflow:hidden;isolation:isolate}
+#bg{position:absolute;inset:0;z-index:0;background:#070406;overflow:hidden}
+#bg .plate{position:absolute;inset:0;background:#070406 center 16%/cover no-repeat;
+  opacity:0;transition:opacity .85s ease}
+#bg .plate.on{opacity:1}
+#bg::after{content:"";position:absolute;inset:0;z-index:1;background:
+  radial-gradient(86% 40% at 50% 6%, rgba(10,5,7,.92) 0%, rgba(10,5,7,.48) 56%, rgba(10,5,7,0) 100%),
+  radial-gradient(74% 26% at 50% 47%, rgba(8,4,6,.72), transparent 72%),
+  linear-gradient(180deg, rgba(10,5,7,.52) 0%, rgba(10,5,7,.16) 22%, rgba(10,5,7,.58) 58%, rgba(10,5,7,.94) 86%, #0a0507 100%)}
 
-/* ── 들어가기 ───────────────────────────── */
-.ask{
-  flex:1 1 auto; min-height:0; overflow-y:auto; overscroll-behavior:contain;
-  display:flex; flex-direction:column; justify-content:center; gap:20px;
-  padding-block:10px;
-}
+.screen{position:absolute;inset:0;z-index:2;overflow:hidden;display:flex;flex-direction:column;
+  padding-left:max(22px,env(safe-area-inset-left,0px));
+  padding-right:max(22px,env(safe-area-inset-right,0px));
+  animation:fade .7s ease both}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+
+/* 머리글 */
+.brand{padding-top:calc(7vh + 8px);text-align:center;flex:none;
+  transition:opacity .25s,max-height .3s ease,padding-top .3s ease;max-height:230px;overflow:hidden}
+.screen.typing .brand{max-height:0;opacity:0;padding-top:0}
+.brand .mark{margin:0;line-height:0;position:relative}
+.brand .mark img{width:min(66vw,268px);height:auto;display:inline-block;
+  filter:drop-shadow(0 0 26px rgba(255,40,20,.5)) drop-shadow(0 2px 6px #000)}
+#s-shuffle .brand,#s-pick .brand{padding-top:calc(3.4vh + 4px)}
+#s-shuffle .brand .mark img,#s-pick .brand .mark img{width:min(42vw,168px);opacity:.9}
+.rule{width:58px;height:1px;margin:17px auto 0;background:linear-gradient(90deg,transparent,var(--geum-dim),transparent)}
+
+/* 들어가기 */
+.ask{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;
+  display:flex;flex-direction:column;justify-content:center;gap:20px;padding-block:10px}
 .ask::-webkit-scrollbar{width:0}
-.ask h2{
-  font-family:var(--serif); font-weight:700; font-size:clamp(19px,5.2vw,23px);
-  text-align:center; margin:0; color:var(--jae); text-wrap:balance;
-  line-height:1.95; letter-spacing:-.012em;
-  text-shadow:0 2px 14px #000, 0 0 30px rgba(0,0,0,.85);
-}
+.ask h2{font-family:var(--serif);font-weight:700;font-size:clamp(19px,5.2vw,23px);
+  text-align:center;margin:0;color:var(--jae);text-wrap:balance;line-height:1.95;
+  letter-spacing:-.012em;text-shadow:0 2px 14px #000,0 0 30px rgba(0,0,0,.85)}
 .field{position:relative}
-.field textarea{
-  width:100%; min-height:98px; resize:none;
-  background:rgba(7,4,5,.88); color:var(--jae);
-  border:1px solid var(--line); border-radius:2px;
-  padding:16px 16px 34px; font:inherit; font-size:15px; line-height:1.7;
-  backdrop-filter:blur(3px);
-}
+.field textarea{width:100%;min-height:98px;resize:none;background:rgba(7,4,5,.88);color:var(--jae);
+  border:1px solid var(--line);border-radius:2px;padding:16px 16px 34px;font:inherit;font-size:15px;line-height:1.7}
 .field textarea::placeholder{color:#978679}
-.field textarea:focus{border-color:var(--geum); background:rgba(6,3,4,.94); box-shadow:0 0 0 1px rgba(201,162,74,.3), 0 0 30px rgba(0,0,0,.8)}
-.count{position:absolute; right:12px; bottom:10px; font-size:11px; color:#8d7f73; font-variant-numeric:tabular-nums}
-.hint{margin:0; font-size:12.5px; font-weight:200; color:#b9aa9c; text-align:center; letter-spacing:.04em; text-shadow:0 2px 12px #000, 0 0 24px #000, 0 0 40px rgba(0,0,0,.95)}
+.field textarea:focus{border-color:var(--geum);background:rgba(6,3,4,.94);
+  box-shadow:0 0 0 1px rgba(201,162,74,.3),0 0 30px rgba(0,0,0,.8)}
+.count{position:absolute;right:12px;bottom:10px;font-size:11px;color:#8d7f73;font-variant-numeric:tabular-nums}
+.seer-name{margin:0 0 2px;text-align:center;font-family:var(--serif);font-size:13px;
+  letter-spacing:.16em;color:var(--geum-dim);text-shadow:0 2px 12px #000,0 0 24px #000}
+.seer-name b{color:var(--geum);font-weight:700;font-size:15px;letter-spacing:.1em}
+.seer-name span{color:var(--jusa);font-size:12px}
+.hint{margin:0;font-size:12.5px;font-weight:200;color:#b9aa9c;text-align:center;letter-spacing:.04em;
+  text-shadow:0 2px 12px #000,0 0 24px #000}
 
-/* ── 단추 ───────────────────────────────── */
-.btn{
-  display:block; width:100%; padding:16px 18px; border:1px solid var(--geum);
-  background:linear-gradient(180deg, rgba(192,54,42,.30), rgba(120,24,18,.46));
-  color:var(--jae); font-family:var(--serif); font-weight:700;
-  font-size:16px; letter-spacing:.28em; border-radius:2px;
-  text-indent:.28em; transition:.22s;
-}
-.btn:hover{background:linear-gradient(180deg, rgba(222,70,48,.44), rgba(150,30,22,.58)); box-shadow:0 0 28px rgba(255,84,54,.3)}
-.btn:disabled{opacity:.62; cursor:default; box-shadow:none; filter:saturate(.5)}
-.btn.ghost{background:transparent; border-color:var(--line); color:var(--jae-dim); font-weight:400; font-size:13px; letter-spacing:.22em; padding:13px}
-.btn.ghost:hover{border-color:var(--geum-dim); color:var(--jae); box-shadow:none}
+/* 단추 */
+.btn{display:block;width:100%;padding:16px 18px;border:1px solid var(--geum);
+  background:linear-gradient(180deg,rgba(192,54,42,.32),rgba(120,24,18,.48));color:var(--jae);
+  font-family:var(--serif);font-weight:700;font-size:16px;letter-spacing:.26em;border-radius:2px;
+  text-indent:.26em;transition:.22s}
+.btn:hover{background:linear-gradient(180deg,rgba(222,70,48,.46),rgba(150,30,22,.6));box-shadow:0 0 28px rgba(255,84,54,.3)}
+.btn:disabled{opacity:.62;cursor:default;box-shadow:none;filter:saturate(.5)}
+.btn.ghost{background:transparent;border-color:var(--line);color:var(--jae-dim);font-weight:400;
+  font-size:13px;letter-spacing:.2em;padding:13px}
+.btn.ghost:hover{border-color:var(--geum-dim);color:var(--jae);box-shadow:none}
+.foot{flex:none;position:relative;z-index:8;padding-top:10px;display:grid;gap:9px;
+  padding-bottom:calc(14px + env(safe-area-inset-bottom,0px))}
+.legal{margin:0;text-align:center;font-size:11px;color:#7d7066;padding-bottom:4px}
+.legal button{background:none;border:0;color:#9a8b7e;text-decoration:underline;font-size:11px;padding:2px 4px}
 
-/* ── 부채꼴 패 ──────────────────────────── */
-.fanwrap{
-  position:absolute; left:0; right:0; z-index:3; touch-action:none;
-  bottom:calc(70px + env(safe-area-inset-bottom,0px)); height:300px;
-  perspective:1100px; perspective-origin:50% 120%;
-}
-.fanwrap::before{
-  content:""; position:absolute; left:-10%; right:-10%; bottom:-30px; height:150px;
-  background:radial-gradient(60% 100% at 50% 100%, rgba(255,84,54,.20), transparent 72%);
-  pointer-events:none;
-}
-.fan{
-  position:absolute; left:50%; bottom:0; width:0; height:0;
-  transform-style:preserve-3d;
-  transform:rotateX(21deg);
-}
-.card{
-  position:absolute; bottom:0; width:132px; height:198px; margin-left:-66px;
-  border-radius:5px; background:#120a0b url("img/back.webp") center/cover no-repeat;
-  border:1px solid rgba(201,162,74,.5);
-  box-shadow:0 -4px 18px rgba(0,0,0,.72), 0 0 0 1px rgba(0,0,0,.5);
-  transform-origin:50% 186%;
-  transform:var(--t);
-  transition:transform .44s cubic-bezier(.22,1,.36,1), filter .35s, opacity .4s;
-  will-change:transform;
-}
-.card.lift{
-  transform:var(--t) translate(0,-46px) scale(1.07);
+/* 패 바퀴 */
+.fanwrap{position:absolute;left:0;right:0;z-index:3;touch-action:none;
+  bottom:calc(16px + env(safe-area-inset-bottom,0px));height:300px;
+  perspective:1100px;perspective-origin:50% 120%}
+.fanwrap::before{content:"";position:absolute;left:-10%;right:-10%;bottom:-30px;height:150px;
+  background:radial-gradient(60% 100% at 50% 100%,rgba(255,84,54,.2),transparent 72%);pointer-events:none}
+.fan{position:absolute;left:50%;bottom:0;width:0;height:0;transform-style:preserve-3d;transform:rotateX(21deg)}
+.card{position:absolute;bottom:0;width:132px;height:198px;margin-left:-66px;border-radius:5px;
+  background:#120a0b url("img/back.webp") center/cover no-repeat;border:1px solid rgba(201,162,74,.5);
+  box-shadow:0 -4px 18px rgba(0,0,0,.72),0 0 0 1px rgba(0,0,0,.5);
+  transform-origin:50% 186%;transform:var(--t);
+  transition:transform .44s cubic-bezier(.22,1,.36,1),filter .35s,opacity .4s;will-change:transform}
+.card.lift{transform:var(--t) translate(0,-46px) scale(1.07);
   filter:brightness(1.5) drop-shadow(0 0 18px rgba(255,84,54,.8));
-  transition:transform .15s ease-out, filter .15s;
-  z-index:80 !important;
-}
-.card.brushed{border-color:rgba(255,140,100,.85); box-shadow:0 -4px 18px rgba(0,0,0,.72), 0 0 16px rgba(255,84,54,.3)}
+  transition:transform .15s ease-out,filter .15s;z-index:80!important}
+.card.nudge{transform:var(--t) translate(0,-15px);transition:transform .2s ease-out}
+.card.brushed{border-color:rgba(255,140,100,.85);box-shadow:0 -4px 18px rgba(0,0,0,.72),0 0 16px rgba(255,84,54,.3)}
+.card.off{opacity:0;pointer-events:none;transition:opacity .2s}
+.card.taken{opacity:0;pointer-events:none;transition:opacity .25s}
 .fan.pickable .card{cursor:pointer}
-.fan.pickable .card:hover{
-  transform:var(--t) translate(0,-40px);
-  filter:brightness(1.4) drop-shadow(0 0 16px rgba(255,84,54,.7));
-  z-index:80;
-}
-.card.taken{
-  transform:var(--t) translate(0,-150px) scale(.52) !important;
-  opacity:0; pointer-events:none;
-  transition:transform .66s cubic-bezier(.3,.85,.3,1), opacity .5s ease-in .12s;
-}
-.card.nudge{transform:var(--t) translate(0,-15px); transition:transform .2s ease-out}
-.card.off{opacity:0; pointer-events:none; transition:opacity .2s}
-.fan.spin .card{transition:filter .25s, opacity .2s}
+.fan.pickable .card:hover{transform:var(--t) translate(0,-40px);
+  filter:brightness(1.4) drop-shadow(0 0 16px rgba(255,84,54,.7));z-index:80}
+.fan.spin .card{transition:filter .25s,opacity .2s}
 
-.deal{
-  position:absolute; left:0; right:0; z-index:5; margin:0; text-align:center;
-  bottom:calc(386px + env(safe-area-inset-bottom,0px));
-  font-family:var(--serif); font-size:14px; letter-spacing:.14em; color:var(--jae);
-  text-shadow:0 2px 14px #000, 0 0 26px rgba(0,0,0,.9); pointer-events:none;
-  transition:opacity .4s;
-}
-.deal small{display:block; margin-top:7px; font-size:11.5px; font-family:var(--sans);
-  font-weight:200; letter-spacing:.06em; color:var(--jae-dim)}
-.pips{display:flex; gap:11px; justify-content:center; margin-top:11px}
-.pips i{
-  width:7px; height:7px; transform:rotate(45deg); border:1px solid var(--geum-dim);
-  transition:.3s;
-}
-.pips i.on{background:var(--jusa-hot); border-color:var(--jusa-hot); box-shadow:0 0 12px rgba(255,84,54,.9)}
+/* 날아가는 패 */
+.ghost{position:fixed;z-index:300;border-radius:5px;border:1px solid var(--geum);
+  background:#120a0b url("img/back.webp") center/cover no-repeat;
+  box-shadow:0 10px 36px rgba(0,0,0,.8),0 0 30px rgba(255,84,54,.55);
+  transition:left .62s cubic-bezier(.3,.9,.3,1),top .62s cubic-bezier(.3,.9,.3,1),
+    width .62s cubic-bezier(.3,.9,.3,1),height .62s cubic-bezier(.3,.9,.3,1),
+    transform .62s cubic-bezier(.3,.9,.3,1),opacity .2s ease .54s;pointer-events:none}
 
-/* ── 뽑은 세 장 ─────────────────────────── */
-.laid{flex:none; display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:4vh}
+/* 안내 글 */
+.deal{position:absolute;left:0;right:0;z-index:5;margin:0;text-align:center;
+  bottom:calc(330px + env(safe-area-inset-bottom,0px));
+  font-family:var(--serif);font-weight:700;font-size:20px;letter-spacing:.04em;color:#fff;
+  text-shadow:0 2px 16px #000,0 0 30px #000,0 0 50px rgba(0,0,0,.95);
+  pointer-events:none;transition:opacity .4s}
+.deal small{display:block;margin-top:9px;font-size:12.5px;font-family:var(--sans);font-weight:300;
+  letter-spacing:.04em;color:#c9b9aa;text-shadow:0 2px 12px #000,0 0 22px #000}
+.tally{display:flex;gap:12px;justify-content:center;margin-top:13px}
+.tally i{width:30px;height:4px;background:rgba(255,255,255,.18);border:1px solid rgba(201,162,74,.45);
+  border-radius:1px;transition:.3s}
+.tally i.on{background:var(--jusa-hot);border-color:var(--jusa-hot);box-shadow:0 0 14px rgba(255,84,54,.9)}
+
+/* 상 위 열 자리 */
+.board{flex:none;display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:10px;position:relative;z-index:6}
 .slot{text-align:center}
-.slot .pos{
-  font-family:var(--serif); font-size:13px; letter-spacing:.2em; color:var(--geum-dim);
-  margin-bottom:9px; text-indent:.2em;
-}
-.flipper{position:relative; width:100%; aspect-ratio:2/3; perspective:900px}
-.inner{
-  position:absolute; inset:0; transform-style:preserve-3d;
-  transition:transform .85s cubic-bezier(.3,.9,.3,1);
-}
+.slot .pos{font-family:var(--serif);font-size:10px;letter-spacing:.04em;color:var(--geum-dim);margin-bottom:4px}
+.slot.cur .pos{color:var(--jusa-hot)}
+.flipper{position:relative;width:100%;aspect-ratio:2/3;perspective:800px}
+.flipper .inner{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .8s cubic-bezier(.3,.9,.3,1)}
 .flipper.open .inner{transform:rotateY(180deg)}
-.face{
-  position:absolute; inset:0; backface-visibility:hidden; border-radius:4px;
-  border:1px solid rgba(201,162,74,.5); overflow:hidden;
-  box-shadow:0 6px 20px rgba(0,0,0,.66);
-}
+.flipper.empty{opacity:.26}
+.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:3px;overflow:hidden;
+  border:1px solid rgba(201,162,74,.45);box-shadow:0 4px 14px rgba(0,0,0,.6)}
 .face.back{background:#120a0b url("img/back.webp") center/cover no-repeat}
-.face.front{
-  transform:rotateY(180deg); background:#0d0708;
-  display:flex; flex-direction:column;
-}
-.front .art{
-  flex:1; min-height:0; background:#140b0c center/cover no-repeat;
-  border-bottom:1px solid rgba(201,162,74,.3);
-}
+.face.front{transform:rotateY(180deg);background:#0d0708;display:flex;flex-direction:column}
+.front .art{flex:1;min-height:0;background:#150c0d center/cover no-repeat;
+  border-bottom:1px solid rgba(201,162,74,.28);display:grid;place-items:center}
+.front .art .gl{font-family:var(--serif);font-weight:700;font-size:21px;color:var(--jusa);
+  text-shadow:0 0 14px rgba(255,84,54,.6);line-height:1}
 .front.rev .art{transform:rotate(180deg)}
-.front .nm{
-  flex:none; padding:5px 3px 6px; background:linear-gradient(180deg,#140b0c,#0a0506);
-  font-family:var(--serif); font-size:10.5px; line-height:1.35; color:var(--jae);
-}
-.front .nm small{display:block; font-size:8.5px; color:var(--geum-dim); letter-spacing:.08em; margin-top:1px}
-.awake{
-  position:absolute; top:5px; left:50%; transform:translateX(-50%); z-index:3;
-  font-size:8.5px; letter-spacing:.14em; color:#fff;
-  background:rgba(192,54,42,.9); border:1px solid rgba(255,120,90,.8);
-  padding:2px 6px; border-radius:1px; text-indent:.14em; white-space:nowrap;
-}
-.slot.locked .face.back::after{
-  content:"封"; position:absolute; inset:0; display:grid; place-items:center;
-  font-family:var(--serif); font-size:28px; color:rgba(255,84,54,.92);
-  background:rgba(6,3,4,.6); text-shadow:0 0 18px rgba(255,84,54,.8);
-}
+.front .nm{flex:none;padding:3px 2px 4px;background:linear-gradient(180deg,#150c0d,#0a0506);
+  font-family:var(--serif);font-size:8.5px;line-height:1.3;color:var(--jae)}
+.slot.sealed .face.back::after{content:"封";position:absolute;inset:0;display:grid;place-items:center;
+  font-family:var(--serif);font-size:17px;color:rgba(255,84,54,.9);background:rgba(6,3,4,.56);
+  text-shadow:0 0 14px rgba(255,84,54,.8)}
+.awake{position:absolute;top:2px;left:50%;transform:translateX(-50%);z-index:3;font-size:7px;
+  letter-spacing:.1em;color:#fff;background:rgba(192,54,42,.92);border:1px solid rgba(255,120,90,.8);
+  padding:1px 4px;border-radius:1px;white-space:nowrap}
 
-/* ── 풀이 ───────────────────────────────── */
-.read{flex:1; min-height:0; overflow-y:auto; margin-top:16px; padding-bottom:18px}
+/* 풀이 */
+.read{flex:1;min-height:0;overflow-y:auto;margin-top:14px;padding-bottom:16px}
 .read::-webkit-scrollbar{width:3px}
 .read::-webkit-scrollbar-thumb{background:var(--geum-dim)}
-.line{
-  margin:0 0 17px; font-size:15.5px; font-weight:300; line-height:2.05;
-  color:var(--jae); letter-spacing:-.008em; animation:rise .55s ease both;
-}
-.line .who{
-  display:block; font-family:var(--serif); font-weight:700; font-size:11.5px;
-  letter-spacing:.3em; color:var(--jusa-hot); margin-bottom:7px; text-indent:.3em;
-}
-.caret{
-  display:inline-block; width:2px; height:1em; vertical-align:-2px;
-  background:var(--jusa-hot); margin-left:2px; animation:blip .9s steps(2) infinite;
-}
+.line{margin:0 0 17px;font-size:15.5px;font-weight:300;line-height:2.05;color:var(--jae);
+  letter-spacing:-.008em;animation:rise .5s ease both}
+.line .who{display:block;font-family:var(--serif);font-weight:700;font-size:11.5px;letter-spacing:.3em;
+  color:var(--jusa-hot);margin-bottom:7px;text-indent:.3em}
+.line em{font-style:normal;color:var(--geum);font-weight:500}
+.line strong{color:#ff8a6b;font-weight:500}
+@keyframes rise{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
+.caret{display:inline-block;width:2px;height:1em;vertical-align:-2px;background:var(--jusa-hot);
+  margin-left:2px;animation:blip .9s steps(2) infinite}
 @keyframes blip{0%,49%{opacity:1}50%,100%{opacity:0}}
-.dots{display:inline-block; letter-spacing:.42em; font-size:17px; color:var(--jae-dim)}
-.dots i{font-style:normal; animation:fadein 1.5s ease-in-out infinite}
-.dots i:nth-child(2){animation-delay:.25s}
-.dots i:nth-child(3){animation-delay:.5s}
+.dots{display:inline-block;letter-spacing:.42em;font-size:17px;color:var(--jae-dim)}
+.dots i{font-style:normal;animation:fadein 1.4s ease-in-out infinite}
+.dots i:nth-child(2){animation-delay:.24s}
+.dots i:nth-child(3){animation-delay:.48s}
 @keyframes fadein{0%,100%{opacity:.2}45%{opacity:1}}
-.line em{font-style:normal; color:var(--geum); font-weight:500}
-.line strong{color:#ff8a6b; font-weight:500}
-@keyframes rise{from{opacity:0; transform:translateY(10px)}to{opacity:1; transform:none}}
-.thinking{color:var(--jae-dim); font-size:13px; letter-spacing:.3em}
 
-.seal{
-  margin:4px 0 16px; padding:18px 16px; border:1px solid var(--line); border-radius:2px;
-  background:rgba(8,4,6,.72); text-align:center; animation:rise .6s ease both;
-}
-.seal .blur{
-  color:var(--jae-dim); font-size:14px; line-height:1.95;
-  filter:blur(5px); user-select:none; margin:0 0 14px;
-}
-.seal .why{font-family:var(--serif); font-size:14.5px; color:var(--jae); margin:0 0 4px}
-.seal .price{
-  font-family:var(--serif); font-size:12px; color:var(--geum-dim); margin:0 0 14px;
-  letter-spacing:.06em;
-}
-.tail{
-  margin:10px 0 0; font-size:12px; color:var(--jae-dim); text-align:center; line-height:1.9;
-}
-.tail b{color:var(--geum); font-weight:400}
+.seal{margin:4px 0 16px;padding:20px 16px;border:1px solid var(--line);border-radius:2px;
+  background:rgba(8,4,6,.8);text-align:center;animation:rise .6s ease both}
+.seal .why{font-family:var(--serif);font-weight:700;font-size:16px;color:var(--jae);margin:0 0 12px}
+.seal .blur{color:var(--jae-dim);font-size:14px;line-height:1.95;filter:blur(5px);user-select:none;margin:0 0 14px}
+.seal .what{margin:0 0 14px;font-size:12.5px;color:#b9aa9c;line-height:1.95;text-align:left}
+.seal .what b{color:var(--geum);font-weight:400}
+.seal .price{font-family:var(--serif);font-weight:700;font-size:15px;color:var(--jae);margin:0 0 4px}
+.seal .price span{color:var(--jusa-hot)}
+.seal .small{margin:0 0 14px;font-size:11px;color:#8d7f73}
+.tail{margin:12px 0 0;font-size:12px;color:var(--jae-dim);text-align:center;line-height:1.9}
+.tail b{color:var(--geum);font-weight:400}
 
-.foot{
-  flex:none; position:relative; z-index:8;
-  padding-bottom:calc(14px + env(safe-area-inset-bottom,0px));
-  padding-top:10px; display:grid; gap:9px;
-}
-#s-shuffle .brand .mark img, #s-pick .brand .mark img{width:min(44vw, 176px); opacity:.86}
-.demo-tag{
-  position:fixed; z-index:9; top:calc(8px + env(safe-area-inset-top,0px));
-  left:50%; transform:translateX(-50%);
-  font-size:9.5px; letter-spacing:.26em; color:var(--geum-dim);
-  border:1px solid var(--line); padding:3px 9px; border-radius:1px;
-  background:rgba(6,3,4,.72); text-indent:.26em; pointer-events:none;
-}
+/* 약관 */
+.sheet{position:fixed;inset:0;z-index:500;background:rgba(4,2,3,.86);display:flex;align-items:flex-end}
+.sheet .inner{width:100%;max-width:520px;margin:0 auto;max-height:86%;overflow-y:auto;
+  background:#0d0709;border-top:1px solid var(--line);
+  padding:22px max(20px,env(safe-area-inset-left,0px)) calc(24px + env(safe-area-inset-bottom,0px));
+  animation:up .32s cubic-bezier(.2,.9,.3,1) both}
+@keyframes up{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}
+.sheet h3{font-family:var(--serif);font-weight:700;font-size:17px;margin:0 0 4px;color:var(--jae)}
+.sheet h4{font-family:var(--serif);font-weight:700;font-size:13.5px;margin:20px 0 7px;color:var(--geum)}
+.sheet p,.sheet li{font-size:12.5px;line-height:1.95;color:#bfb1a3;margin:0 0 7px}
+.sheet ul{margin:0 0 7px;padding-left:17px}
+.sheet .fill{color:var(--jusa-hot)}
+.sheet .close{margin-top:22px}
 </style>
 
-<div class="demo-tag">데모판</div>
-
 <div id="stage">
-  <div id="bg"><div class="plate night"></div><div class="plate seer"></div></div>
+  <div id="bg">
+    <div class="plate" id="plateA"></div>
+    <div class="plate" id="plateB"></div>
+  </div>
 
-  <!-- 1. 들어가기 -->
+  <!-- 1. 질문 -->
   <section class="screen" id="s-ask">
     <div class="brand">
       <h1 class="mark"><img src="img/title.webp" alt="백귀타로"></h1>
       <div class="rule"></div>
     </div>
-    <div class="ask" id="askbox">
-      <h2>무엇이 궁금하여<br>백 귀신의 패를 열려 하는가</h2>
+    <div class="ask">
+      <p class="seer-name">백귀술사 <b>호연</b> <span>狐煙</span></p>
+      <h2>자네가 품고 온 이야기를 들려주게<br>카드는 이미 알고 있을지도 모르니</h2>
       <div class="field">
-        <textarea id="q" maxlength="120" placeholder="지금 가장 답답한 것 하나만 적어라.&#10;예) 지금 만나는 사람과 끝까지 갈 수 있을까요"></textarea>
+        <textarea id="q" maxlength="120" placeholder="지금 가장 답답한 것 하나만 적어 보게.&#10;예) 지금 만나는 사람과 끝까지 갈 수 있을까요"></textarea>
         <span class="count" id="count">0 / 120</span>
       </div>
-      <p class="hint">생년월일은 묻지 않는다. 질문 하나면 족하다.</p>
+      <p class="hint">생년월일은 묻지 않네. 질문 하나면 족하네.</p>
+      <p class="hint" style="font-size:11px;color:#8d7f73">여우의 연기, 호연 — 사람과 귀신의 경계에서<br>말 속에 숨은 마음과 보이지 않는 기운을 읽는다</p>
     </div>
     <div class="foot">
       <button class="btn" id="go" disabled>패 를 펴 다</button>
+      <p class="legal"><button id="openTerms">이용안내 · 환불규정</button></p>
     </div>
   </section>
 
-  <!-- 2. 섞기 -->
+  <!-- 2. 흩기 -->
   <section class="screen" id="s-shuffle" hidden>
-    <div class="brand" style="padding-top:calc(5vh + 4px)">
-      <h1 class="mark"><img src="img/title.webp" alt="백귀타로"></h1>
-    </div>
+    <div class="brand"><h1 class="mark"><img src="img/title.webp" alt="백귀타로"></h1></div>
     <div class="ask"></div>
-    <p class="deal" id="dealmsg">패를 손으로 쓸어 흩어라<small>백 귀신이 네 질문을 받아 간다</small></p>
-    <div class="fanwrap" id="fanwrap">
-      <div class="fan" id="fan"></div>
-    </div>
+    <p class="deal" id="dealmsg">패를 세 번 쓸어 보게
+      <small>손으로 패 위를 좌우로 훑으면 되네</small>
+      <span class="tally" id="tally"><i></i><i></i><i></i></span>
+    </p>
+    <div class="fanwrap" id="fanwrap"><div class="fan" id="fan"></div></div>
   </section>
 
   <!-- 3. 뽑기 -->
   <section class="screen" id="s-pick" hidden>
-    <div class="brand" style="padding-top:calc(5vh + 4px)">
-      <h1 class="mark"><img src="img/title.webp" alt="백귀타로"></h1>
-    </div>
+    <div class="brand"><h1 class="mark"><img src="img/title.webp" alt="백귀타로"></h1></div>
+    <div class="board" id="boardPick"></div>
     <div class="ask"></div>
-    <p class="deal" id="pickmsg">손이 멎는 자리가 네 패다
-      <small>인(因) · 연(緣) · 과(果) 세 장</small>
-      <span class="pips" id="pips"><i></i><i></i><i></i></span>
+    <p class="deal" id="pickmsg">열 장을 뽑게
+      <small>손이 멎는 자리가 자네 패일세</small>
     </p>
-    <div class="fanwrap" id="fanwrap2">
-      <div class="fan pickable" id="fan2"></div>
-    </div>
+    <div class="fanwrap" id="fanwrap2"><div class="fan pickable" id="fan2"></div></div>
   </section>
 
   <!-- 4. 풀이 -->
   <section class="screen" id="s-read" hidden>
-    <div class="brand" style="padding-top:calc(3.4vh + 4px)">
-      <p class="sub" style="margin:0">백귀타로</p>
+    <div class="brand" style="padding-top:calc(2.4vh + 4px);max-height:70px">
+      <h1 class="mark"><img src="img/title.webp" alt="백귀타로" style="width:min(32vw,128px);opacity:.85"></h1>
     </div>
-    <div class="laid" id="laid"></div>
+    <div class="board" id="board"></div>
     <div class="read" id="read"></div>
     <div class="foot" id="readfoot"></div>
   </section>
 </div>
 
+<div class="sheet" id="terms" hidden>
+  <div class="inner">
+    <h3>이용안내 · 환불규정</h3>
+    <p>백귀타로를 쓰기 전에 아래를 읽어 주십시오.</p>
+
+    <h4>어떤 서비스인가</h4>
+    <ul>
+      <li>백귀타로는 오락과 참고를 위한 콘텐츠입니다.</li>
+      <li>풀이 내용은 의료·법률·투자·진로의 판단 근거가 되지 않습니다. 중요한 결정은 반드시 본인 책임 아래 하십시오.</li>
+      <li>만 19세 미만은 보호자의 동의를 받은 뒤 이용하십시오.</li>
+    </ul>
+
+    <h4>결제</h4>
+    <ul>
+      <li>봉인 해제(열 장 전체 풀이) 1회 3,990원 · 부가세 포함.</li>
+      <li>단건 결제이며 자동 갱신이나 정기 결제는 없습니다.</li>
+      <li>결제는 결제대행사를 통해 처리되며, 본 서비스는 카드번호 등 결제수단 정보를 보관하지 않습니다.</li>
+    </ul>
+
+    <h4>환불</h4>
+    <ul>
+      <li>결제 즉시 디지털 콘텐츠가 제공되므로, <b>봉인을 해제해 풀이를 열람한 뒤에는 환불이 어렵습니다.</b> (전자상거래법 제17조 제2항 제5호)</li>
+      <li>결제했으나 <b>풀이를 열람하지 않은 경우</b>, 결제일로부터 7일 이내 전액 환불해 드립니다.</li>
+      <li>오류·중복결제·미제공 등 서비스 쪽 사유일 때는 열람 여부와 관계없이 전액 환불합니다.</li>
+      <li>환불 요청: 아래 문의처로 결제일시와 결제수단을 적어 보내 주십시오. 영업일 기준 3일 안에 처리합니다.</li>
+    </ul>
+
+    <h4>개인정보</h4>
+    <ul>
+      <li>질문으로 적은 글은 풀이를 만드는 데에만 쓰입니다.</li>
+      <li>이름·생년월일·연락처는 받지 않습니다.</li>
+      <li>결제 확인에 필요한 기록은 전자상거래법에 따라 5년간 보관한 뒤 파기합니다.</li>
+    </ul>
+
+    <h4>사업자 정보</h4>
+    <ul>
+      <li>상호 온미라이프 · 대표 <span class="fill">○○○</span></li>
+      <li>사업자등록번호 <span class="fill">○○○-○○-○○○○○</span></li>
+      <li>통신판매업신고 <span class="fill">제○○○○-○○○○호</span></li>
+      <li>주소 <span class="fill">○○○</span></li>
+      <li>문의 ja9746@naver.com</li>
+    </ul>
+    <p style="font-size:11.5px;color:#8d7f73">붉게 표시된 자리는 실제 사업자 정보로 채워 넣어야 합니다.</p>
+
+    <button class="btn ghost close" id="closeTerms">닫 기</button>
+  </div>
+</div>
+
 <script>
-/* ── 패 (데모용 열 장. 실제는 백 장) ───────────────────────── */
+
+/* ── 백귀 (데모 스무 장. 실제는 백 장) ───────────────── */
 const DECK = [
-  { nm:"염마", jp:"엔마", hanja:"閻魔", suit:"대귀", no:"제일귀", el:"화", art:"img/oni.webp",
-    因:"네 일이 막힌 뿌리는 네 선택이 아니다. 심판의 귀가 뒤에 서 있다. 네가 전에 끊지 못하고 어물쩍 넘긴 일 하나가, 지금 전부를 붙잡고 있다.",
-    緣:"지금 네 둘레에 저울이 놓여 있다. 너를 재고 있는 사람이 있고, 그 사람은 이미 결론을 냈다. 네가 모르고 있을 뿐이다.",
-    果:"어물쩍 넘어가는 결말은 없다. 둘 중 하나로 딱 갈린다. 반반은 없다.",
-    why:"네가 끝내지 않고 미뤄둔 일이 있기 때문이다. 염마는 미룬 자를 따라붙는 귀다. 매듭을 안 지었으니 매듭이 너를 지은 것이다.",
-    fix:"미뤄둔 것 하나를 이번 달 안에 끝내라. 작은 것이라도 좋다. 끝냈다는 사실 자체가 이 귀를 떨어뜨린다." },
+ {nm:"염마",jp:"엔마",hanja:"閻魔",suit:"대귀",no:"제일귀",el:"화",art:"img/oni.webp",
+  nature:"미룬 자를 따라붙어 저울을 드는 귀",
+  act:"자네가 끊지 못하고 어물쩍 넘긴 일 하나가 지금 전부를 붙잡고 있다.",
+  warn:"어물쩍 넘어가는 결말은 없다. 둘 중 하나로 딱 갈린다.",
+  fix:"미뤄둔 것 하나를 이달 안에 끝내게. 작은 것이라도 좋네."},
+ {nm:"백귀야행",jp:"햐쿠키야교",hanja:"百鬼夜行",suit:"대귀",no:"제삼귀",el:"수",art:"img/moon.webp",
+  nature:"밤길을 떼지어 지나며 남의 것과 자네 것을 섞는 무리",
+  act:"하나가 아니라 여럿이 겹쳐서 여기까지 왔다. 한 가지만 고치려 했으니 안 풀린 것이다.",
+  warn:"혼자 조용히 끝나지 않는다. 남들이 다 보는 자리에서 결판난다.",
+  fix:"사람을 쳐내게. 셋만 남기고 거리를 두게."},
+ {nm:"나찰",jp:"라세츠",hanja:"羅刹",suit:"대귀",no:"제이귀",el:"화",
+  nature:"고운 얼굴을 쓰고 들어와 안에서부터 먹는 귀",
+  act:"자네에게 가장 잘해주는 쪽에서 가장 크게 빠져나간다.",
+  warn:"정이 깊을수록 손해가 커진다. 지금 못 끊으면 두 배로 든다.",
+  fix:"호의를 받을 때마다 값을 치르게. 빚으로 쌓이면 그게 먹잇감이 되네."},
+ {nm:"구미호",jp:"큐비노키츠네",hanja:"九尾狐",suit:"대귀",no:"제사귀",el:"목",
+  nature:"꼬리를 아홉 갈래로 갈라 자네 판단을 나누는 귀",
+  act:"길이 여럿으로 보이는 건 길이 많아서가 아니라 자네가 홀려 있어서다.",
+  warn:"고르는 사이에 때가 지나간다. 셋 다 놓친다.",
+  fix:"오늘 안에 하나만 남기고 나머지를 지우게."},
+ {nm:"야차",jp:"야샤",hanja:"夜叉",suit:"대귀",no:"제오귀",el:"금",
+  nature:"지키려는 자에게 붙어 싸움을 불러오는 귀",
+  act:"자네가 지키려 들수록 상대도 날을 세운다. 지금 싸움은 자네가 먼저 열었다.",
+  warn:"이기더라도 남는 게 없다. 판 자체가 손해다.",
+  fix:"한 번만 져주게. 그 한 번이 전체를 자네 쪽으로 돌리네."},
 
-  { nm:"백귀야행", jp:"햐쿠키야교", hanja:"百鬼夜行", suit:"대귀", no:"제삼귀", el:"수", art:"img/moon.webp",
-    因:"하나가 아니다. 여럿이 겹쳐서 이렇게 됐다. 네가 한 가지 원인만 붙들고 고치려 했으니 안 풀린 것이다.",
-    緣:"지금 네 주변이 통째로 움직이는 때다. 사람이 몰려들고 말도 몰려든다. 이 소란 속에서 네 것과 남의 것이 섞인다.",
-    果:"혼자 조용히 끝나지 않는다. 남들이 다 보는 자리에서 결판난다.",
-    why:"네가 너무 많은 문을 열어뒀기 때문이다. 아무나 드나드는 집에는 귀도 섞여 든다. 지금 네 곁에 있는 사람 수부터 줄여야 한다.",
-    fix:"사람을 쳐내라. 셋만 남기고 거리를 둬라. 소란이 가라앉으면 네 것이 뭔지 보인다." },
+ {nm:"뇌수",jp:"라이주",hanja:"雷獸",suit:"검(소드)",no:"七",el:"금",
+  nature:"말을 타고 내려와 하루아침에 금을 내는 귀",
+  act:"자네가 뱉었거나 들은 말 한마디가 아직도 금을 벌리고 있다.",
+  warn:"길게 끌 것 같지만 하루아침에 갈라진다.",
+  fix:"보름간 속사정을 아무에게도 말하지 말게. 문자도 남기지 말게."},
+ {nm:"화차",jp:"카샤",hanja:"火車",suit:"검(소드)",no:"三",el:"화",
+  nature:"붙잡는 손을 태우며 끌고 가는 불수레",
+  act:"이미 끝난 것을 자네가 붙잡아 태우고 있으니 재만 남은 것이다.",
+  warn:"쥐고 있는 한 계속 탄다. 한 번 크게 잃는다.",
+  fix:"가장 아까운 것 하나를 먼저 내려놓게."},
+ {nm:"겸유",jp:"카마이타치",hanja:"鎌鼬",suit:"검(소드)",no:"五",el:"금",
+  nature:"스치듯 지나가며 베는 줄도 모르게 베는 귀",
+  act:"아프지도 않게 조금씩 깎여 나가고 있다. 세어 보면 꽤 된다.",
+  warn:"피가 멎지 않는다. 작은 손실이 멈추질 않는다.",
+  fix:"나가는 돈과 시간을 이레만 적어 보게. 베는 자리가 보이네."},
+ {nm:"우귀",jp:"우시오니",hanja:"牛鬼",suit:"검(소드)",no:"十",el:"수",
+  nature:"물가에 엎드려 등 돌린 자를 덮치는 귀",
+  act:"다 끝났다고 마음 놓은 자리에서 한 번 더 온다.",
+  warn:"마지막에 뒤집힌다. 끝까지 등을 보이지 마라.",
+  fix:"다 됐다 싶을 때 한 번 더 확인하게. 서류든 말이든."},
 
-  { nm:"뇌수", jp:"라이주", hanja:"雷獸", suit:"검(소드)", no:"七", el:"금",
-    因:"말 한마디다. 네가 뱉었거나 들은 말 한마디가 벼락처럼 떨어져, 지금까지 금을 내고 있다.",
-    緣:"칼날이 서 있다. 네 편인 줄 알았던 쪽에서 날이 온다. 지금 네가 믿고 속을 터놓는 그 상대를 다시 봐라.",
-    果:"갑자기 끝난다. 길게 끌 것 같지만 하루아침에 갈라진다.",
-    why:"입이 가벼운 때를 만났기 때문이다. 뇌수는 말을 타고 온다. 네가 한 말이 네게 돌아오는 자리에 지금 서 있다.",
-    fix:"앞으로 보름간 네 속사정을 아무에게도 말하지 마라. 문자도 남기지 마라. 말이 끊기면 벼락도 끊긴다." },
+ {nm:"설녀",jp:"유키온나",hanja:"雪女",suit:"잔(컵)",no:"九",el:"수",
+  nature:"곱게 웃으며 온도를 가져가는 귀",
+  act:"사건이 있어서가 아니라 서서히 식어서 여기까지 왔다.",
+  warn:"붙잡으면 더 차가워진다.",
+  fix:"열흘만 연락을 끊고 자네 일에 몰두하게. 얼음은 두면 녹네."},
+ {nm:"청행등",jp:"아오안돈",hanja:"青行燈",suit:"잔(컵)",no:"二",el:"목",
+  nature:"밤마다 되새기는 생각을 먹고 밝아지는 푸른 등",
+  act:"자네가 불러들였다. 생각할수록 등이 밝아지고 밝아질수록 자네가 묶인다.",
+  warn:"기다리면 꺼진다. 말을 꺼내는 쪽이 가져간다.",
+  fix:"사흘 안에 자네 뜻을 한 줄로 상대에게 말하게."},
+ {nm:"반야",jp:"한냐",hanja:"般若",suit:"잔(컵)",no:"八",el:"화",
+  nature:"사랑이 뒤집혀 뿔이 돋은 얼굴",
+  act:"그 마음은 식은 게 아니라 뒤집힌 것이다. 아직 뜨겁되 방향이 반대다.",
+  warn:"건드리면 터진다. 지금은 말이 칼이 된다.",
+  fix:"해명하지 말게. 한 달을 비워두면 뿔이 내려가네."},
+ {nm:"인어",jp:"닝교",hanja:"人魚",suit:"잔(컵)",no:"六",el:"수",
+  nature:"오래 묵은 것을 보여주며 사람을 붙드는 귀",
+  act:"지난 일이 자꾸 돌아온다. 돌아오는 게 아니라 자네가 꺼내 보는 것이다.",
+  warn:"오래 보면 돌이 된다. 그 자리에서 못 움직인다.",
+  fix:"옛것 하나를 버리게. 사진이든 번호든 물건이든."},
 
-  { nm:"화차", jp:"카샤", hanja:"火車", suit:"검(소드)", no:"三", el:"화",
-    因:"억지로 끌고 온 것이 있다. 이미 끝난 것을 네가 붙잡아 태우고 있으니, 재만 남은 것이다.",
-    緣:"끌려가는 기운이다. 네 의지와 상관없이 밀려가는 흐름이 있고, 돈이나 사람 하나가 그 수레에 실려 있다.",
-    果:"한 번 크게 잃고 나서야 풀린다. 그리고 그 잃는 것이 아깝지 않게 된다.",
-    why:"놓아야 할 것을 못 놓았기 때문이다. 화차는 붙잡는 손을 태우는 귀다. 쥐고 있는 한 계속 탄다.",
-    fix:"가장 아까운 것 하나를 먼저 내려놔라. 네가 내려놓는 순간 수레가 멈춘다." },
+ {nm:"도벽",jp:"누리카베",hanja:"塗壁",suit:"전(펜타클)",no:"五",el:"토",
+  nature:"고집 앞에만 서는 보이지 않는 벽",
+  act:"길이 없는 게 아니라 벽이 쳐진 것이다. 한 길만 보는 자에게만 보인다.",
+  warn:"정면으로는 못 뚫는다. 같은 자리에서 또 넘어진다.",
+  fix:"두드리던 문을 접고 다른 문을 찾게. 사람도 바꾸게."},
+ {nm:"금령",jp:"카네다마",hanja:"金霊",suit:"전(펜타클)",no:"十",el:"금",
+  nature:"해를 주지 않고 문 앞에 서서 기다리는 귀",
+  act:"들어올 자리는 이미 있었다. 자네가 쥔 것을 안 놓아 못 들어온 것이다.",
+  warn:"문을 계속 닫아두면 다른 집으로 간다.",
+  fix:"묵은 빚이나 밀린 것 하나를 먼저 갚게."},
+ {nm:"빈핍신",jp:"빔보가미",hanja:"貧乏神",suit:"전(펜타클)",no:"三",el:"토",
+  nature:"어지러운 자리에 눌러앉아 떠나지 않는 귀",
+  act:"돈이 모자란 게 아니라 새는 구멍을 안 막아서 안 모이는 것이다.",
+  warn:"이대로 두면 석 달 뒤가 지금보다 못하다.",
+  fix:"집에서 가장 어지러운 한 칸을 오늘 치우게. 그 자리가 구멍이네."},
+ {nm:"좌부동자",jp:"자시키와라시",hanja:"座敷童子",suit:"전(펜타클)",no:"一",el:"토",
+  nature:"머무는 집을 일으키되 홀대하면 조용히 떠나는 아이귀",
+  act:"자네에게 복이 하나 와 있다. 다만 자네가 그걸 복인 줄 모르고 있다.",
+  warn:"알아보지 못하면 말없이 나간다. 나간 뒤에야 안다.",
+  fix:"요즘 자네에게 잘해준 사람에게 먼저 연락하게. 거기 복이 있네."},
 
-  { nm:"설녀", jp:"유키온나", hanja:"雪女", suit:"잔(컵)", no:"九", el:"수",
-    因:"식었다. 사건이 있어서가 아니라 서서히 식어서 여기까지 왔다. 언제부터인지 너도 모를 것이다.",
-    緣:"겉으로는 곱고 조용하나 속이 차다. 네게 웃어 보이는 그 사람의 마음이 지금 얼어 있다.",
-    果:"붙잡으면 더 차가워진다. 네가 손을 놓는 순간 상대가 먼저 움직인다.",
-    why:"네가 먼저 등을 보였기 때문이다. 설녀는 식은 자리에 앉는 귀다. 상대가 변한 게 아니라 온도가 먼저 떨어진 것이다.",
-    fix:"매달리지 마라. 열흘만 연락을 끊고 네 일에 몰두해라. 얼음은 누르면 깨지고 두면 녹는다." },
-
-  { nm:"청행등", jp:"아오안돈", hanja:"青行燈", suit:"잔(컵)", no:"二", el:"목",
-    因:"네가 불러들였다. 밤마다 꺼내 보는 생각, 되새기는 이야기가 등불이 되어 이것을 불러 앉혔다.",
-    緣:"둘 사이에 푸른 불이 하나 켜져 있다. 아직 꺼지지 않았으나, 지금 그 불은 네 쪽에서만 켜고 있다.",
-    果:"기다리면 꺼진다. 말을 꺼내는 쪽이 가져간다.",
-    why:"네가 밤에 혼자 되새기기 때문이다. 청행등은 되새김을 먹고 자라는 귀다. 생각할수록 등이 밝아지고, 밝아질수록 네가 묶인다.",
-    fix:"밤에 그 생각이 올라오면 자리에서 일어나 불을 켜라. 그리고 사흘 안에 상대에게 네 뜻을 한 줄로 말해라." },
-
-  { nm:"도벽", jp:"누리카베", hanja:"塗壁", suit:"전(펜타클)", no:"五", el:"토",
-    因:"길이 없는 게 아니라 벽이 쳐진 것이다. 보이지 않는 벽이라 네가 자꾸 같은 자리에서 넘어진 것이다.",
-    緣:"돈이든 일이든 지금 한 뼘 앞에서 막혀 있다. 네 능력 문제가 아니다. 막는 자가 따로 있다.",
-    果:"정면으로는 못 뚫는다. 옆으로 돌아가는 길이 열린다.",
-    why:"네가 같은 문만 두드렸기 때문이다. 도벽은 고집 앞에 서는 귀다. 한 길만 보는 자에게만 벽이 보인다.",
-    fix:"지금 두드리던 문을 접고 다른 문을 찾아라. 사람도 바꿔라. 소개로 들어가는 자리에서 길이 난다." },
-
-  { nm:"금령", jp:"카네다마", hanja:"金霊", suit:"전(펜타클)", no:"十", el:"금",
-    因:"들어올 자리는 이미 네게 있었다. 다만 네가 쥐고 있던 것을 놓지 않아 새 것이 못 들어온 것이다.",
-    緣:"재물의 기운이 네 문 앞까지 와 있다. 사람을 통해 온다. 네가 최근에 소홀히 한 그 사람이다.",
-    果:"들어온다. 다만 네가 먼저 하나를 내보낸 뒤에 들어온다.",
-    why:"이건 붙어서 해를 주는 귀가 아니다. 금령은 들어오려고 문 앞에 선 귀다. 네가 문을 안 열어주고 있는 것이다.",
-    fix:"묵은 빚이나 밀린 것 하나를 먼저 갚아라. 나가는 길을 터야 들어오는 길이 난다." },
-
-  { nm:"야호", jp:"야코", hanja:"野狐", suit:"지(완드)", no:"八", el:"목",
-    因:"홀렸다. 네가 지금 옳다고 믿는 그림이 실은 누가 보여준 그림이다. 처음부터 네 생각이 아니었다.",
-    緣:"빠르게 움직이는 기운이 붙었다. 일이 술술 풀리는 것처럼 보이는데, 그 빠름 자체가 미끼다.",
-    果:"서두르면 뺏긴다. 늦추면 네 것이 된다.",
-    why:"네가 급했기 때문이다. 야호는 급한 자의 뒤를 따르는 귀다. 빨리 가고 싶은 마음이 길을 열어준 것이다.",
-    fix:"지금 결정하려던 것을 한 달 미뤄라. 서류든 약속이든 오늘 도장 찍지 마라. 미루면 저절로 정체가 드러난다." },
-
-  { nm:"천정", jp:"텐조나메", hanja:"天井嘗", suit:"지(완드)", no:"四", el:"토",
-    因:"네가 안 보는 곳에서 자랐다. 천장을 핥는 귀처럼, 네가 고개 들지 않은 사이에 위에서부터 썩었다.",
-    緣:"집이나 자리에 관한 기운이다. 네가 머무는 곳 자체가 지금 네 기운을 갉고 있다.",
-    果:"자리를 옮겨야 끝난다. 옮기지 않으면 같은 일이 한 번 더 온다.",
-    why:"네가 오래 한자리에 머물렀기 때문이다. 천정은 묵은 자리에 들러붙는 귀다. 사람이 아니라 자리가 문제다.",
-    fix:"자는 자리부터 바꿔라. 머리 두는 방향을 돌리고 위쪽을 쓸어내라. 그리고 석 달 안에 자리를 옮길 궁리를 해라." }
+ {nm:"야호",jp:"야코",hanja:"野狐",suit:"지(완드)",no:"八",el:"목",
+  nature:"급한 자의 뒤를 따라붙어 길을 보여주는 들여우",
+  act:"일이 술술 풀리는 것처럼 보이는데 그 빠름 자체가 미끼다.",
+  warn:"서두르면 뺏긴다. 자네 이름으로 남지 않는다.",
+  fix:"결정하려던 것을 한 달 미루게. 오늘 도장 찍지 말게."},
+ {nm:"천정",jp:"텐조나메",hanja:"天井嘗",suit:"지(완드)",no:"四",el:"토",
+  nature:"고개 들지 않는 사이 위에서부터 핥아 내리는 귀",
+  act:"자네가 안 보는 곳에서 자랐다. 사람이 아니라 자리가 문제다.",
+  warn:"그냥 두면 같은 일이 한 번 더 온다.",
+  fix:"자는 자리부터 바꾸게. 머리 두는 방향을 돌리고 위쪽을 쓸어내게."},
+ {nm:"수신",jp:"미즈치",hanja:"蛟",suit:"지(완드)",no:"二",el:"수",
+  nature:"물 밑에 몸을 감추고 때를 기다리는 용이 못 된 뱀",
+  act:"아직 드러나지 않았을 뿐 밑에서 이미 움직이고 있다.",
+  warn:"드러나는 순간이 곧 터지는 순간이다.",
+  fix:"지금 조용한 쪽을 먼저 들여다보게. 소리 나는 쪽은 급하지 않네."}
 ];
-
-/* 주제 판별 */
-const TOPICS = [
-  { k:"연애", re:/사랑|연애|남친|여친|애인|좋아|고백|썸|결혼|재회|헤어|이별|만나|그사람|그 사람|마음/ },
-  { k:"금전", re:/돈|빚|재물|투자|대출|월급|수입|자금|사업|장사|가게|매출|집값|계약/ },
-  { k:"직장", re:/회사|직장|이직|면접|취업|합격|시험|승진|상사|일자리|퇴사|진로/ },
-  { k:"사람", re:/친구|가족|부모|형제|동업|배신|소문|관계|사람들/ },
-  { k:"건강", re:/몸|아프|아픈|병|건강|수술|잠|피곤/ }
-];
-const TOPIC_TIE = {
-  연애:"특히 사람 사이의 일에서 이 기운이 가장 세게 돈다.",
-  금전:"특히 돈이 오가는 자리에서 이 기운이 가장 세게 돈다.",
-  직장:"특히 일과 자리를 두고 이 기운이 가장 세게 돈다.",
-  사람:"특히 네 주변 사람들 사이에서 이 기운이 가장 세게 돈다.",
-  건강:"특히 네 몸과 잠자리 쪽으로 이 기운이 내려앉아 있다.",
-  기타:"지금 네가 가장 답답해하는 바로 그 일에서 이 기운이 돈다."
-};
-const TOPIC_VERDICT = {
-  연애:["된다. 그 사람과 이어진다.","된다. 한 번 틀어졌다가 이어진다.","지금 방식으로는 안 된다. 네가 먼저 물러서야 돌아온다.","아니다. 이 사람과는 여기까지다. 붙잡을수록 네가 상한다."],
-  금전:["들어온다. 액수도 네 생각보다 크다.","들어온다. 다만 한 번 새고 나서 들어온다.","지금 벌인 것으로는 안 된다. 판을 바꿔야 돈이 돈다.","아니다. 지금 넣으면 잃는다. 손을 떼라."],
-  직장:["된다. 그 자리는 네 자리다.","된다. 한 번 떨어지고 나서 된다.","지금 자리에선 안 난다. 옮겨야 길이 생긴다.","아니다. 지금 밀면 밀릴수록 뒤로 간다. 때를 기다려라."],
-  사람:["풀린다. 네가 생각하는 것보다 쉽게 풀린다.","풀린다. 한 번 크게 부딪히고 나서 풀린다.","지금 상태로는 안 풀린다. 네가 먼저 말을 꺼내야 한다.","아니다. 이 사람과는 거리를 둬라. 가까이 둘수록 네가 깎인다."],
-  건강:["좋아진다. 큰 탈은 없다.","좋아진다. 한 번 더 성가신 일을 겪고 나서 좋아진다.","지금 사는 방식으론 안 낫는다. 자는 자리부터 고쳐라.","지금 그냥 두면 안 된다. 미루지 말고 사람을 찾아가 봐라."],
-  기타:["된다. 그대로 간다.","된다. 한 번 뒤집혔다가 된다.","지금 모양으로는 안 된다. 네가 움직여야 길이 난다.","아니다. 끊고 다시 시작해야 네 것이 생긴다."]
-};
-const EL_WHEN = {
-  목:{ t:"해가 바뀌고 두 달 안", d:"새로 돋는 기운이라 봄머리에 움직인다" },
-  화:{ t:"늦봄에서 여름 사이", d:"불기운이라 한번 붙으면 빠르게 번진다" },
-  토:{ t:"두 달 안, 환절머리", d:"흙기운이라 천천히 그러나 확실하게 자리를 바꾼다" },
-  금:{ t:"지금부터 한 달 안", d:"쇠기운이라 단칼에 갈린다" },
-  수:{ t:"올겨울, 특히 섣달", d:"물기운이라 조용히 스며들듯 결판난다" }
-};
 
 const POS = [
-  { key:"因", label:"인 · 因", desc:"어디서 비롯됐는가" },
-  { key:"緣", label:"연 · 緣", desc:"지금 무엇이 얽혔는가" },
-  { key:"果", label:"과 · 果", desc:"어떻게 끝나는가" }
+ {k:"因",ko:"인 因",desc:"어디서 비롯됐나"},
+ {k:"緣",ko:"연 緣",desc:"지금 무엇이 얽혔나"},
+ {k:"隱",ko:"은 隱",desc:"자네가 못 보는 것"},
+ {k:"敵",ko:"적 敵",desc:"자네를 막는 것"},
+ {k:"助",ko:"조 助",desc:"자네를 돕는 것"},
+ {k:"心",ko:"심 心",desc:"상대의 속"},
+ {k:"時",ko:"시 時",desc:"때"},
+ {k:"鬼",ko:"귀 鬼",desc:"붙은 귀"},
+ {k:"符",ko:"부 符",desc:"푸는 법"},
+ {k:"果",ko:"과 果",desc:"끝"}
 ];
 
-/* ── 상태 ───────────────────────────────── */
-const S = { q:"", order:[], picked:[], shuffles:0, swept:new Set(), paid:false, E:null, spin:0, done:false, brushN:0, pass:0, dir:0, sinceFlip:0 };
-const $ = id => document.getElementById(id);
-const show = id => {
-  document.querySelectorAll(".screen").forEach(s => s.hidden = true);
-  $(id).hidden = false;
+const TOPICS = [
+ {k:"연애",re:/사랑|연애|남친|여친|애인|좋아|고백|썸|결혼|재회|헤어|이별|만나|그사람|그 사람|마음|바람/},
+ {k:"금전",re:/돈|빚|재물|투자|대출|월급|수입|자금|사업|장사|가게|매출|집값|계약|주식|코인/},
+ {k:"직장",re:/회사|직장|이직|면접|취업|합격|시험|승진|상사|일자리|퇴사|진로|자격/},
+ {k:"사람",re:/친구|가족|부모|형제|동업|배신|소문|관계|사람들|시댁|처가/},
+ {k:"건강",re:/몸|아프|아픈|병|건강|수술|잠|피곤|검사/},
+ {k:"아이",re:/아이|임신|난임|시험관|애기|자식|출산/}
+];
+const TIE = {
+ 연애:"사람 사이의 일에서 이 기운이 가장 세게 돈다.",
+ 금전:"돈이 오가는 자리에서 이 기운이 가장 세게 돈다.",
+ 직장:"일과 자리를 두고 이 기운이 가장 세게 돈다.",
+ 사람:"자네 주변 사람들 사이에서 이 기운이 가장 세게 돈다.",
+ 건강:"자네 몸과 잠자리 쪽으로 이 기운이 내려앉아 있다.",
+ 아이:"기다리는 그 일에 이 기운이 걸려 있다.",
+ 기타:"지금 자네가 가장 답답해하는 바로 그 일에서 돈다."
 };
+const VERDICT = {
+ 연애:["된다. 그 사람과 이어진다.","된다. 한 번 크게 틀어졌다가 이어진다.","지금 방식으로는 안 된다. 자네가 먼저 물러서야 돌아온다.","아니다. 이 사람과는 여기까지다. 붙잡을수록 자네가 상한다."],
+ 금전:["들어온다. 액수도 자네 생각보다 크다.","들어온다. 다만 한 번 새고 나서 들어온다.","지금 벌인 것으로는 안 된다. 판을 바꿔야 돈이 돈다.","아니다. 지금 넣으면 잃는다. 손을 떼라."],
+ 직장:["된다. 그 자리는 자네 자리다.","된다. 한 번 떨어지고 나서 된다.","지금 자리에선 안 난다. 옮겨야 길이 생긴다.","아니다. 지금 밀면 밀릴수록 뒤로 간다. 때를 기다려라."],
+ 사람:["풀린다. 자네 생각보다 쉽게 풀린다.","풀린다. 한 번 크게 부딪히고 나서 풀린다.","지금 상태로는 안 풀린다. 자네가 먼저 말을 꺼내야 한다.","아니다. 이 사람과는 거리를 둬라. 가까이 둘수록 자네가 깎인다."],
+ 건강:["좋아진다. 큰 탈은 없다.","좋아진다. 한 번 더 성가신 일을 겪고 나서 좋아진다.","지금 사는 방식으론 안 낫는다. 자는 자리부터 고쳐라.","그냥 두면 안 된다. 미루지 말고 사람을 찾아가 봐라."],
+ 아이:["온다. 생각보다 이르다.","온다. 한 번 마음을 비우고 나서 온다.","지금 방식으로는 더디다. 몸보다 자리를 먼저 바꿔라.","지금 흐름으론 아니다. 반년을 비우고 다시 보라."],
+ 기타:["된다. 그대로 간다.","된다. 한 번 뒤집혔다가 된다.","지금 모양으로는 안 된다. 자네가 움직여야 길이 난다.","아니다. 끊고 다시 시작해야 자네 것이 생긴다."]
+};
+const EL_WHEN = {
+ 목:{t:"해가 바뀌고 두 달 안",d:"새로 돋는 기운이라 봄머리에 움직인다"},
+ 화:{t:"늦봄에서 여름 사이",d:"불기운이라 한번 붙으면 빠르게 번진다"},
+ 토:{t:"두 달 안, 환절머리",d:"흙기운이라 더디되 확실하게 자리를 바꾼다"},
+ 금:{t:"지금부터 한 달 안",d:"쇠기운이라 단칼에 갈린다"},
+ 수:{t:"올겨울, 특히 섣달",d:"물기운이라 조용히 스며들듯 결판난다"}
+};
+const QTYPE = [
+ {k:"언제",re:/언제|시기|며칠|몇\s*월|얼마나|얼마만/},
+ {k:"왜",re:/왜|이유|어째서|무슨 일/},
+ {k:"어떻게",re:/어떻게|방법|어쩌|어찌/},
+ {k:"누구",re:/누구|어떤 사람|어떤사람/}
+];
 
-/* ── 1. 질문 ────────────────────────────── */
-const q = $("q");
-q.addEventListener("focus", () => $("s-ask").classList.add("typing"));
-q.addEventListener("blur", () => $("s-ask").classList.remove("typing"));
-q.addEventListener("input", () => {
-  $("count").textContent = q.value.length + " / 120";
-  $("go").disabled = q.value.trim().length < 2;
+/* ── 상태 ── */
+const S = {q:"",order:[],picked:[],swept:new Set(),brushN:0,pass:0,dir:0,sinceFlip:0,
+  done:false,spin:0,paid:false,E:null};
+const $ = id => document.getElementById(id);
+const show = id => {document.querySelectorAll(".screen").forEach(s=>s.hidden=true); $(id).hidden=false;};
+function esc(t){return String(t).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));}
+function wait(ms){return new Promise(r=>setTimeout(r,ms));}
+
+/* ── 배경 갈아끼우기 ── */
+let plateTop = false;
+function setBg(file){
+  const a=$("plateA"), b=$("plateB");
+  const next = plateTop ? a : b, cur = plateTop ? b : a;
+  next.style.backgroundImage = `url("${file}")`;
+  next.classList.add("on"); cur.classList.remove("on");
+  plateTop = !plateTop;
+}
+setBg("img/bg.webp");
+
+/* ── 약관 ── */
+$("openTerms").addEventListener("click",()=>$("terms").hidden=false);
+$("closeTerms").addEventListener("click",()=>$("terms").hidden=true);
+$("terms").addEventListener("click",e=>{if(e.target.id==="terms")$("terms").hidden=true;});
+
+/* ── 1. 질문 ── */
+const q=$("q");
+q.addEventListener("focus",()=>$("s-ask").classList.add("typing"));
+q.addEventListener("blur",()=>$("s-ask").classList.remove("typing"));
+q.addEventListener("input",()=>{
+  $("count").textContent=q.value.length+" / 120";
+  $("go").disabled=q.value.trim().length<2;
 });
-$("go").addEventListener("click", () => {
-  S.q = q.value.trim();
-  S.order = [];
-  while(S.order.length < WHEEL) S.order.push(...DECK.map((_, i) => i));
-  for(let i = S.order.length - 1; i > 0; i--){
-    const j = Math.floor(Math.random() * (i + 1));
-    [S.order[i], S.order[j]] = [S.order[j], S.order[i]];
-  }
-  buildFan($("fan"), false);
-  $("bg").classList.add("seer");
+$("go").addEventListener("click",()=>{
+  S.q=q.value.trim();
+  S.order=[];
+  while(S.order.length<WHEEL) S.order.push(...DECK.map((_,i)=>i));
+  shuffleArr(S.order);
+  buildFan($("fan"),false);
+  setBg("img/seer-shuffle.webp");
   show("s-shuffle");
 });
+function shuffleArr(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}}
 
-/* ── 패 바퀴 — 눈에는 부채, 속으로는 원 ──── */
-const WHEEL = 60;              /* 끊김 없이 도는 패 */
-const STEP  = 360 / WHEEL;
-
-function norm(a){ return ((a + 180) % 360 + 360) % 360 - 180; }
-function cardAngle(i){ return norm(i * STEP + (S.spin || 0)); }
-function fanTransform(i){ return `rotate(${cardAngle(i).toFixed(2)}deg)`; }
-
-let spinQueued = false;
+/* ── 패 바퀴 ── */
+const WHEEL=60, STEP=360/WHEEL;
+function norm(a){return ((a+180)%360+360)%360-180;}
+function cardAngle(i){return norm(i*STEP+(S.spin||0));}
+let spinQueued=false;
 function applySpin(host){
-  if(spinQueued) return;
-  spinQueued = true;
-  requestAnimationFrame(() => {
-    spinQueued = false;
-    const cards = host.children;
-    for(let i = 0; i < cards.length; i++){
-      const a = cardAngle(i), c = cards[i];
-      c.style.setProperty("--t", `rotate(${a.toFixed(2)}deg)`);
-      const off = Math.abs(a) > 52;
-      if((c.dataset.off === "1") !== off){
-        c.dataset.off = off ? "1" : "0";
-        c.classList.toggle("off", off);
-      }
-      c.style.zIndex = String(120 - Math.round(Math.abs(a)));
+  if(spinQueued)return; spinQueued=true;
+  requestAnimationFrame(()=>{
+    spinQueued=false;
+    const cards=host.children;
+    for(let i=0;i<cards.length;i++){
+      const a=cardAngle(i), c=cards[i];
+      c.style.setProperty("--t",`rotate(${a.toFixed(2)}deg)`);
+      const off=Math.abs(a)>52;
+      if((c.dataset.off==="1")!==off){c.dataset.off=off?"1":"0";c.classList.toggle("off",off);}
+      c.style.zIndex=String(120-Math.round(Math.abs(a)));
     }
   });
 }
-
-function buildFan(host, pickable){
-  host.innerHTML = "";
-  for(let i = 0; i < WHEEL; i++){
-    const c = document.createElement("div");
-    c.className = "card";
-    c.style.setProperty("--t", fanTransform(i));
-    c.dataset.i = i;
+function buildFan(host,pickable){
+  host.innerHTML="";
+  for(let i=0;i<WHEEL;i++){
+    const c=document.createElement("div");
+    c.className="card";
+    c.style.setProperty("--t",`rotate(${cardAngle(i).toFixed(2)}deg)`);
+    c.dataset.i=i;
     if(pickable){
-      c.setAttribute("role", "button");
-      c.setAttribute("tabindex", "0");
-      c.setAttribute("aria-label", "패 뽑기");
-      c.addEventListener("click", () => pick(c));
-      c.addEventListener("keydown", e => {
-        if(e.key === "Enter" || e.key === " "){ e.preventDefault(); pick(c); }
-      });
+      c.setAttribute("role","button"); c.setAttribute("tabindex","0");
+      c.setAttribute("aria-label","패 뽑기");
+      c.addEventListener("click",()=>pick(c));
+      c.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();pick(c);}});
     }
     host.appendChild(c);
   }
   applySpin(host);
 }
 
-/* ── 2. 쓸어서 섞기 — 두세 번이면 족하다 ── */
+/* ── 2. 세 번 쓸기 ── */
 function brush(el){
-  if(!el || !el.classList.contains("card")) return;
-  if(el.classList.contains("lift") || el.classList.contains("off")) return;
+  if(!el||!el.classList.contains("card"))return;
+  if(el.classList.contains("lift")||el.classList.contains("off"))return;
   el.classList.add("lift");
-  setTimeout(() => el.classList.remove("lift"), 240);
-  [el.previousElementSibling, el.nextElementSibling].forEach(sb => {
-    if(!sb || sb.classList.contains("lift") || sb.classList.contains("taken")) return;
-    sb.classList.add("nudge");
-    setTimeout(() => sb.classList.remove("nudge"), 210);
+  setTimeout(()=>el.classList.remove("lift"),240);
+  [el.previousElementSibling,el.nextElementSibling].forEach(sb=>{
+    if(!sb||sb.classList.contains("lift")||sb.classList.contains("taken"))return;
+    sb.classList.add("nudge"); setTimeout(()=>sb.classList.remove("nudge"),210);
   });
-
   el.classList.add("brushed");
   S.brushN++; S.sinceFlip++;
-
-  const n = S.order.length;
-  const a = Number(el.dataset.i) % n, b = Math.floor(Math.random() * n);
-  [S.order[a], S.order[b]] = [S.order[b], S.order[a]];
-
-  if(S.brushN >= 40) finishSweep();
+  const n=S.order.length, a=Number(el.dataset.i)%n, b=Math.floor(Math.random()*n);
+  [S.order[a],S.order[b]]=[S.order[b],S.order[a]];
+  if(S.brushN>=46) finishSweep();
 }
-
 function markPass(){
-  S.pass++;
-  S.sinceFlip = 0;
-  const msg = $("dealmsg");
-  if(S.pass === 1) msg.innerHTML = '한 번 더 쓸어라<small>아직 귀신들이 자리를 안 잡았다</small>';
-  if(S.pass === 2) msg.innerHTML = '한 번만 더<small>거의 다 흩어졌다</small>';
-  if(S.pass >= 3) finishSweep();
+  if(S.done||S.pass>=3)return;
+  S.pass++; S.sinceFlip=0;
+  [...$("tally").children].forEach((d,i)=>d.classList.toggle("on",i<S.pass));
+  const m=$("dealmsg").firstChild;
+  if(S.pass===1) m.textContent="두 번 더 쓸어 보게 ";
+  if(S.pass===2) m.textContent="한 번만 더 ";
+  if(S.pass>=3) finishSweep();
 }
-
 function finishSweep(){
-  if(S.done) return;
-  S.done = true;
-  const msg = $("dealmsg");
-  msg.innerHTML = '흩어졌다<small>패가 네 질문을 물었다</small>';
-  const cards = [...$("fan").children].filter(c => !c.classList.contains("off"));
-  cards.forEach((c, i) => setTimeout(() => {
-    c.classList.add("lift");
-    setTimeout(() => c.classList.remove("lift"), 220);
-  }, i * 36));
-  setTimeout(() => { msg.style.opacity = "0"; }, 1000);
-  setTimeout(toPickScreen, 1350);
+  if(S.done)return; S.done=true;
+  [...$("tally").children].forEach(d=>d.classList.add("on"));
+  $("dealmsg").innerHTML='흩어졌다<small>패가 자네 물음을 물었네</small>';
+  const cards=[...$("fan").children].filter(c=>!c.classList.contains("off"));
+  cards.forEach((c,i)=>setTimeout(()=>{
+    c.classList.add("lift"); setTimeout(()=>c.classList.remove("lift"),220);
+  },i*34));
+  setTimeout(()=>{$("dealmsg").style.opacity="0";},1000);
+  setTimeout(toPickScreen,1400);
 }
-
 function toPickScreen(){
-  buildFan($("fan2"), true);
-  if(!pickWired){ wireSpin("fanwrap2", "fan2", false); pickWired = true; }
+  buildBoard($("boardPick"),true);
+  buildFan($("fan2"),true);
+  if(!pickWired){wireSpin("fanwrap2","fan2",false);pickWired=true;}
+  setBg("img/seer-pick.webp");
   show("s-pick");
 }
-let pickWired = false;
+let pickWired=false;
 
-/* ── 돌리기 + 쓸기 ─────────────────────── */
-function wireSpin(wrapId, fanId, sweeping){
-  const wrap = $(wrapId), fan = $(fanId);
-  let x = null, v = 0, raf = null, moved = 0;
-
-  const glide = () => {
-    v *= 0.94;
-    if(Math.abs(v) < 0.02){ raf = null; fan.classList.remove("spin"); return; }
-    S.spin += v; applySpin(fan);
-    raf = requestAnimationFrame(glide);
+/* ── 돌리기 + 쓸기 ── */
+function wireSpin(wrapId,fanId,sweeping){
+  const wrap=$(wrapId), fan=$(fanId);
+  let x=null,v=0,raf=null,moved=0;
+  const glide=()=>{
+    v*=0.94;
+    if(Math.abs(v)<0.02){raf=null;fan.classList.remove("spin");return;}
+    S.spin+=v; applySpin(fan); raf=requestAnimationFrame(glide);
   };
-
-  wrap.addEventListener("pointerdown", e => {
-    e.preventDefault();
-    x = e.clientX; v = 0; moved = 0;
-    if(raf){ cancelAnimationFrame(raf); raf = null; }
+  wrap.addEventListener("pointerdown",e=>{
+    e.preventDefault(); x=e.clientX; v=0; moved=0;
+    if(raf){cancelAnimationFrame(raf);raf=null;}
     fan.classList.add("spin");
-    if(sweeping) brush(document.elementFromPoint(e.clientX, e.clientY));
+    if(sweeping) brush(document.elementFromPoint(e.clientX,e.clientY));
   });
-
-  wrap.addEventListener("pointermove", e => {
-    if(sweeping) brush(document.elementFromPoint(e.clientX, e.clientY));
-    if(x === null) return;
-    const dx = e.clientX - x;
-    if(Math.abs(dx) < 0.5) return;
-    moved += Math.abs(dx);
+  wrap.addEventListener("pointermove",e=>{
+    if(sweeping) brush(document.elementFromPoint(e.clientX,e.clientY));
+    if(x===null)return;
+    const dx=e.clientX-x;
+    if(Math.abs(dx)<0.5)return;
+    moved+=Math.abs(dx);
     if(sweeping){
-      const dir = Math.sign(dx);
-      if(S.dir === 0) S.dir = dir;
-      else if(dir !== S.dir && S.sinceFlip >= 5){ S.dir = dir; markPass(); }
+      const dir=Math.sign(dx);
+      if(S.dir===0) S.dir=dir;
+      else if(dir!==S.dir&&S.sinceFlip>=5){S.dir=dir;markPass();}
     }
-    v = dx * 0.14;
-    S.spin += v;
-    applySpin(fan);
-    x = e.clientX;
+    v=dx*0.14; S.spin+=v; applySpin(fan); x=e.clientX;
   });
-
-  ["pointerup","pointercancel","pointerleave"].forEach(ev =>
-    wrap.addEventListener(ev, () => {
-      if(x === null) return;
-      x = null;
-      wrap.dataset.moved = moved > 8 ? "1" : "";
-      setTimeout(() => { wrap.dataset.moved = ""; }, 80);
-      if(Math.abs(v) > 0.1 && !raf) raf = requestAnimationFrame(glide);
+  ["pointerup","pointercancel","pointerleave"].forEach(ev=>
+    wrap.addEventListener(ev,()=>{
+      if(x===null)return;
+      x=null;
+      wrap.dataset.moved=moved>8?"1":"";
+      setTimeout(()=>{wrap.dataset.moved="";},90);
+      if(Math.abs(v)>0.1&&!raf) raf=requestAnimationFrame(glide);
       else fan.classList.remove("spin");
     }));
 }
-wireSpin("fanwrap", "fan", true);
+wireSpin("fanwrap","fan",true);
 
-/* ── 3. 뽑기 ────────────────────────────── */
+/* ── 상 위 열 자리 ── */
+function buildBoard(host,placeholder){
+  host.innerHTML="";
+  POS.forEach((p,i)=>{
+    const slot=document.createElement("div");
+    slot.className="slot";
+    slot.innerHTML=`<div class="pos">${p.k}</div>
+      <div class="flipper ${placeholder?"empty":""}" id="${placeholder?"ps":"fl"}${i}">
+        <div class="inner"><div class="face back"></div><div class="face front"></div></div>
+      </div>`;
+    host.appendChild(slot);
+  });
+}
+
+/* ── 3. 뽑기 — 실제로 뽑혀 나간다 ── */
 function pick(el){
-  if($("fanwrap2").dataset.moved) return;
-  if(el.classList.contains("taken") || S.picked.length >= 3) return;
-  const slot = S.picked.length;
-  const idx = S.order[Number(el.dataset.i) % S.order.length];
-  S.picked.push({ card: DECK[idx], rev: Math.random() < 0.38 });
+  if($("fanwrap2").dataset.moved)return;
+  if(el.classList.contains("taken")||S.picked.length>=10)return;
+  const n=S.picked.length;
+  const idx=S.order[Number(el.dataset.i)%S.order.length];
+  S.picked.push({card:DECK[idx],rev:Math.random()<0.36});
   el.classList.add("taken");
-  [...$("pips").children].forEach((d, i) => d.classList.toggle("on", i < S.picked.length));
+  flyTo(el,$("ps"+n));
+  const m=$("pickmsg").firstChild;
+  const left=10-S.picked.length;
+  m.textContent = left>0 ? `${left}장 더 뽑게 ` : "열 장이 자네 앞에 놓였네 ";
+  if(S.picked.length===10){
+    setTimeout(()=>{$("pickmsg").style.opacity="0";},600);
+    setTimeout(openReading,1300);
+  }
+}
+function flyTo(src,slot){
+  const a=src.getBoundingClientRect(), b=slot.getBoundingClientRect();
+  const g=document.createElement("div");
+  g.className="ghost";
+  const m=new DOMMatrixReadOnly(getComputedStyle(src).transform);
+  const deg=Math.round(Math.atan2(m.b,m.a)*180/Math.PI);
+  g.style.cssText=`left:${a.left}px;top:${a.top}px;width:${a.width}px;height:${a.height}px;transform:rotate(${deg}deg)`;
+  document.body.appendChild(g);
+  requestAnimationFrame(()=>{
+    g.style.left=b.left+"px"; g.style.top=b.top+"px";
+    g.style.width=b.width+"px"; g.style.height=b.height+"px";
+    g.style.transform="rotate(0deg)"; g.style.opacity="0";
+  });
+  setTimeout(()=>{
+    g.remove();
+    slot.classList.remove("empty");
+    slot.animate([{transform:"scale(1.18)"},{transform:"scale(1)"}],{duration:260,easing:"ease-out"});
+  },640);
+}
 
-  if(S.picked.length === 1) $("pickmsg").firstChild.textContent = "둘 더 남았다 ";
-  if(S.picked.length === 2) $("pickmsg").firstChild.textContent = "마지막 한 장 ";
-  if(S.picked.length === 3){
-    $("pickmsg").firstChild.textContent = "세 장이 네 앞에 놓였다 ";
-    setTimeout(() => { $("pickmsg").style.opacity = "0"; }, 500);
-    setTimeout(openReading, 1000);
+/* ── 풀이 엔진 ── */
+function buildReading(){
+  const topic=(TOPICS.find(t=>t.re.test(S.q))||{k:"기타"}).k;
+  const qtype=(QTYPE.find(t=>t.re.test(S.q))||{k:"될까"}).k;
+  const tally={};
+  S.picked.forEach(p=>tally[p.card.el]=(tally[p.card.el]||0)+1);
+  const el=Object.keys(tally).sort((x,y)=>tally[y]-tally[x])[0];
+  const rev=S.picked.filter(p=>p.rev).length;
+  const grade=rev<=1?0:rev<=3?1:rev<=5?2:3;
+  const suits={};
+  S.picked.forEach(p=>suits[p.card.suit]=(suits[p.card.suit]||0)+1);
+  const leanSuit=Object.keys(suits).sort((x,y)=>suits[y]-suits[x])[0];
+  const daegui=S.picked.filter(p=>p.card.suit==="대귀").length;
+  return {topic,qtype,el,elN:tally[el],rev,grade,leanSuit,leanN:suits[leanSuit],daegui,
+    verdict:VERDICT[topic][grade],when:EL_WHEN[el],tie:TIE[topic]};
+}
+function revTag(p){return p.rev?' <strong>이 귀는 깨어 있다.</strong>':"";}
+
+function frame(i,p,E){
+  const c=p.card, nm=`<em>${c.nm}(${c.jp})</em>`;
+  switch(i){
+    case 0: return `이 일의 뿌리는 ${nm}다.<br>${c.act}${revTag(p)}`;
+    case 1: return `지금 자네 둘레에 ${nm}가 앉았다. ${c.nature}.<br>${c.act} ${E.tie}`;
+    case 2: return `자네가 못 보고 있는 것이 여기 있다. ${nm}, ${c.nature}.<br>${c.warn}${revTag(p)}`;
+    case 3: return `자네를 막고 선 것은 ${nm}다.<br>${c.act} ${c.warn}`;
+    case 4: return `그래도 자네 뒤를 받치는 것이 하나 있다. ${nm}, ${c.nature}.<br>${c.fix}`;
+    case 5: return `상대의 속은 ${nm}로 나왔다. ${c.nature}.<br>${c.act}`;
+    case 6: return `때를 끌고 오는 것은 ${nm}다. ${E.when.d}.<br>갈리는 때는 <strong>${E.when.t}</strong>이다. 그 안에 반드시 한 번 움직인다.`;
+    case 7: return `자네 뒤에 붙은 것은 ${nm}, ${c.hanja}다. ${c.nature}.<br>${c.warn}${revTag(p)}`;
+    case 8: return `${c.fix}<br>이것 하나만 해도 ${E.when.t} 전에 기운이 바뀐다.`;
+    case 9: return `${c.act}<br><strong>${E.verdict}</strong>`;
   }
 }
 
-/* ── 4. 풀이 ────────────────────────────── */
-function openReading(){
-  const laid = $("laid");
-  laid.innerHTML = "";
-  S.picked.forEach((p, i) => {
-    const slot = document.createElement("div");
-    slot.className = "slot" + (i === 2 ? " locked" : "");
-    slot.innerHTML = `
-      <div class="pos">${POS[i].label}</div>
-      <div class="flipper" id="fl${i}">
-        <div class="inner">
-          <div class="face back"></div>
-          <div class="face front${p.rev ? " rev" : ""}">
-            ${p.rev ? '<span class="awake">깨 어 남</span>' : ''}
-            <div class="art" style="background-image:url('${p.card.art || "img/back.webp"}')"></div>
-            <div class="nm">${p.card.nm}(${p.card.jp})<small>${p.card.no} · ${p.card.suit}</small></div>
-          </div>
-        </div>
-      </div>`;
-    laid.appendChild(slot);
-  });
-
-  $("bg").classList.remove("seer");
-  show("s-read");
-  $("read").innerHTML = "";
-  $("readfoot").innerHTML = "";
-
-  setTimeout(() => $("fl0").classList.add("open"), 500);
-  setTimeout(() => $("fl1").classList.add("open"), 1250);
-  setTimeout(runReading, 2000);
-}
-
-function esc(t){ return String(t).replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c])); }
-function wait(ms){ return new Promise(r => setTimeout(r, ms)); }
-const readBox = () => $("read");
-function toBottom(){ const r = readBox(); r.scrollTop = r.scrollHeight; }
-
-/* ── 뜸 들이기 ──────────────────────────── */
-async function dots(ms){
-  const p = document.createElement("div");
-  p.className = "line";
-  p.innerHTML = '<span class="dots"><i>·</i><i>·</i><i>·</i></span>';
-  readBox().appendChild(p);
-  toBottom();
-  await wait(950 + Math.random() * 450);
+/* ── 말하기 ── */
+const readBox=()=>$("read");
+function toBottom(){const r=readBox();r.scrollTop=r.scrollHeight;}
+async function dots(){
+  const p=document.createElement("div");
+  p.className="line";
+  p.innerHTML='<span class="dots"><i>·</i><i>·</i><i>·</i></span>';
+  readBox().appendChild(p); toBottom();
+  await wait(850+Math.random()*400);
   p.remove();
 }
-
-/* ── 한 자씩 뱉기 ───────────────────────── */
-async function line(who, html, speed){
-  speed = speed || 6;
-  const p = document.createElement("div");
-  p.className = "line";
-  p.innerHTML = (who ? `<span class="who">${who}</span>` : "") + '<span class="body"></span>';
+async function line(who,html){
+  const p=document.createElement("div");
+  p.className="line";
+  p.innerHTML=(who?`<span class="who">${who}</span>`:"")+'<span class="body"></span>';
   readBox().appendChild(p);
-  const body = p.querySelector(".body");
-  let out = "";
-  for(let i = 0; i < html.length; i++){
-    const ch = html[i];
-    if(ch === "<"){
-      const j = html.indexOf(">", i);
-      out += html.slice(i, j + 1); i = j;
-      body.innerHTML = out + '<span class="caret"></span>';
-      if(html.slice(j - 3, j + 1) === "<br>") await wait(120);
+  const body=p.querySelector(".body");
+  let out="";
+  for(let i=0;i<html.length;i++){
+    const ch=html[i];
+    if(ch==="<"){
+      const j=html.indexOf(">",i);
+      out+=html.slice(i,j+1); i=j;
+      body.innerHTML=out+'<span class="caret"></span>';
+      if(html.slice(j-3,j+1)==="<br>") await wait(120);
       continue;
     }
-    out += ch;
-    body.innerHTML = out + '<span class="caret"></span>';
+    out+=ch;
+    body.innerHTML=out+'<span class="caret"></span>';
     toBottom();
-    let d = speed * (0.8 + Math.random() * 0.5);
-    if(ch === "…") d = 190;
-    else if(ch === "." || ch === "?" || ch === "!") d = 95;
-    else if(ch === ",") d = 48;
+    let d=6*(0.8+Math.random()*0.5);
+    if(ch==="…")d=190; else if(ch==="."||ch==="?"||ch==="!")d=95; else if(ch===",")d=48;
     await wait(d);
   }
-  body.innerHTML = out;
-  toBottom();
-  await wait(90);
+  body.innerHTML=out; toBottom(); await wait(90);
   return p;
 }
-
-/* ── 풀이 엔진 ──────────────────────────── */
-function buildReading(){
-  const [a, b, c] = S.picked;
-  const topic = (TOPICS.find(t => t.re.test(S.q)) || { k:"기타" }).k;
-
-  /* 오행 우세 */
-  const tally = {};
-  S.picked.forEach(p => tally[p.card.el] = (tally[p.card.el] || 0) + 1);
-  const el = Object.keys(tally).sort((x, y) => tally[y] - tally[x])[0];
-  const elCount = tally[el];
-
-  /* 뒤집힌 수 → 확답 등급 */
-  const rev = S.picked.filter(p => p.rev).length;
-  const verdict = TOPIC_VERDICT[topic][Math.min(rev, 3)];
-
-  /* 붙은 귀 — 대귀가 있으면 대귀, 없으면 뒤집힌 귀, 그도 없으면 과(果) 자리 */
-  const gui = S.picked.find(p => p.card.suit === "대귀")
-           || S.picked.find(p => p.rev)
-           || c;
-
-  /* 갈래 쏠림 */
-  const suits = S.picked.map(p => p.card.suit);
-  const leanSuit = suits.find((s, i) => suits.indexOf(s) !== i) || null;
-
-  return { topic, el, elCount, rev, verdict, gui, leanSuit,
-           when: EL_WHEN[el], tie: TOPIC_TIE[topic] };
+async function reveal(i){
+  const slot=$("fl"+i);
+  slot.parentElement.classList.remove("sealed");
+  slot.parentElement.classList.add("cur");
+  slot.classList.add("open");
+  await wait(620);
 }
 
-function revTail(p){
-  return p.rev ? " 게다가 이 귀는 지금 <strong>깨어 있다</strong>. 그래서 더 빠르게, 더 세게 온다." : "";
-}
+/* ── 무료 두 장 ── */
+async function openReading(){
+  const E=buildReading(); S.E=E;
+  buildBoard($("board"),false);
+  S.picked.forEach((p,i)=>{
+    const fl=$("fl"+i), front=fl.querySelector(".front");
+    if(p.rev) front.classList.add("rev");
+    front.innerHTML=
+      (p.rev?'<span class="awake">깨어남</span>':"")+
+      `<div class="art" ${p.card.art?`style="background-image:url('${p.card.art}')"`:""}>${p.card.art?"":`<span class="gl">${p.card.hanja[0]}</span>`}</div>`+
+      `<div class="nm">${p.card.nm}</div>`;
+    if(i>=2) fl.parentElement.classList.add("sealed");
+  });
+  setBg("img/seer-card.webp");
+  show("s-read");
+  $("read").innerHTML=""; $("readfoot").innerHTML="";
 
-/* ── 무료 구간 ──────────────────────────── */
-async function runReading(){
-  const E = buildReading();
-  S.E = E;
+  await dots();
+  await line("호연",`자네가 품고 온 것은 <em>“${esc(S.q)}”</em> 이것이로군.`);
+  await dots();
+  await line("",`열 장이 깔렸네. 뿌리와 얽힘, 두 장을 먼저 열어 주지.`);
 
-  await dots(1600);
-  await line("원광", `네가 물은 것은… <em>“${esc(S.q)}”</em> 이것이로구나.`);
-  await dots(1400);
-  await line("", `패가 셋 나왔다.<br>먼저 뿌리와 얽힘, 둘만 보여주마.`);
-
-  for(let i = 0; i < 2; i++){
-    const p = S.picked[i];
-    await dots(1500);
-    await line(POS[i].label,
-      `<em>${p.card.nm}(${p.card.jp})</em> · ${p.card.no} ${p.card.suit}<br>` +
-      p.card[POS[i].key] + revTail(p));
+  for(let i=0;i<2;i++){
+    await dots();
+    await reveal(i);
+    await line(POS[i].ko+" · "+POS[i].desc, frame(i,S.picked[i],E));
+    $("fl"+i).parentElement.classList.remove("cur");
   }
 
-  await dots(1200);
-  await line("", `${E.tie}<br>그런데 마지막 한 장이… 좋지 않다.`);
+  await dots();
+  await line("",`여기까지는 자네도 어렴풋이 알던 것일세.<br>나머지 여덟 장이… 자네가 모르는 쪽이네.`);
 
   await wait(300);
-  const seal = document.createElement("div");
-  seal.className = "seal";
-  seal.innerHTML = `
-    <p class="why">과(果)는 아직 덮여 있다.</p>
-    <p class="blur">이 일은 ○○ 안에 갈린다. 네가 지금 붙들고 있는 그것을 놓으면 돌아오고, 쥐고 있으면 그대로 끝난다. 그리고 네 뒤에 붙은 귀는 ○○이다. 그 귀가 왜 하필 네게 붙었는지, 어떻게 떼는지는…</p>
-    <p class="price">결과 · 시기 · 확답 · 네게 붙은 귀 · 떼는 법 — 1,900원</p>
+  setBg("img/seer-pray.webp");
+  const seal=document.createElement("div");
+  seal.className="seal";
+  seal.innerHTML=`
+    <p class="why">여덟 장이 아직 덮여 있다.</p>
+    <p class="blur">자네가 못 보는 것은 ○○이고, 자네를 막는 것은 ○○이다. 때는 ○○ 안에 갈리며, 자네 뒤에 붙은 귀는 ○○이다. 그 귀를 떼는 법은 ○○이고, 끝은 ○○으로 난다.</p>
+    <p class="what">
+      <b>隱</b> 자네가 못 보고 있는 것<br>
+      <b>敵</b> 자네를 막고 선 것<br>
+      <b>助</b> 자네 뒤를 받치는 것<br>
+      <b>心</b> 상대의 속<br>
+      <b>時</b> 갈리는 때 — 달까지 짚는다<br>
+      <b>鬼</b> 자네 뒤에 붙은 귀와 그 까닭<br>
+      <b>符</b> 그 귀를 떼는 법<br>
+      <b>果</b> 끝과 확답
+    </p>
+    <p class="price">여덟 장 전부 <span>3,990원</span></p>
+    <p class="small">한 번 결제로 끝. 자동결제 없음.</p>
     <button class="btn" id="pay">봉 인 을 풀 다</button>`;
-  readBox().appendChild(seal);
-  toBottom();
-
-  $("pay").addEventListener("click", unseal, { once:true });
-  $("readfoot").innerHTML = `<button class="btn ghost" id="again">다 시 묻 다</button>`;
-  $("again").addEventListener("click", reset);
+  readBox().appendChild(seal); toBottom();
+  $("pay").addEventListener("click",unseal,{once:true});
+  $("readfoot").innerHTML=`<button class="btn ghost" id="again">다 시 묻 다</button>
+    <p class="legal"><button id="t2">이용안내 · 환불규정</button></p>`;
+  $("again").addEventListener("click",reset);
+  $("t2").addEventListener("click",()=>$("terms").hidden=false);
 }
 
-/* ── 유료 구간 — 여기서 전부 끝낸다 ─────── */
+/* ── 여덟 장 — 여기서 전부 끝낸다 ── */
 async function unseal(){
-  S.paid = true;
-  const E = S.E;
+  S.paid=true;
+  const E=S.E;
   document.querySelector(".seal").remove();
-  $("readfoot").innerHTML = "";
-  document.querySelectorAll(".slot")[2].classList.remove("locked");
-  $("fl2").classList.add("open");
-  await wait(750);
+  $("readfoot").innerHTML="";
+  setBg("img/seer-card.webp");
 
-  const p = S.picked[2];
-  await line(POS[2].label,
-    `<em>${p.card.nm}(${p.card.jp})</em> · ${p.card.no} ${p.card.suit}<br>` +
-    p.card["果"] + revTail(p));
-
-  await dots(1600);
-  await line("시기",
-    `세 장에 <em>${E.el}</em> 기운이 ${E.elCount === 3 ? "셋 다" : E.elCount + "장이나"} 몰렸다. ` +
-    `${E.when.d}.<br>갈리는 때는 <strong>${E.when.t}</strong>이다. 그 안에 반드시 한 번 움직인다.`);
-
-  await dots(1700);
-  await line("확답", `<strong>${E.verdict}</strong>`);
-
-  await dots(1800);
-  await line("붙은 귀",
-    `네 뒤에 붙은 것은 <em>${E.gui.card.nm}(${E.gui.card.jp})</em>, ${E.gui.card.hanja}다.<br>` +
-    E.gui.card.why);
-
-  await dots(1500);
-  await line("떼는 법", E.gui.card.fix);
-
-  if(E.leanSuit){
-    await dots(1300);
-    await line("한 가지 더",
-      `세 장 중 둘이 <em>${E.leanSuit}</em>에서 나왔다. 한쪽으로 쏠린 패다. ` +
-      `이건 네 문제가 한 군데에 몰려 있다는 뜻이다. 거기만 손보면 나머지는 따라온다.`);
+  for(let i=2;i<10;i++){
+    await dots();
+    await reveal(i);
+    await line(POS[i].ko+" · "+POS[i].desc, frame(i,S.picked[i],E));
+    $("fl"+i).parentElement.classList.remove("cur");
   }
 
-  await dots(1400);
-  await line("원광",
-    `${E.rev === 0 ? "뒤집힌 귀가 하나도 없다. 흐름이 네 편이다." :
-      E.rev === 3 ? "셋 다 뒤집혔다. 지금 네 자리가 통째로 흔들리고 있다는 뜻이다." :
-      `${E.rev}장이 뒤집혀 나왔다. 순순히 가지는 않는다는 뜻이다.`}<br>` +
-    `다만 패는 끝을 이미 정해뒀다… <strong>${E.when.t}</strong>, 그때 네가 어느 손을 쓰느냐만 남았다.`);
+  await dots();
+  const qt = E.qtype==="언제" ? `자네가 물은 것은 때였네. <strong>${E.when.t}</strong>, 그 안이다.`
+           : E.qtype==="왜" ? `자네가 물은 것은 까닭이었네. 까닭은 ${S.picked[0].card.nm}에 있다. 자네 탓이 반, 붙은 것이 반이다.`
+           : E.qtype==="어떻게" ? `자네가 물은 것은 방법이었네. 부(符)에 적힌 그것 하나면 된다. 더 벌이지 마라.`
+           : E.qtype==="누구" ? `자네가 물은 것은 사람이었네. 심(心)에 나온 그 모습이 그 사람의 속이다.`
+           : `자네가 물은 것은 되느냐 안 되느냐였네.`;
+  await line("확답",`${qt}<br><strong>${E.verdict}</strong>`);
 
-  const tail = document.createElement("p");
-  tail.className = "tail";
-  tail.innerHTML = `이 풀이는 <b>${new Date().toLocaleDateString("ko-KR")}</b>의 패다.<br>같은 질문을 다시 물으면 패가 달라진다.`;
-  readBox().appendChild(tail);
-  toBottom();
+  await dots();
+  const bits=[];
+  bits.push(`열 장에 <em>${E.el}</em> 기운이 ${E.elN}장 몰렸다`);
+  bits.push(`<em>${E.leanSuit}</em>가 ${E.leanN}장으로 가장 많다`);
+  if(E.daegui>0) bits.push(`대귀가 ${E.daegui}장이나 섞였다`);
+  bits.push(`뒤집힌 패가 ${E.rev}장이다`);
+  await line("패의 모양",
+    bits.join(", ")+`.<br>`+
+    (E.daegui>=2?"대귀가 둘 이상 든 패는 흔치 않다. 자네 일이 자네 손만의 일이 아니라는 뜻이다. "
+     :E.rev>=6?"절반 넘게 뒤집혔다. 지금 자네 자리가 통째로 흔들리고 있다는 뜻이다. "
+     :E.rev===0?"하나도 뒤집히지 않았다. 흐름이 자네 편이다. ":"")+
+    `문제가 <em>${E.leanSuit}</em> 한 군데에 몰려 있으니, 거기만 손보면 나머지는 따라온다.`);
 
-  $("readfoot").innerHTML = `<button class="btn ghost" id="again2">다 른 것 을 묻 다</button>`;
-  $("again2").addEventListener("click", reset);
+  await dots();
+  await line("호연",
+    `${E.grade<=1?"끝은 자네 쪽으로 기운다.":"끝은 그냥 두면 자네 쪽이 아니다."} `+
+    `다만 패는 끝을 이미 정해뒀다… <strong>${E.when.t}</strong>, 그때 자네가 어느 손을 쓰느냐만 남았다.<br>`+
+    `부(符)에 적힌 것부터 해라. 그게 첫 매듭이다.`);
+
+  setBg("img/seer-smile.webp");
+  const tail=document.createElement("p");
+  tail.className="tail";
+  tail.innerHTML=`이 풀이는 <b>${new Date().toLocaleDateString("ko-KR")}</b>의 패다.<br>같은 질문을 다시 물으면 패가 달라진다.`;
+  readBox().appendChild(tail); toBottom();
+
+  $("readfoot").innerHTML=`<button class="btn ghost" id="again2">다 른 것 을 묻 다</button>
+    <p class="legal"><button id="t3">이용안내 · 환불규정</button></p>`;
+  $("again2").addEventListener("click",reset);
+  $("t3").addEventListener("click",()=>$("terms").hidden=false);
 }
 
+/* ── 되돌리기 ── */
 function reset(){
-  S.q = ""; S.order = []; S.picked = []; S.shuffles = 0; S.paid = false; S.E = null; S.spin = 0;
-  S.brushN = 0; S.pass = 0; S.dir = 0; S.sinceFlip = 0;
-  S.swept = new Set();
-  q.value = "";
-  $("count").textContent = "0 / 120";
-  $("go").disabled = true;
-  $("bg").classList.remove("seer");
-  S.done = false;
-  const dm = $("dealmsg"), pm = $("pickmsg");
-  delete dm.dataset.near;
-  dm.style.opacity = ""; pm.style.opacity = "";
-  dm.innerHTML = '패를 손으로 쓸어 흩어라<small>백 귀신이 네 질문을 받아 간다</small>';
-  pm.innerHTML = '손이 멎는 자리가 네 패다\n      <small>인(因) · 연(緣) · 과(果) 세 장</small>\n      <span class="pips" id="pips"><i></i><i></i><i></i></span>';
+  S.q="";S.order=[];S.picked=[];S.swept=new Set();S.brushN=0;S.pass=0;S.dir=0;S.sinceFlip=0;
+  S.done=false;S.spin=0;S.paid=false;S.E=null;
+  q.value=""; $("count").textContent="0 / 120"; $("go").disabled=true;
+  $("dealmsg").style.opacity=""; $("pickmsg").style.opacity="";
+  $("dealmsg").innerHTML='패를 세 번 쓸어 보게<small>손으로 패 위를 좌우로 훑으면 되네</small><span class="tally" id="tally"><i></i><i></i><i></i></span>';
+  $("pickmsg").innerHTML='열 장을 뽑게<small>손이 멎는 자리가 자네 패일세</small>';
+  setBg("img/bg.webp");
   show("s-ask");
 }
 </script>
