@@ -5,7 +5,72 @@
  * 결제가 끝난 뒤에만 불린다.
  */
 
-const MODEL = process.env.BAEKGWI_MODEL || "claude-sonnet-5-5";
+/* 백귀사주와 같은 통로를 쓴다. 베르셀 안에서는 열쇠 없이도 붙는다. */
+const MODEL = process.env.BAEKGWI_MODEL || "anthropic/claude-haiku-4.5";
+const GATEWAY = "https://ai-gateway.vercel.sh/v1/chat/completions";
+const DIRECT = "https://api.anthropic.com/v1/messages";
+
+function route() {
+  if (process.env.AI_GATEWAY_API_KEY)
+    return { how: "gateway", token: process.env.AI_GATEWAY_API_KEY };
+  if (process.env.VERCEL_OIDC_TOKEN)
+    return { how: "gateway", token: process.env.VERCEL_OIDC_TOKEN };
+  if (process.env.ANTHROPIC_API_KEY)
+    return { how: "direct", token: process.env.ANTHROPIC_API_KEY };
+  return null;
+}
+
+async function callModel(system, prompt) {
+  const r = route();
+  if (!r) return null;
+
+  if (r.how === "gateway") {
+    const res = await fetch(GATEWAY, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        authorization: `Bearer ${r.token}`,
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        max_tokens: 3000,
+        temperature: 1,
+        messages: [
+          { role: "system", content: system },
+          { role: "user", content: prompt },
+        ],
+      }),
+    });
+    if (!res.ok) {
+      console.error("gateway", res.status, (await res.text()).slice(0, 400));
+      return null;
+    }
+    const d = await res.json();
+    return d?.choices?.[0]?.message?.content || null;
+  }
+
+  const res = await fetch(DIRECT, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "x-api-key": r.token,
+      "anthropic-version": "2023-06-01",
+    },
+    body: JSON.stringify({
+      model: MODEL.replace(/^anthropic\//, ""),
+      max_tokens: 3000,
+      temperature: 1,
+      system,
+      messages: [{ role: "user", content: prompt }],
+    }),
+  });
+  if (!res.ok) {
+    console.error("direct", res.status, (await res.text()).slice(0, 400));
+    return null;
+  }
+  const d = await res.json();
+  return (d.content || []).filter((b) => b.type === "text").map((b) => b.text).join("");
+}
 const MAX_Q = 200;
 
 /* 아주 단순한 주소별 횟수 제한 (한 대에 한정) */
@@ -85,9 +150,8 @@ export default async function handler(req, res) {
     res.status(405).json({ error: "POST만 받는다" });
     return;
   }
-  const key = process.env.ANTHROPIC_API_KEY;
-  if (!key) {
-    res.status(503).json({ error: "열쇠가 없다" });
+  if (!route()) {
+    res.status(503).json({ error: "통로가 없다" });
     return;
   }
 
@@ -116,34 +180,11 @@ export default async function handler(req, res) {
   }
 
   try {
-    const r = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        "x-api-key": key,
-        "anthropic-version": "2023-06-01",
-      },
-      body: JSON.stringify({
-        model: MODEL,
-        max_tokens: 3000,
-        temperature: 1,
-        system: SYSTEM,
-        messages: [{ role: "user", content: buildPrompt(q, cards, bone) }],
-      }),
-    });
-
-    if (!r.ok) {
-      const t = await r.text();
-      console.error("model error", r.status, t.slice(0, 400));
+    const raw = await callModel(SYSTEM, buildPrompt(q, cards, bone));
+    if (!raw) {
       res.status(502).json({ error: "패를 읽다 끊겼다" });
       return;
     }
-
-    const data = await r.json();
-    const raw = (data.content || [])
-      .filter((b) => b.type === "text")
-      .map((b) => b.text)
-      .join("");
 
     const start = raw.indexOf("[");
     const end = raw.lastIndexOf("]");
