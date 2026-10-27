@@ -98,8 +98,8 @@ button{font-family:inherit;color:inherit;cursor:pointer}
 .btn.ghost{background:transparent;border-color:var(--line);color:var(--jae-dim);font-weight:400;
   font-size:13px;letter-spacing:.2em;padding:13px}
 .btn.ghost:hover{border-color:var(--geum-dim);color:var(--jae);box-shadow:none}
-.foot{flex:none;position:relative;z-index:8;padding-top:10px;display:grid;gap:9px;
-  padding-bottom:calc(14px + env(safe-area-inset-bottom,0px))}
+.foot{flex:none;position:relative;z-index:8;padding-top:10px;display:grid;gap:8px;
+  padding-bottom:calc(22px + env(safe-area-inset-bottom,0px))}
 .legal{margin:0;text-align:center;font-size:11px;color:#7d7066;padding-bottom:4px}
 .legal button{background:none;border:0;color:#9a8b7e;text-decoration:underline;font-size:11px;padding:2px 4px}
 
@@ -149,7 +149,7 @@ button{font-family:inherit;color:inherit;cursor:pointer}
 .tally i.on{background:var(--jusa-hot);border-color:var(--jusa-hot);box-shadow:0 0 14px rgba(255,84,54,.9)}
 
 /* 상 위 열 자리 */
-.board{flex:none;display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:10px;position:relative;z-index:6}
+.board{flex:none;display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-top:8px;position:relative;z-index:6}
 .slot{text-align:center}
 .slot .pos{font-family:var(--serif);font-size:10px;letter-spacing:.04em;color:var(--geum-dim);margin-bottom:4px}
 .slot.cur .pos{color:var(--jusa-hot)}
@@ -176,7 +176,7 @@ button{font-family:inherit;color:inherit;cursor:pointer}
   padding:1px 4px;border-radius:1px;white-space:nowrap}
 
 /* 풀이 */
-.read{flex:1;min-height:0;overflow-y:auto;margin-top:14px;padding-bottom:16px}
+.read{flex:1 1 auto;min-height:0;overflow-y:auto;margin-top:12px;padding-bottom:10px}
 .read::-webkit-scrollbar{width:3px}
 .read::-webkit-scrollbar-thumb{background:var(--geum-dim)}
 .line{margin:0 0 17px;font-size:15.5px;font-weight:300;line-height:2.05;color:var(--jae);
@@ -297,7 +297,7 @@ button{font-family:inherit;color:inherit;cursor:pointer}
 
     <h4>결제</h4>
     <ul>
-      <li>봉인 해제(열 장 전체 풀이) 1회 3,990원 · 부가세 포함.</li>
+      <li>봉인 해제(덮인 일곱 장 전체 풀이) 1회 3,990원 · 부가세 포함. 앞의 세 장은 무료입니다.</li>
       <li>단건 결제이며 자동 갱신이나 정기 결제는 없습니다.</li>
       <li>결제는 결제대행사를 통해 처리되며, 본 서비스는 카드번호 등 결제수단 정보를 보관하지 않습니다.</li>
     </ul>
@@ -319,13 +319,13 @@ button{font-family:inherit;color:inherit;cursor:pointer}
 
     <h4>사업자 정보</h4>
     <ul>
-      <li>상호 온미라이프 · 대표 <span class="fill">○○○</span></li>
-      <li>사업자등록번호 <span class="fill">○○○-○○-○○○○○</span></li>
-      <li>통신판매업신고 <span class="fill">제○○○○-○○○○호</span></li>
-      <li>주소 <span class="fill">○○○</span></li>
+      <li>상호 온미라이프 · 대표 김민철</li>
+      <li>사업자등록번호 501-04-95672</li>
+      <li>통신판매업신고 <span class="fill">신고 준비 중</span></li>
+      <li>주소 울산광역시 북구 염포로 685, 110동 1801호 (염포동, 염포성원상떼빌)</li>
       <li>문의 ja9746@naver.com</li>
     </ul>
-    <p style="font-size:11.5px;color:#8d7f73">붉게 표시된 자리는 실제 사업자 정보로 채워 넣어야 합니다.</p>
+    <p style="font-size:11.5px;color:#8d7f73">통신판매업 신고번호는 신고 완료 후 채워 넣어야 합니다.</p>
 
     <button class="btn ghost close" id="closeTerms">닫 기</button>
   </div>
@@ -440,6 +440,45 @@ const DECK = [
   warn:"드러나는 순간이 곧 터지는 순간이다.",
   fix:"지금 조용한 쪽을 먼저 들여다보게. 소리 나는 쪽은 급하지 않네."}
 ];
+
+
+const SUIT_MEAN = {
+ "대귀":"운명이 직접 손을 대는 자리",
+ "검(소드)":"생각과 말, 그리고 다툼의 갈래",
+ "잔(컵)":"마음과 정이 오가는 갈래",
+ "전(펜타클)":"돈과 현실이 걸린 갈래",
+ "지(완드)":"기운과 의지가 움직이는 갈래"
+};
+const DETAIL = {
+ 연애:{隱:"자네가 못 보는 건 상대의 사정이 아니라 자네 마음이 어디로 기울어 있는지일세.",
+       敵:"둘 사이를 막는 건 제삼자가 아니라 때다. 사람을 탓하면 평생 못 푼다.",
+       心:"상대가 입으로 한 말과 속이 다르다. 말을 믿지 말고 행동을 세어 봐라.",
+       果:"끝은 둘 중 한쪽이 먼저 손을 놓는 모양으로 난다. 누가 먼저 놓느냐가 전부다."},
+ 금전:{隱:"자네가 못 보는 건 들어올 돈이 아니라 지금 새고 있는 구멍일세.",
+       敵:"막는 건 경기도 운도 아니다. 자네가 아직 못 끊은 지출 하나다.",
+       心:"돈을 쥔 쪽의 속은 자네 생각보다 차갑다. 정으로 풀리지 않는다.",
+       果:"끝은 액수가 아니라 흐름이 바뀌는 모양으로 난다. 한 번 돌면 계속 돈다."},
+ 직장:{隱:"자네가 못 보는 건 자네 실력이 아니라 윗선에서 이미 그어둔 선일세.",
+       敵:"막는 건 경쟁자가 아니라 자네를 평가하는 사람의 마음이다.",
+       心:"그쪽은 이미 답을 정해뒀다. 묻는 건 형식일 뿐이다.",
+       果:"끝은 붙느냐 떨어지느냐보다 자리를 옮기느냐 마느냐로 갈린다."},
+ 사람:{隱:"자네가 못 보는 건 그 사람의 속내가 아니라 자네가 준 틈일세.",
+       敵:"막는 건 그 사람이 아니라 둘 사이를 오가는 말이다.",
+       心:"겉으로 웃는 그 얼굴 밑에 서운함이 쌓여 있다.",
+       果:"끝은 멀어지거나 깊어지거나 둘 중 하나다. 어중간하게는 안 남는다."},
+ 건강:{隱:"자네가 못 보는 건 아픈 자리가 아니라 그 아픔을 만든 습관일세.",
+       敵:"막는 건 병이 아니라 미루는 버릇이다.",
+       心:"주변에서 걱정하는 말이 잔소리로만 들릴 것이다. 그게 문제다.",
+       果:"끝은 낫느냐가 아니라 다시 도지느냐로 갈린다."},
+ 아이:{隱:"자네가 못 보는 건 몸이 아니라 자네가 머무는 자리의 기운일세.",
+       敵:"막는 건 때가 아니라 조급함이다. 셈을 할수록 멀어진다.",
+       心:"곁에 있는 사람도 같은 무게를 지고 있다. 말을 안 할 뿐이다.",
+       果:"끝은 오느냐 안 오느냐가 아니라 언제 오느냐로만 남는다."},
+ 기타:{隱:"자네가 못 보는 건 바깥 사정이 아니라 자네가 이미 내려둔 결론일세.",
+       敵:"막는 건 바깥이 아니라 자네가 놓지 못한 것 하나다.",
+       心:"상대는 자네가 먼저 움직이기를 기다리고 있다.",
+       果:"끝은 흐지부지 넘어가지 않는다. 한쪽으로 분명히 기운다."}
+};
 
 const POS = [
  {k:"因",ko:"인 因",desc:"어디서 비롯됐나"},
@@ -730,17 +769,27 @@ function revTag(p){return p.rev?' <strong>이 귀는 깨어 있다.</strong>':""
 
 function frame(i,p,E){
   const c=p.card, nm=`<em>${c.nm}(${c.jp})</em>`;
+  const gal=`${c.no} ${c.suit} — ${SUIT_MEAN[c.suit]}`;
+  const D=DETAIL[E.topic];
+  const rv=p.rev?' 게다가 이 귀는 뒤집혀 나왔다. <strong>깨어 있다는 뜻이다.</strong> 같은 일이 더 빠르고 더 세게 온다.':"";
   switch(i){
-    case 0: return `이 일의 뿌리는 ${nm}다.<br>${c.act}${revTag(p)}`;
-    case 1: return `지금 자네 둘레에 ${nm}가 앉았다. ${c.nature}.<br>${c.act} ${E.tie}`;
-    case 2: return `자네가 못 보고 있는 것이 여기 있다. ${nm}, ${c.nature}.<br>${c.warn}${revTag(p)}`;
-    case 3: return `자네를 막고 선 것은 ${nm}다.<br>${c.act} ${c.warn}`;
-    case 4: return `그래도 자네 뒤를 받치는 것이 하나 있다. ${nm}, ${c.nature}.<br>${c.fix}`;
-    case 5: return `상대의 속은 ${nm}로 나왔다. ${c.nature}.<br>${c.act}`;
-    case 6: return `때를 끌고 오는 것은 ${nm}다. ${E.when.d}.<br>갈리는 때는 <strong>${E.when.t}</strong>이다. 그 안에 반드시 한 번 움직인다.`;
-    case 7: return `자네 뒤에 붙은 것은 ${nm}, ${c.hanja}다. ${c.nature}.<br>${c.warn}${revTag(p)}`;
-    case 8: return `${c.fix}<br>이것 하나만 해도 ${E.when.t} 전에 기운이 바뀐다.`;
-    case 9: return `${c.act}<br><strong>${E.verdict}</strong>`;
+    case 0: return `${gal}.<br>이 일의 뿌리는 ${nm}다. ${c.nature}.<br>${c.act}${rv}<br>`+
+      `그러니 지금 벌어진 일을 어제오늘의 일로 보지 말게. 뿌리가 이미 한참 전에 내렸네.`;
+    case 1: return `${gal}.<br>지금 자네 둘레에 ${nm}가 앉았다. ${c.nature}.<br>${c.act}${rv}<br>${E.tie}`;
+    case 2: return `${gal}.<br>자네가 못 보고 있는 것이 여기 있네. ${nm}, ${c.nature}.<br>${c.warn}${rv}<br>${D.隱}`;
+    case 3: return `${gal}.<br>자네를 막고 선 것은 ${nm}다. ${c.nature}.<br>${c.act} ${c.warn}${rv}<br>${D.敵}`;
+    case 4: return `${gal}.<br>그래도 자네 뒤를 받치는 것이 하나 있네. ${nm}, ${c.nature}.<br>${c.fix}<br>`+
+      `이 한 가지만은 자네 편일세. 쥐고 가게.`;
+    case 5: return `${gal}.<br>상대의 속은 ${nm}로 나왔다. ${c.nature}.<br>${c.act}${rv}<br>${D.心}`;
+    case 6: return `${gal}.<br>때를 끌고 오는 것은 ${nm}다. ${E.when.d}.<br>`+
+      `갈리는 때는 <strong>${E.when.t}</strong>일세. 그 안에 반드시 한 번 움직인다.<br>`+
+      `${p.rev?"뒤집혀 나왔으니 그보다 더 이르게 올 수도 있네.":"그 전에는 아무리 밀어도 안 움직이니 힘 빼지 말게."}`;
+    case 7: return `${gal}.<br>자네 뒤에 붙은 것은 ${nm}, ${c.hanja}다. ${c.nature}.<br>${c.act} ${c.warn}${rv}<br>`+
+      `왜 하필 이 귀가 붙었는가. ${c.nature}이기 때문일세. 자네가 그 자리를 내준 것이네.`;
+    case 8: return `떼는 법은 하나뿐일세.<br><strong>${c.fix}</strong><br>`+
+      `${nm}가 알려주는 방식이다. 거창한 걸 벌이지 말고 이것 하나만 하게. `+
+      `${E.when.t} 전에 해야 효험이 있네.`;
+    case 9: return `${gal}.<br>끝은 ${nm}로 닫혔다.<br>${c.act}${rv}<br>${D.果}<br><strong>${E.verdict}</strong>`;
   }
 }
 
@@ -800,7 +849,7 @@ async function openReading(){
       (p.rev?'<span class="awake">깨어남</span>':"")+
       `<div class="art" ${p.card.art?`style="background-image:url('${p.card.art}')"`:""}>${p.card.art?"":`<span class="gl">${p.card.hanja[0]}</span>`}</div>`+
       `<div class="nm">${p.card.nm}</div>`;
-    if(i>=2) fl.parentElement.classList.add("sealed");
+    if(i>=3) fl.parentElement.classList.add("sealed");
   });
   setBg("img/seer-card.webp");
   show("s-read");
@@ -809,9 +858,9 @@ async function openReading(){
   await dots();
   await line("호연",`자네가 품고 온 것은 <em>“${esc(S.q)}”</em> 이것이로군.`);
   await dots();
-  await line("",`열 장이 깔렸네. 뿌리와 얽힘, 두 장을 먼저 열어 주지.`);
+  await line("",`열 장이 깔렸네. 뿌리와 얽힘, 그리고 자네가 못 보던 것까지… 세 장은 그냥 열어 주지.`);
 
-  for(let i=0;i<2;i++){
+  for(let i=0;i<3;i++){
     await dots();
     await reveal(i);
     await line(POS[i].ko+" · "+POS[i].desc, frame(i,S.picked[i],E));
@@ -819,17 +868,16 @@ async function openReading(){
   }
 
   await dots();
-  await line("",`여기까지는 자네도 어렴풋이 알던 것일세.<br>나머지 여덟 장이… 자네가 모르는 쪽이네.`);
+  await line("",`세 장을 열었네. 여기까지는 자네도 어렴풋이 짐작하던 것일 테지.<br>나머지 일곱 장이… 자네가 끝내 모르던 쪽이네.`);
 
   await wait(300);
   setBg("img/seer-pray.webp");
   const seal=document.createElement("div");
   seal.className="seal";
   seal.innerHTML=`
-    <p class="why">여덟 장이 아직 덮여 있다.</p>
-    <p class="blur">자네가 못 보는 것은 ○○이고, 자네를 막는 것은 ○○이다. 때는 ○○ 안에 갈리며, 자네 뒤에 붙은 귀는 ○○이다. 그 귀를 떼는 법은 ○○이고, 끝은 ○○으로 난다.</p>
+    <p class="why">일곱 장이 아직 덮여 있네.</p>
+    <p class="blur">자자네가 못 보는 것은 이미 보았고, 자네를 막는 것은 ○○이다. 때는 ○○ 안에 갈리며, 자네 뒤에 붙은 귀는 ○○이다. 그 귀를 떼는 법은 ○○이고, 끝은 ○○으로 난다.</p>
     <p class="what">
-      <b>隱</b> 자네가 못 보고 있는 것<br>
       <b>敵</b> 자네를 막고 선 것<br>
       <b>助</b> 자네 뒤를 받치는 것<br>
       <b>心</b> 상대의 속<br>
@@ -838,13 +886,13 @@ async function openReading(){
       <b>符</b> 그 귀를 떼는 법<br>
       <b>果</b> 끝과 확답
     </p>
-    <p class="price">여덟 장 전부 <span>3,990원</span></p>
+    <p class="price">일곱 장 전부 <span>3,990원</span></p>
     <p class="small">한 번 결제로 끝. 자동결제 없음.</p>
-    <button class="btn" id="pay">봉 인 을 풀 다</button>`;
+    <button class="btn" id="pay">봉 인 을 풀 다</button>
+    <p class="legal" style="margin-top:12px"><button id="t2">이용안내 · 환불규정</button></p>`;
   readBox().appendChild(seal); toBottom();
   $("pay").addEventListener("click",unseal,{once:true});
-  $("readfoot").innerHTML=`<button class="btn ghost" id="again">다 시 묻 다</button>
-    <p class="legal"><button id="t2">이용안내 · 환불규정</button></p>`;
+  $("readfoot").innerHTML=`<button class="btn ghost" id="again">다 시 묻 다</button>`;
   $("again").addEventListener("click",reset);
   $("t2").addEventListener("click",()=>$("terms").hidden=false);
 }
@@ -857,7 +905,7 @@ async function unseal(){
   $("readfoot").innerHTML="";
   setBg("img/seer-card.webp");
 
-  for(let i=2;i<10;i++){
+  for(let i=3;i<10;i++){
     await dots();
     await reveal(i);
     await line(POS[i].ko+" · "+POS[i].desc, frame(i,S.picked[i],E));
@@ -897,10 +945,8 @@ async function unseal(){
   tail.innerHTML=`이 풀이는 <b>${new Date().toLocaleDateString("ko-KR")}</b>의 패다.<br>같은 질문을 다시 물으면 패가 달라진다.`;
   readBox().appendChild(tail); toBottom();
 
-  $("readfoot").innerHTML=`<button class="btn ghost" id="again2">다 른 것 을 묻 다</button>
-    <p class="legal"><button id="t3">이용안내 · 환불규정</button></p>`;
+  $("readfoot").innerHTML=`<button class="btn ghost" id="again2">다 른 것 을 묻 다</button>`;
   $("again2").addEventListener("click",reset);
-  $("t3").addEventListener("click",()=>$("terms").hidden=false);
 }
 
 /* ── 되돌리기 ── */
