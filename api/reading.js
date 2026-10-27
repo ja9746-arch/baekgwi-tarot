@@ -183,6 +183,7 @@ ${list}
 - 열 장 중 오행 ${bone.el}이 ${bone.elN}장으로 가장 많다
 - 갈래는 ${bone.leanSuit}가 ${bone.leanN}장으로 가장 많다
 - 대귀 ${bone.daegui}장, 뒤집힌 패 ${bone.rev}장
+- 열 장 속 조합: ${(bone.combos || []).join(", ") || "없음"} (조합은 화면에서 따로 짚으니 길게 되풀이하지 말고, 해당 자리에서 한 마디만 걸쳐 둔다)
 
 이번 풀이의 결
 ${TONE[Math.max(0, Math.min(3, Number(bone.grade) || 0))]}

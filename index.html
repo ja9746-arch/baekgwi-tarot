@@ -313,6 +313,28 @@ button{font-family:inherit;color:inherit;cursor:pointer}
 .duo.single{grid-template-columns:1fr}
 .duo .btn{font-size:14px;letter-spacing:.04em;text-indent:.04em;padding:13px 6px;text-align:center;text-decoration:none}
 .legal{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+
+/* 잠깐! */
+.halt{position:fixed;inset:0;z-index:420;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+  background:radial-gradient(70% 50% at 50% 45%,rgba(120,10,0,.55),rgba(5,2,3,.92) 70%);transition:opacity .3s;text-align:center;padding:0 20px}
+.halt.out{opacity:0}
+.halt .hbig{margin:0;font-family:var(--serif);font-weight:700;font-size:64px;line-height:1;color:#fff;
+  text-shadow:0 0 30px rgba(255,84,54,.95),0 0 60px rgba(255,84,54,.6);animation:haltpop .5s cubic-bezier(.2,1.6,.4,1) both}
+.halt .hsub{margin:4px 0 10px;font-size:14px;color:#e9d8c8;animation:rise .4s .25s ease both}
+.halt .hname{margin:0;font-family:var(--serif);font-weight:700;font-size:26px;color:#ffcf6a;animation:rise .4s .45s ease both}
+.halt .hhan{margin:0;font-family:var(--serif);font-size:16px;letter-spacing:.2em;color:#ff7a5c;animation:rise .4s .6s ease both}
+@keyframes haltpop{0%{transform:scale(2.4);opacity:0}100%{transform:scale(1);opacity:1}}
+.board .slot.combo .flipper{animation:combopulse 1s ease-in-out infinite;box-shadow:0 0 0 2px #ffcf6a,0 0 18px rgba(255,180,80,.85)}
+@keyframes combopulse{50%{box-shadow:0 0 0 2px #ff5436,0 0 26px rgba(255,84,54,.95)}}
+/* 다음 패 */
+.nextbtn{display:block;margin:2px auto 20px;padding:10px 24px;border-radius:22px;border:1px solid var(--geum);
+  background:rgba(120,24,18,.45);color:var(--jae);font-family:var(--serif);font-weight:700;font-size:14.5px;animation:nextglow 1.6s ease-in-out infinite}
+@keyframes nextglow{50%{box-shadow:0 0 18px rgba(255,84,54,.55)}}
+.confirmbtn{margin:6px 0 20px}
+.seal .tease{margin:-6px 0 12px;font-family:var(--serif);font-weight:700;font-size:15px;color:#ffcf6a;text-shadow:0 0 14px rgba(255,180,80,.5)}
+.minicard{display:inline-block;width:40px;aspect-ratio:5/3;margin:0 8px 4px 0;vertical-align:-6px;border:1px solid var(--geum);border-radius:2px;background:#150c0d center/cover no-repeat}
+.minicard.rev{transform:rotate(180deg)}
+.board.confirmboard{grid-template-columns:repeat(var(--n),46px)!important;justify-content:center}
 </style>
 
 <div id="stage">
@@ -485,6 +507,13 @@ button{font-family:inherit;color:inherit;cursor:pointer}
     </div>
     <button class="btn ghost close" data-close="share">닫기</button>
   </div>
+</div>
+
+<div class="halt" id="halt" hidden>
+  <p class="hbig">잠깐!</p>
+  <p class="hsub">이 패들이 함께 나왔다고?</p>
+  <p class="hname"></p>
+  <p class="hhan"></p>
 </div>
 
 <div class="spot" id="spot" hidden>
@@ -799,7 +828,8 @@ function findSame(q){
 function recordNow(){
   const h=hist().filter(r=>r.id!==S.rec?.id);
   const rec={id:S.rec?.id||("r"+Date.now()), q:S.q, k:normKey(S.q), t:S.rec?.t||Date.now(),
-    picks:S.picked.map(p=>[p.idx,p.rev?1:0]), paid:S.paid, free:S.freeTexts, paidTexts:S.paidTexts};
+    picks:S.picked.map(p=>[p.idx,p.rev?1:0]), paid:S.paid, free:S.freeTexts, paidTexts:S.paidTexts,
+    confirm:S.confirm&&S.confirm.length?S.confirm.map(p=>[p.idx,p.rev?1:0]):null};
   S.rec=rec; h.unshift(rec); saveHist(h); refreshHistLink();
 }
 function fmtDate(t){ const d=new Date(t); return `${d.getMonth()+1}월 ${d.getDate()}일`; }
@@ -872,6 +902,7 @@ function closeSheet(id){ $(id).hidden=true; }
 document.querySelectorAll(".sheet").forEach(sh=>sh.addEventListener("click",e=>{ if(e.target===sh) sh.hidden=true; }));
 document.querySelectorAll("[data-close]").forEach(b=>b.addEventListener("click",()=>closeSheet(b.dataset.close)));
 $("openTerms").addEventListener("click",()=>openSheet("terms"));
+$("read").addEventListener("click",e=>{ if(!e.target.closest("button")) S.skip=true; });
 $("home").addEventListener("click",()=>{ reset(); try{ if(history.state&&history.state.bg) history.back(); }catch(e){} });
 
 /* ── 1. 질문 ── */
@@ -1000,7 +1031,8 @@ function finishSweep(){
 }
 let pickWired=false;
 function toPickScreen(){
-  S.spin=0;
+  S.spin=0; S.mode="main";
+  $("boardPick").classList.remove("confirmboard");
   buildBoard($("boardPick"),true);
   buildFan($("fan2"),true);
   if(!pickWired){wireSpin("fanwrap2","fan2",false);pickWired=true;}
@@ -1070,34 +1102,36 @@ let pickLock=0;
 function pick(el){
   if($("fanwrap2").dataset.moved)return;
   if(Date.now()<pickLock)return;
+  const confirm=S.mode==="confirm";
+  const arr=confirm?S.confirm:S.picked, need=confirm?S.cNeed:10;
+  if(el.classList.contains("taken")||arr.length>=need)return;
   pickLock=Date.now()+380;
-  if(el.classList.contains("taken")||S.picked.length>=10)return;
-  const n=S.picked.length;
+  const n=arr.length;
   const idx=S.order[Number(el.dataset.i)%S.order.length];
-  let use=idx;
+  const used=i=>S.picked.some(p=>p.idx===i)||(S.confirm||[]).some(p=>p.idx===i);
   const avoid=topicOf(S.q)==="아이"?[22,31,50]:[];
-  if(S.picked.some(p=>p.idx===use)||avoid.includes(use)){ /* 같은 귀가 두 번 나오지 않게 */
-    const free=DECK.map((_,i)=>i).filter(i=>!S.picked.some(p=>p.idx===i)&&!avoid.includes(i));
+  let use=idx;
+  if(used(use)||avoid.includes(use)){
+    const free=DECK.map((_,i)=>i).filter(i=>!used(i)&&!avoid.includes(i));
     use=free[Math.floor(Math.random()*free.length)];
   }
-  S.picked.push({card:DECK[use],idx:use,rev:Math.random()<0.36});
+  arr.push({card:DECK[use],idx:use,rev:Math.random()<0.36});
   el.classList.add("taken"); tick();
   flyTo(el,$("ps"+n));
-  /* 빠진 자리는 새 패로 다시 채운다 — 부채에 구멍이 남지 않게 */
   const slotI=Number(el.dataset.i)%S.order.length;
   setTimeout(()=>{
-    const left=DECK.map((_,k)=>k).filter(k=>!S.picked.some(p=>p.idx===k));
+    const left=DECK.map((_,k)=>k).filter(k=>!used(k));
     S.order[slotI]=left[Math.floor(Math.random()*left.length)];
     el.classList.remove("taken"); el.classList.add("refill");
     setTimeout(()=>el.classList.remove("refill"),420);
   },520);
   const m=$("pickmsg").firstChild;
-  const left=10-S.picked.length;
-  m.textContent = left>0 ? `${left}장 더 뽑게 ` : "열 장이 자네 앞에 놓였네 ";
-  if(S.picked.length===10){
+  const left=need-arr.length;
+  m.textContent = left>0 ? `${left}장 더 뽑게 ` : (confirm?"확인의 패가 다 나왔네 ":"열 장이 자네 앞에 놓였네 ");
+  if(arr.length===need){
     bell(440,.12);
     setTimeout(()=>{$("pickmsg").style.opacity="0";},600);
-    const T=RUN; setTimeout(()=>{ if(T===RUN) openReading(); },1300);
+    const T=RUN; setTimeout(()=>{ if(T===RUN){ confirm?finishConfirm():openReading(); } },1300);
   }
 }
 function flyTo(src,slot){
@@ -1155,12 +1189,15 @@ function buildReading(){
   const fe=P[9].card.el;
   if(GEN[el]===fe||GEN[fe]===el){score-=1; why.push(`끝자리의 ${fe} 기운이 몰린 ${el} 기운과 서로 살리네`);}
   else if(KE[el]===fe||KE[fe]===el){score+=1; why.push(`끝자리의 ${fe} 기운이 몰린 ${el} 기운과 서로 부딪히네`);}
+  const combos=findCombos(P);
+  combos.forEach(c=>{ score+=c.tone; });
+  combos.filter(c=>c.tone!==0).slice(0,2).forEach(c=>why.push(`조합 ‘${c.name}’${jo(c.name,"이가")} ${c.tone>0?"무게를 더했네":"흐름을 풀어 주었네"}`));
   const grade=score<=0?0:score<=2?1:score<=4?2:3;
 
   const seed=P.reduce((a,p,i)=>a+(p.idx+1)*(i+3),0);
   let verdict=VERDICT[topic][grade];
   if(qtype==="어느"&&R.A&&R.B){ const pickS=(grade<=1?R.A:R.B).replace(/[?？!.]+$/,""); verdict=`패는 ‘${pickS}’ 쪽을 가리키네. `+(grade<=1?"망설일 까닭이 없네.":"쉽지는 않으나 그쪽이 덜 다치는 길일세."); }
-  return {topic,qtype,el,elN:tally[el],rev,grade,score,why,leanSuit,leanN:suits[leanSuit],daegui,seed,
+  return {topic,qtype,combos,el,elN:tally[el],rev,grade,score,why,leanSuit,leanN:suits[leanSuit],daegui,seed,
     verdict,when:whenFor(el,S.rec?S.rec.t:Date.now()),tie:pickV(TIE[topic],seed)};
 }
 function bat(w){const m=String(w).match(/[가-힣](?=[^가-힣]*$)/);if(!m)return 0;const c=(m[0].charCodeAt(0)-0xAC00)%28;return c===0?0:(c===8?2:1);}
@@ -1171,6 +1208,11 @@ function jo(w,t){const b=bat(w);
   if(t==="으로")return b===1?"으로":"로"; return "";}
 
 function frame(i,p,E){
+  const extra=(PS[POS[i].k]||{})[suitKey(p.card.suit)];
+  const core=frameCore(i,p,E);
+  return extra?core+"<br>"+extra:core;
+}
+function frameCore(i,p,E){
   const c=p.card, nm=`<em>${c.full}</em>`, n=c.nm, R=S.R||readQ(S.q);
   const seen=S.picked.slice(0,i).some(x=>x.card.suit===c.suit);
   const gal=seen?`${c.no} ${c.suit}`:`${c.no} ${c.suit} — ${SUIT_MEAN[c.suit]}`;
@@ -1217,6 +1259,126 @@ function frame(i,p,E){
   }
 }
 
+
+/* ── 자리 × 갈래 — 패마다 한 단락 더 ── */
+const PS = {
+ 因:{대귀:"자네 손으로 고를 수 없던 일에서 시작됐네. 그러니 자네 탓만 하며 스스로를 깎지 말게.",검:"말에서 시작된 일일세. 누가 무슨 말을 했는지, 그 첫마디를 떠올려 보게. 거기 실마리가 있네.",잔:"마음이 먼저 기운 데서 시작됐네. 정을 준 쪽이 먼저 흔들린 것이네.",전:"셈에서 시작된 일일세. 돈이든 손익이든, 처음 따진 그 계산이 지금까지 끌고 왔네.",지:"생각이 꼬리를 물면서 시작됐네. 실제 일보다 자네 머릿속에서 먼저 커졌네."},
+ 緣:{대귀:"지금 판은 사람 힘보다 큰 흐름이 쥐고 있네. 억지로 비틀면 다치네.",검:"지금 자네 둘레엔 말이 많네. 들은 말을 다 믿지 말고 옮기지도 말게.",잔:"지금 자네 둘레엔 정이 얽혀 있네. 누구 편도 들기 어려운 자리에 서 있지.",전:"지금 자네 둘레엔 돈과 셈이 얽혀 있네. 눈으로 확인하지 않은 약속은 믿지 말게.",지:"지금 자네는 지쳐 있네. 판단이 흐린 날에는 큰 결정을 하지 말게."},
+ 隱:{대귀:"자네가 못 보는 건 몸과 안전일세. 마음 쓰는 사이 몸이 먼저 상하고 있네.",검:"자네가 못 보는 건 등 뒤의 말일세. 자네 없는 자리에서 자네 얘기가 돌고 있네.",잔:"자네가 못 보는 건 자네 마음일세. 원하는 것과 붙잡고 있는 것이 다르네.",전:"자네가 못 보는 건 새는 돈일세. 작다고 넘긴 것들이 모여 구멍이 됐네.",지:"자네가 못 보는 건 자네의 지친 넋일세. 쉬지 못한 마음이 판단을 비틀고 있네."},
+ 敵:{대귀:"막는 것이 사람이 아니니 싸울 상대가 없네. 피해 가는 것이 이기는 것일세.",검:"막는 건 누군가의 입일세. 말로 맞서면 지네. 글로 남기게.",잔:"막는 건 정일세. 미운 사람이 아니라 끊지 못하는 사람이 자네를 막네.",전:"막는 건 돈줄일세. 쥔 쪽이 따로 있으니, 그 사람의 사정을 먼저 알아보게.",지:"막는 건 자네 안의 겁일세. 해 보기도 전에 안 될 이유를 먼저 세고 있네."},
+ 助:{대귀:"큰 흐름이 한 번은 자네 쪽으로 부네. 그 바람이 불 때 망설이지 말게.",검:"바른말 해 주는 사람이 하나 있네. 듣기 싫어도 그 말이 자네를 살리네.",잔:"자네를 아끼는 마음 하나가 곁에 있네. 혼자 버티지 말고 기대게.",전:"작은 돈줄 하나가 살아 있네. 크게 벌이지 말고 그것부터 지키게.",지:"자네의 첫 느낌이 맞을 때가 많네. 머리보다 그 느낌을 한 번 믿어 보게."},
+ 心:{대귀:"그 속은 그 사람도 어쩌지 못하는 사정에 묶여 있네. 탓하기 전에 사정을 보게.",검:"그 속엔 하지 못한 말이 쌓여 있네. 말을 꺼낼 틈을 먼저 주게.",잔:"그 속엔 아직 정이 남아 있네. 다만 그걸 드러낼 마음이 없을 뿐일세.",전:"그 속엔 셈이 먼저 서 있네. 마음보다 손익을 먼저 따지고 있네.",지:"그 속은 지금 어지럽네. 그 사람도 자기 마음을 다 모르네."},
+ 時:{대귀:"때가 오면 갑자기 오네. 준비할 틈이 짧으니 미리 채비해 두게.",검:"때는 한마디 말과 함께 오네. 그 무렵 들어오는 연락을 놓치지 말게.",잔:"때는 마음이 먼저 알아채네. 문득 그 사람이 떠오르는 날이 그 언저리일세.",전:"때는 서류나 돈이 오가는 날에 맞물려 있네. 그 무렵 날짜를 잘 보게.",지:"때는 자네가 지쳐 손을 놓은 뒤에 오네. 너무 붙잡고 기다리지 말게."},
+ 鬼:{대귀:"이 귀는 사람의 마음이 아니라 운의 틈에 붙었네. 몸가짐부터 단속하게.",검:"이 귀는 말에 붙어 다니네. 입을 다무는 것만으로도 절반은 떨어지네.",잔:"이 귀는 정에 붙어 다니네. 끊지 못하는 마음이 이 귀의 집일세.",전:"이 귀는 돈에 붙어 다니네. 지갑과 통장을 정리하는 것부터가 떼는 일일세.",지:"이 귀는 넋에 붙어 다니네. 잠과 끼니를 바로 하면 힘을 잃네."},
+ 符:{대귀:"이 처방은 몸으로 하는 것일세. 머리로 이해하려 들지 말고 그냥 하게.",검:"이 처방은 입을 다스리는 것일세. 사흘만 지켜도 달라지네.",잔:"이 처방은 마음을 정하는 것일세. 정했으면 뒤돌아보지 말게.",전:"이 처방은 셈을 바로 하는 것일세. 작은 것부터 바로 세우게.",지:"이 처방은 넋을 쉬게 하는 것일세. 하루 한 번이면 족하네."},
+ 果:{대귀:"끝은 사람 손을 떠나 정해지네. 다만 그 끝을 맞는 자세는 자네가 고르네.",검:"끝은 말로 맺어지네. 마지막 한마디를 곱게 하게.",잔:"끝은 마음으로 맺어지네. 미련을 남기지 않는 쪽이 이기네.",전:"끝은 숫자로 드러나네. 그때 가서 놀라지 않도록 지금 셈을 해 두게.",지:"끝은 자네 마음이 먼저 알 것일세. 그 느낌을 무시하지 말게."}
+};
+const suitKey = s => String(s).replace(/\(.*\)/,"");
+
+/* ── 조합 — 열 장 안에서 특별한 짝을 찾는다 ── */
+const FAMILY=[
+ {id:"fox",name:"여우 둔갑진",han:"狐變陣",ids:[20,21,30,33,38,80],tone:1,line:"여우가 둘 이상 들었네. 이 판에 둔갑한 것이 있다는 뜻일세. 웃는 얼굴 하나가 자네를 홀리고 있네. 나도 여우라, 그 기척만은 놓치지 않네."},
+ {id:"jailer",name:"우두마두",han:"牛頭馬頭",ids:[45,46],tone:1,line:"저승 옥졸 한 쌍이 나란히 섰네. 미뤄 둔 셈을 받으러 온 것일세. 갚을 것, 사과할 것, 끝낼 것이 있다면 이달 안에 하게."},
+ {id:"tiger",name:"범의 그림자",han:"虎影",ids:[41,55],tone:1,line:"범 둘이 한 판에 들었네. 자네를 꾀어내는 손과 덮치는 손이 따로 있네. 급히 부르는 소리엔 한 번 멈추게."},
+ {id:"gold",name:"금맥",han:"金脈",ids:[1,4,9,18],tone:-1,line:"재물을 쥔 귀가 둘이나 들었네. 흔치 않은 금맥일세. 다만 금은 서두르는 손엔 안 쥐어지네. 천천히 캐게."},
+ {id:"immortal",name:"죽지 않는 둘",han:"不殺雙",ids:[0,83],tone:1,line:"죽지 않는 것 둘이 나란히 섰네. 끝난 줄 안 일이 다시 살아나는 판일세. 마무리를 확실히 짓게."},
+ {id:"snake",name:"뱀의 똬리",han:"蛇蟠",ids:[4,37,39],tone:1,line:"뱀이 똬리를 틀었네. 얽힌 일이 한 번에 풀리지 않고 감기고 또 감기는 판일세. 한 가닥씩 풀어야 하네."},
+ {id:"neck",name:"목의 살",han:"頸煞",ids:[40,51,52],tone:1,line:"머리와 목을 노리는 귀가 겹쳤네. 머리로만 버티고 있다는 뜻일세. 생각을 내려놓고 몸부터 쉬게 하게."},
+ {id:"blade",name:"쇠와 피",han:"金血",ids:[53,56,57,58],tone:1,line:"날붙이와 피의 귀가 겹쳤네. 다툼이 몸싸움으로 번지기 쉬운 판일세. 날 선 말 한마디도 아끼게."},
+ {id:"night",name:"밤의 행렬",han:"夜行",ids:[60,64,65,67,74],tone:1,line:"밤의 귀들이 줄을 섰네. 자네가 이 일을 낮이 아니라 밤에 붙들고 있다는 뜻일세. 밤에 내린 결정은 아침에 한 번 더 보게."},
+ {id:"mouth",name:"뭇 입의 합창",han:"衆口",ids:[82,84,87,89,92,98],tone:1,line:"입의 귀가 겹쳤네. 이 일은 사실보다 말이 먼저 커진 판일세. 자네 입부터 닫으면 절반은 가라앉네."},
+ {id:"court",name:"관재 겹침",han:"官災",ids:[85,94,95,96,97],tone:1,line:"문서와 송사의 귀가 겹쳤네. 말로 끝날 일이 종이로 번질 수 있는 판일세. 서명하기 전에 반드시 한 번 더 읽게."},
+ {id:"betray",name:"등 뒤의 칼",han:"背刃",ids:[86,88,90,93,99],tone:1,line:"얼굴을 바꾸는 귀가 겹쳤네. 앞에서 웃는 사람 가운데 하나가 등 뒤에서 다른 말을 하고 있네."},
+ {id:"longing",name:"그리움의 사슬",han:"相思鎖",ids:[23,25,28,29,34],tone:0,line:"그리움의 귀가 겹쳤네. 이 일의 밑바닥엔 놓지 못한 사람이 있네. 그 마음을 인정하는 데서 매듭이 풀리네."},
+ {id:"leak",name:"곳간의 구멍",han:"庫穴",ids:[3,8,11,15,16,19],tone:1,line:"새는 돈의 귀가 겹쳤네. 큰 손해보다 작은 구멍들이 자네를 말리고 있네. 이레만 지출을 적어 보게."},
+ {id:"illusion",name:"헛것의 장막",han:"幻幕",ids:[17,24,61,72,73],tone:1,line:"헛것을 보이는 귀가 겹쳤네. 지금 자네 눈에 비친 그림이 실제와 다르네. 믿을 만한 사람의 눈을 한 번 빌리게."},
+ {id:"fire",name:"불의 길",han:"火路",ids:[42,66],tone:0,line:"불의 귀 둘이 길을 냈네. 일이 한 번 붙으면 걷잡을 수 없이 번지네. 좋은 일이든 나쁜 일이든 빠르게 오네."},
+ {id:"faces",name:"여러 얼굴",han:"多面",ids:[32,80,82,88],tone:1,line:"머리와 얼굴이 여럿인 귀가 겹쳤네. 한 사람 안에 두 마음이 있다는 뜻일세. 자네일 수도, 상대일 수도 있네."}
+];
+const HAN_NUM=["一","二","三","四","五","六","七","八","九","十","十一","十二","十三","十四","十五","十六","十七","十八","十九","二十"];
+const KO_NUM=["일","이","삼","사","오","육","칠","팔","구","십","십일","십이","십삼","십사","십오","십육","십칠","십팔","십구","이십"];
+function rankOf(c){ if(c.suit==="대귀") return KO_NUM.indexOf(c.no.replace(/^제/,"").replace(/귀$/,""))+1; return HAN_NUM.indexOf(c.no)+1; }
+
+function findCombos(P){
+  const out=[], add=o=>{ if(!out.some(x=>x.id===o.id)) out.push(o); };
+  FAMILY.forEach(f=>{
+    const pos=P.map((p,i)=>f.ids.includes(p.idx)?i:-1).filter(i=>i>=0);
+    if(pos.length>=2) add({...f,pos,rank:1});
+  });
+  const bySuit={}; P.forEach((p,i)=>(bySuit[p.card.suit]=bySuit[p.card.suit]||[]).push(i));
+  Object.entries(bySuit).forEach(([s,pos])=>{
+    if(pos.length>=5) add({id:"suit-"+s,name:`${suitKey(s)} ${pos.length>=6?"육합":"오합"}`,han:pos.length>=6?"六合":"五合",pos,tone:s==="대귀"?1:0,rank:2,
+      line:`${s} 갈래가 ${pos.length}장이나 모였네. ${SUIT_MEAN[s]}에 일이 몰려 있다는 뜻일세. 다른 데 힘 빼지 말고 그 한 곳을 다스리게.`});
+  });
+  if((bySuit["대귀"]||[]).length===3&&(bySuit["대귀"]).some(i=>P[i].rev)) add({id:"daegui3",name:"대귀 삼진",han:"三陣",pos:bySuit["대귀"],tone:1,rank:2,
+    line:"대귀 셋이 진을 쳤네. 사람 힘 밖의 일이 세 갈래로 다가오고 있네. 이번 일은 이기려 들지 말고 다치지 않는 것을 먼저 보게."});
+  const byRank={}; P.forEach((p,i)=>{ const r=rankOf(p.card); (byRank[r]=byRank[r]||[]).push(i); });
+  Object.entries(byRank).forEach(([r,pos])=>{
+    const kn=KO_NUM[r-1];
+    if(pos.length>=3) add({id:"rank3-"+r,name:`${kn}의 삼동`,han:"三同",pos,tone:0,rank:2,line:`서로 다른 갈래에서 같은 수 ${kn}${jo(kn,"이가")} 셋이나 나왔네. 같은 일이 세 군데서 한꺼번에 울린다는 뜻일세. 하나만 풀면 셋이 함께 풀리네.`});
+    else if(pos.length===2&&pos.includes(0)&&pos.includes(9)) add({id:"rankpair",name:`처음과 끝의 쌍수`,han:"首尾雙數",pos,tone:0,rank:2,line:`처음 자리와 끝자리에 같은 수 ${kn}${jo(kn,"이가")} 섰네. 이 일은 시작한 그 모양 그대로 끝난다는 뜻일세. 처음 마음을 떠올리게.`});
+  });
+  if(new Set(P.slice(0,5).map(p=>p.card.el)).size===5) add({id:"cycle",name:"오행 순환",han:"五行循環",pos:[0,1,2,3,4],tone:-1,rank:3,
+    line:"앞의 다섯 자리에 목·화·토·금·수가 하나씩 다 들었네. 흔치 않은 판일세. 기운이 한 바퀴를 돌았으니 막힌 것이 풀릴 때가 됐네."});
+  const byEl={}; P.forEach((p,i)=>(byEl[p.card.el]=byEl[p.card.el]||[]).push(i));
+  Object.entries(byEl).forEach(([e,pos])=>{ if(pos.length>=5) add({id:"flood-"+e,name:`${e} 기운의 범람`,han:"氾濫",pos,tone:1,rank:3,
+    line:`${e} 기운이 ${pos.length}장이나 넘쳤네. 한 기운이 넘치면 나머지가 마르네. 넘친 것을 덜어 내는 일, 곧 ${({목:"가지를 쳐 정리하는 일",화:"식히고 쉬는 일",토:"묵은 것을 흘려보내는 일",금:"부드럽게 굽히는 일",수:"한곳에 뿌리내리는 일"})[e]}을 일부러 챙기게.`}); });
+  for(let i=0;i<8;i++){
+    const a=P[i].card.el,b=P[i+1].card.el,c=P[i+2].card.el;
+    if(GEN[a]===b&&GEN[b]===c&&(i>=3||!P[i].rev)){ add({id:"chain",name:"상생의 줄",han:"相生連",pos:[i,i+1,i+2],tone:-1,rank:3,
+      line:`${POS[i].k}·${POS[i+1].k}·${POS[i+2].k} 세 자리가 ${a}→${b}→${c}로 서로를 살리며 이어졌네. 한 가지가 풀리면 다음이 저절로 풀리는 줄일세.`}); break; }
+  }
+  if(P[0].card.suit===P[9].card.suit) add({id:"loop",name:"수미상관",han:"首尾相關",pos:[0,9],tone:0,rank:4,
+    line:"처음 자리와 끝자리가 같은 갈래로 닫혔네. 시작한 곳으로 돌아와 끝난다는 뜻일세. 처음 그 일을 다시 들여다보게."});
+  if(P[7].card.suit===P[8].card.suit) add({id:"selfknot",name:"스스로 푸는 매듭",han:"自解結",pos:[7,8],tone:-1,rank:4,
+    line:"붙은 귀와 떼는 법이 같은 갈래에서 나왔네. 묶은 자리가 곧 푸는 자리일세. 자네 손으로 풀 수 있는 매듭이네."});
+  if(P[5].card.suit===P[3].card.suit&&(P[5].rev||P[3].rev)) add({id:"heartfoe",name:"속이 곧 벽",han:"心卽敵",pos:[3,5],tone:1,rank:4,
+    line:"상대의 속과 자네를 막는 것이 같은 갈래일세. 막는 것이 바깥 사정이 아니라 그 사람의 속내라는 뜻이네."});
+  if(P[6].rev&&P[9].rev) add({id:"wake2",name:"때와 끝의 깨어남",han:"時果俱醒",pos:[6,9],tone:1,rank:4,
+    line:"때의 자리와 끝자리가 함께 뒤집혀 깨어났네. 일이 생각보다 빨리 닥친다는 뜻일세. 채비를 서두르게."});
+  for(let i=0;i<7;i++){ if(P[i].rev&&P[i+1].rev&&P[i+2].rev&&P[i+3].rev){ add({id:"wakeline",name:"깨어난 줄",han:"醒列",pos:[i,i+1,i+2,i+3],tone:1,rank:5,
+    line:`${POS[i].k}부터 ${POS[i+3].k}까지 네 장이 줄지어 깨어났네. 이 구간의 일은 이미 움직이고 있다는 뜻일세.`}); break; } }
+  if(P.every(p=>!p.rev)) add({id:"calm",name:"고요한 판",han:"靜局",pos:[],tone:-1,rank:5,
+    line:"열 장 가운데 뒤집힌 패가 한 장도 없네. 귀들이 모두 잠들어 있는 고요한 판일세. 지금 움직이면 막는 것이 없네."});
+  return out.sort((a,b)=>a.rank-b.rank).slice(0,5);
+}
+
+/* ── 잠깐! ── */
+async function halt(c){
+  const h=$("halt");
+  h.querySelector(".hname").textContent=c.name;
+  h.querySelector(".hhan").textContent=c.han;
+  h.hidden=false; h.classList.remove("out");
+  boom(); bell(698,.12);
+  $("stage").classList.add("shake"); setTimeout(()=>$("stage").classList.remove("shake"),620);
+  c.pos.forEach(i=>{ const s=$("fl"+i); if(s) s.parentElement.classList.add("combo"); });
+  await wait(1700);
+  h.classList.add("out"); await wait(320); h.hidden=true;
+}
+async function comboEvent(c,T){
+  if(!S.replay) await halt(c);
+  if(T!==RUN) return false;
+  const names=c.pos.map(i=>`<em>${S.picked[i].card.nm}</em>`).join(" · ");
+  await line(`잠깐 · ${c.name} ${c.han}`, (names?`${names}<br>`:"")+c.line);
+  setTimeout(()=>c.pos.forEach(i=>{ const s=$("fl"+i); if(s) s.parentElement.classList.remove("combo"); }),1200);
+  return T===RUN;
+}
+
+/* ── 읽을 틈 — 눌러야 넘어간다 ── */
+function nextTap(label){
+  if(S.replay) return Promise.resolve();
+  return new Promise(res=>{
+    const b=document.createElement("button");
+    b.className="nextbtn"; b.textContent=label||"다음 패 열기";
+    readBox().appendChild(b); toBottom();
+    const T0=RUN;
+    const go=()=>{ b.remove(); res(); };
+    b.addEventListener("click",go,{once:true});
+    const iv=setInterval(()=>{ if(T0!==RUN){ clearInterval(iv); b.remove(); res(); } },300);
+    b.addEventListener("click",()=>clearInterval(iv),{once:true});
+  });
+}
+
 /* ── 말하기 ── */
 const readBox=()=>$("read");
 function toBottom(){const r=readBox();r.scrollTop=r.scrollHeight;}
@@ -1236,10 +1398,11 @@ async function line(who,html){
   readBox().appendChild(p);
   const body=p.querySelector(".body");
   if(S.replay){ body.innerHTML=html; return p; }
-  const T0=RUN;
+  const T0=RUN; S.skip=false;
   let out="";
   for(let i=0;i<html.length;i++){
     if(T0!==RUN) return p;
+    if(S.skip){ S.skip=false; body.innerHTML=html; toBottom(); await wait(90); return p; }
     const ch=html[i];
     if(ch==="<"){
       const j=html.indexOf(">",i);
@@ -1263,8 +1426,9 @@ function frontHTML(p){
     `<div class="art" style="background-image:url('${p.card.art}')"></div><div class="nm">${p.card.nm}</div>`;
 }
 /* 뒤집히는 순간은 크게 보여 준다 */
-async function spotlight(i){
-  const p=S.picked[i], sp=$("spot");
+async function spotlight(i){ return spotlightCard(S.picked[i], `${POS[i].ko} · ${posLabel(i)}`); }
+async function spotlightCard(p,label){
+  const sp=$("spot");
   sp.querySelector(".front").className="face front"+(p.rev?" rev":"");
   const c=p.card;
   sp.querySelector(".front .art").style.backgroundImage=`url('${c.art}')`;
@@ -1273,7 +1437,7 @@ async function spotlight(i){
   sp.querySelector(".cf-hanja").textContent=/[가-힣]/.test(c.hanja)||!c.hanja?"":c.hanja;
   sp.querySelector(".cf-name").textContent=c.nm;
   sp.querySelector(".cf-nat").textContent=c.nature;
-  sp.querySelector(".spotpos").textContent=`${POS[i].ko} · ${posLabel(i)}`;
+  sp.querySelector(".spotpos").textContent=label;
   sp.querySelector(".spotname").innerHTML=`${esc(c.full)}${p.rev?' <span class="rv">깨어남</span>':""}`;
   sp.querySelector(".spotmeta").textContent=`오행 ${c.el} · ${c.src}`;
   sp.classList.remove("open","out"); sp.hidden=false;
@@ -1319,7 +1483,7 @@ async function askSeer(E,from,to,stage){
   }
   const opened=[0,1,2].map(i=>({pos:POS[i].k, nm:S.picked[i].card.full}));
   const R=S.R||readQ(S.q);
-  const bone={stage, opened, grade:E.grade, why:E.why, topic:E.topic, qtype:E.qtype, el:E.el, elN:E.elN, rev:E.rev,
+  const bone={stage, opened, combos:(E.combos||[]).map(c=>c.name), grade:E.grade, why:E.why, topic:E.topic, qtype:E.qtype, el:E.el, elN:E.elN, rev:E.rev,
     leanSuit:E.leanSuit, leanN:E.leanN, daegui:E.daegui, when:E.when, verdict:E.verdict,
     who:R.who, feel:R.feel, whenWord:R.when};
   const ctrl=new AbortController();
@@ -1350,11 +1514,12 @@ function replay(rec){
   S.q=rec.q; S.rec=rec; S.replay=true;
   S.picked=rec.picks.map(([i,r])=>({card:DECK[i],idx:i,rev:!!r}));
   S.paid=!!rec.paid; S.freeTexts=rec.free||null; S.paidTexts=rec.paidTexts||null;
+  S.confirm=rec.confirm?rec.confirm.map(([i,r])=>({card:DECK[i],idx:i,rev:!!r})):null;
   openReading();
 }
 async function openReading(){
   const T=RUN, live=()=>T===RUN;
-  const E=buildReading(); S.E=E;
+  const E=buildReading(); S.E=E; S.shown=new Set();
   setupBoard();
   setBg("img/seer-card.webp");
   show("s-read");
@@ -1365,45 +1530,50 @@ async function openReading(){
     await line("호연",`자네가 <b>${fmtDate(S.rec.t)}</b>에 들고 온 물음일세.<br><em>“${esc(S.q)}”</em><br>그때 나온 패를 그대로 펼쳐 두었네. 패는 같은 물음에 두 번 답하지 않네.`);
     if(!live()) return;
   } else {
-    await dots();
-    if(!live()) return;
-    await line("호연",`자네가 품고 온 것은 <em>“${esc(S.q)}”</em> 이것이로군.`);
-    if(!live()) return;
-    await dots();
-    if(!live()) return;
-    await line("",`열 장이 깔렸네. 뿌리와 얽힘, 그리고 자네가 못 보던 것까지… 세 장은 그냥 열어 주지.`);
-    if(!live()) return;
+    await dots(); if(!live()) return;
+    await line("호연",`자네가 품고 온 것은 <em>“${esc(S.q)}”</em> 이것이로군.`); if(!live()) return;
+    await dots(); if(!live()) return;
+    await line("",`열 장이 깔렸네. 뿌리와 얽힘, 그리고 자네가 못 보던 것까지… 세 장은 그냥 열어 주지.`); if(!live()) return;
   }
   const written = S.replay ? S.freeTexts : await job;
   if(!live()) return;
   const used=[];
   for(let i=0;i<3;i++){
-    await dots();
-    if(!live()) return;
-    await reveal(i);
-    if(!live()) return;
+    await dots(); if(!live()) return;
+    await reveal(i); if(!live()) return;
     const body=(written&&written[i])?written[i]:frame(i,S.picked[i],E);
     used.push(body);
-    await line(POS[i].ko+" · "+posLabel(i), body);
-    if(!live()) return;
+    await line(POS[i].ko+" · "+posLabel(i), body); if(!live()) return;
     $("fl"+i).parentElement.classList.remove("cur");
+    for(const c of E.combos.filter(c=>c.pos.length&&Math.max(...c.pos)===i)){ S.shown.add(c.id); if(!(await comboEvent(c,T))) return; }
+    if(i<2){ await nextTap(); if(!live()) return; }
   }
   S.freeTexts=used;
   if(!S.replay) recordNow();
 
-  if(S.paid){ await showPaid(); return; }
+  if(S.paid){ await nextTap("덮인 패로"); if(!live()) return; await showPaid(); return; }
 
-  await dots();
-  if(!live()) return;
-  await line("",`세 장을 열었네. 여기까지는 자네도 어렴풋이 짐작하던 것일 테지.<br>나머지 일곱 장이… 자네가 끝내 모르던 쪽이네.`);
-  if(!live()) return;
-  await wait(S.replay?0:300);
-  if(!live()) return;
+  const hidden=E.combos.filter(c=>!S.shown.has(c.id));
+  const link=hidden.find(c=>c.pos.some(i=>i<3));
+  if(hidden.length){
+    await nextTap("계속"); if(!live()) return;
+    if(!S.replay){ bell(698,.1); $("stage").classList.add("shake"); setTimeout(()=>$("stage").classList.remove("shake"),620); }
+    if(link){ const li=link.pos.find(i=>i<3); $("fl"+li).parentElement.classList.add("combo"); }
+    const ln=link?S.picked[link.pos.find(i=>i<3)].card.nm:"";
+    await line("잠깐",(link?`방금 연 <em>${ln}</em>${jo(ln,"이가")} 덮인 패 하나와 이어져 있네. 짝이 숨어 있다는 뜻일세.<br>`:"")+
+      `덮인 일곱 장 속에 <strong>조합 ${hidden.length}개</strong>가 숨어 있네. 이런 판은 흔치 않네.`);
+    if(!live()) return;
+  }
+  await dots(); if(!live()) return;
+  await line("",`세 장을 열었네. 여기까지는 자네도 어렴풋이 짐작하던 것일 테지.<br>나머지 일곱 장이… 자네가 끝내 모르던 쪽이네.`); if(!live()) return;
+  await wait(S.replay?0:300); if(!live()) return;
   setBg("img/seer-pray.webp");
+  const nConf=Math.max(1,Math.min(E.combos.length,5));
   const seal=document.createElement("div");
   seal.className="seal";
   seal.innerHTML=`
     <p class="why">일곱 장이 아직 덮여 있네.</p>
+    ${hidden.length?`<p class="tease">숨은 조합 ${hidden.length}개</p>`:""}
     <p class="blur">자네를 막는 것은 ○○이고, 때는 ○○ 안에 갈리네. 자네 뒤에 붙은 귀는 ○○이며, 그 귀를 떼는 법은 ○○일세. 끝은 ○○으로 나네.</p>
     <p class="what">
       <b>敵</b> 자네를 막고 선 것<br>
@@ -1412,7 +1582,9 @@ async function openReading(){
       <b>時</b> 갈리는 때 — 달까지 짚네<br>
       <b>鬼</b> 자네 뒤에 붙은 귀와 그 까닭<br>
       <b>符</b> 그 귀를 떼는 법<br>
-      <b>果</b> 끝과 확답
+      <b>果</b> 끝과 확답<br>
+      <b>合</b> ${hidden.length?`숨은 조합 ${hidden.length}개의 풀이`:"조합 풀이"}<br>
+      <b>確</b> 확인의 패 ${nConf}장 — 패에게 한 번 더 묻기
     </p>
     <p class="price">일곱 장 전부 <span>3,990원</span></p>
     <p class="small">한 번 결제로 끝. 자동결제 없음. 풀이는 생성형 AI가 함께 씁니다.</p>
@@ -1426,29 +1598,25 @@ async function openReading(){
 
 /* ── 봉인이 깨진다 ── */
 async function unseal(){
-  const T=RUN, live=()=>T===RUN;
   if(S.busy) return; S.busy=true;
+  const T=RUN, live=()=>T===RUN;
   S.paid=true; S.replay=false;
   const E=S.E;
   const job=askSeer(E,3,10,"paid");
   document.querySelector(".seal")?.remove();
   $("readfoot").innerHTML="";
+  document.querySelectorAll("#board .slot.combo").forEach(s=>s.classList.remove("combo"));
   boom();
   $("flash").classList.remove("go"); void $("flash").offsetWidth; $("flash").classList.add("go");
   $("stage").classList.add("shake"); setTimeout(()=>$("stage").classList.remove("shake"),620);
   document.querySelectorAll("#board .slot.sealed").forEach((s,k)=>setTimeout(()=>{ s.classList.add("breaking"); bell(300+k*40,.05); },180+k*95));
-  await wait(1100);
-  if(!live()) return;
+  await wait(1100); if(!live()) return;
   document.querySelectorAll("#board .slot.sealed").forEach(s=>s.classList.remove("sealed","breaking"));
   setBg("img/seer-card.webp");
-  await line("호연","봉인이 풀렸네. 패를 하나씩 들여다보겠네… 숨을 고르게.");
-  if(!live()) return;
-  await dots(900);
-  if(!live()) return;
-  S.paidTexts = await job;
-  if(!live()) return;
+  await line("호연","봉인이 풀렸네. 패를 하나씩 들여다보겠네… 숨을 고르게."); if(!live()) return;
+  await dots(900); if(!live()) return;
+  S.paidTexts = await job; if(!live()) return;
   await showPaid();
-  if(!live()) return;
   S.busy=false;
 }
 
@@ -1456,20 +1624,19 @@ async function showPaid(){
   const T=RUN, live=()=>T===RUN;
   const E=S.E, written=S.paidTexts, used=[];
   for(let i=3;i<10;i++){
-    await dots();
-    if(!live()) return;
-    await reveal(i);
-    if(!live()) return;
+    await dots(); if(!live()) return;
+    await reveal(i); if(!live()) return;
     const body=(written&&written[i-3])?written[i-3]:frame(i,S.picked[i],E);
     used.push(body);
-    await line(POS[i].ko+" · "+posLabel(i), body);
-    if(!live()) return;
+    await line(POS[i].ko+" · "+posLabel(i), body); if(!live()) return;
     $("fl"+i).parentElement.classList.remove("cur");
+    for(const c of E.combos.filter(c=>!S.shown.has(c.id)&&c.pos.length&&Math.max(...c.pos)===i)){ S.shown.add(c.id); if(!(await comboEvent(c,T))) return; }
+    await nextTap(i<9?"다음 패 열기":"확답 듣기"); if(!live()) return;
   }
+  for(const c of E.combos.filter(c=>!S.shown.has(c.id))){ S.shown.add(c.id); if(!(await comboEvent(c,T))) return; }
   S.paidTexts=used;
 
-  await dots();
-  if(!live()) return;
+  await dots(); if(!live()) return;
   const R=S.R;
   const qt = E.qtype==="언제" ? `자네가 물은 것은 때였네. <strong>${E.when.t}</strong>, 그 안일세.`
            : E.qtype==="왜" ? `자네가 물은 것은 까닭이었네. 까닭은 ${S.picked[0].card.nm}에 있네. 자네 탓이 반, 붙은 것이 반일세.`
@@ -1477,19 +1644,12 @@ async function showPaid(){
            : E.qtype==="누구" ? `자네가 물은 것은 사람이었네. 심(心)에 나온 그 모습이 그 사람의 속일세.`
            : E.qtype==="어느"&&R.A&&R.B ? `자네는 ‘${esc(R.A)}’ 쪽과 ‘${esc(R.B)}’ 쪽 사이에서 물었네. 패가 한쪽을 골랐네.`
            : `자네가 물은 것은 되느냐 안 되느냐였네.`;
-  const vtxt = E.verdict;
-  await line("확답",`${qt}<br><strong>${vtxt}</strong>`);
-  if(!live()) return;
-
-  await dots();
-  if(!live()) return;
+  await line("확답",`${qt}<br><strong>${E.verdict}</strong>`); if(!live()) return;
+  await dots(); if(!live()) return;
   await line("확답의 근거",
-    `패가 이렇게 답한 까닭은 이렇네.<br>`+E.why.slice(0,5).map(w=>`· ${w}`).join("<br>")+
-    `<br>${E.grade<=1?"바로 선 패가 더 무겁네. 그래서 흐름이 자네 쪽일세.":"깨어난 패가 더 무겁네. 그래서 그냥 두면 자네 쪽이 아닐세."}`);
-    if(!live()) return;
-
-  await dots();
-  if(!live()) return;
+    `패가 이렇게 답한 까닭은 이렇네.<br>`+E.why.slice(0,6).map(w=>`· ${w}`).join("<br>")+
+    `<br>${E.grade<=1?"바로 선 패가 더 무겁네. 그래서 흐름이 자네 쪽일세.":"깨어난 패가 더 무겁네. 그래서 그냥 두면 자네 쪽이 아닐세."}`); if(!live()) return;
+  await nextTap("계속"); if(!live()) return;
   await line("패의 모양",
     `열 장에 <em>${E.el}</em> 기운이 ${E.elN}장 몰렸네. 갈래로는 <em>${E.leanSuit}</em>${jo(E.leanSuit,"이가")} ${E.leanN}장으로 가장 많네. 대귀는 ${E.daegui}장, 뒤집힌 패는 ${E.rev}장일세.<br>`+
     (E.daegui>=4?"대귀가 네 장 넘게 든 패는 흔치 않네. 자네 일이 자네 손만의 일이 아니라는 뜻일세. "
@@ -1499,16 +1659,16 @@ async function showPaid(){
       ? `자네 물음이 걸린 바로 그 갈래에 패가 몰렸네. 패가 자네 속을 정확히 짚은 것일세. `
       : E.leanSuit==="대귀" ? `대귀가 가장 많다는 건 자네 일이 사람 손을 떠나 있다는 뜻일세. 몸부터 조심하게. `
       : `자네는 ${TOPIC_LABEL[E.topic]}${jo(TOPIC_LABEL[E.topic],"을를")} 물었는데 패는 <em>${E.leanSuit}</em>${jo(E.leanSuit,"을를")} 가리키네. 겉으로 보이는 문제와 진짜 뿌리가 다르다는 뜻일세. `)+
-    `그 갈래만 손보면 나머지는 따라오네.`);
-  if(!live()) return;
+    `그 갈래만 손보면 나머지는 따라오네.`); if(!live()) return;
+  recordNow();
 
-  await dots();
-  if(!live()) return;
+  await confirmStage(T); if(!live()) return;
+
+  await dots(); if(!live()) return;
   await line("호연",
     `${E.grade<=1?"끝은 자네 쪽으로 기우네.":"끝은 그냥 두면 자네 쪽이 아닐세."} `+
     `다만 패는 끝을 이미 정해 뒀네… <strong>${E.when.t}</strong>, 그때 자네가 어느 손을 쓰느냐만 남았네.<br>`+
-    `부(符)에 적힌 것부터 하게. 그게 첫 매듭일세.`);
-    if(!live()) return;
+    `부(符)에 적힌 것부터 하게. 그게 첫 매듭일세.`); if(!live()) return;
 
   setBg("img/seer-smile.webp");
   const tail=document.createElement("p");
@@ -1517,6 +1677,72 @@ async function showPaid(){
   readBox().appendChild(tail); if(!S.replay) toBottom();
   recordNow();
   footButtons(true);
+}
+
+/* ── 확인의 패 — 조합 하나에 한 장 ── */
+function confirmTargets(){
+  const E=S.E;
+  return E.combos.length?E.combos:[{id:"verdict",name:"확답",han:"確答",pos:[9],tone:0}];
+}
+async function confirmStage(T){
+  const live=()=>T===RUN, E=S.E, targets=confirmTargets(), n=Math.max(1,Math.min(targets.length,5));
+  if(!(S.confirm&&S.confirm.length===n)){
+    await dots(); if(!live()) return;
+    await line("호연", E.combos.length
+      ? `이 판에 조합이 <strong>${E.combos.length}개</strong> 나왔네. 조합 하나에 확인의 패 한 장씩, <strong>${n}장</strong>을 더 뽑게.<br>패가 제 말을 다시 짚는지, 비트는지 보겠네.`
+      : `이 판엔 조합이 나오지 않았네. 대신 확답이 참인지, 확인의 패 한 장을 더 뽑게.`);
+    if(!live()) return;
+    await new Promise(res=>{
+      const b=document.createElement("button");
+      b.className="btn confirmbtn"; b.textContent=`확인의 패 ${n}장 뽑기`;
+      readBox().appendChild(b); toBottom();
+      b.addEventListener("click",()=>{ b.remove(); toConfirmPick(n,res); },{once:true});
+    });
+    if(!live()) return;
+  }
+  const P=S.picked; let ok=0;
+  for(let k=0;k<n;k++){
+    const d=S.confirm[k], c=targets[k], key=P[(c.pos&&c.pos.length?c.pos[0]:9)].card;
+    if(!S.replay){ await spotlightCard(d,`확인의 패 ${k+1} · ${c.name}`); if(!live()) return; }
+    const dc=d.card;
+    const rel = (dc.suit===key.suit||dc.el===key.el||GEN[dc.el]===key.el) ? "確" : (KE[dc.el]===key.el||KE[key.el]===dc.el) ? "轉" : "靜";
+    if(rel==="確") ok++;
+    const mini=`<span class="minicard${d.rev?" rev":""}" style="background-image:url('${dc.art}')"></span>`;
+    const txt = rel==="確"
+      ? `<em>${dc.full}</em>${jo(dc.nm,"이가")} 나왔네. <strong>패가 다시 짚었네.</strong> ‘${c.name}’${jo(c.name,"은는")} 참일세. `+
+        (c.tone<0?"좋은 쪽으로 더 단단해졌네. 믿고 가게.":c.tone>0?"경고가 더 무거워졌네. 흘려듣지 말게.":"이 흐름은 그대로 가네.")
+      : rel==="轉"
+      ? `<em>${dc.full}</em>… <strong>패가 한 번 비틀었네.</strong> ‘${c.name}’의 기운이 ${suitKey(dc.suit)} 갈래 쪽으로 꺾여 들어가네. ${(PS.隱||{})[suitKey(dc.suit)]||""}`
+      : `<em>${dc.full}</em>, ${dc.nature}. 이 패는 ‘${c.name}’에 대해 말을 아끼네. 조합은 그대로 두되 서두르지 말라는 뜻이네.`;
+    const revN=S.confirm.slice(0,k).filter(x=>x.rev).length;
+    const revTxt=d.rev?(revN===0?"<br>확인의 패마저 뒤집혀 나왔네. 이 일은 생각보다 빠르게 움직이네.":revN===1?"<br>이 패도 깨어 있네. 서두르는 기운이 겹치고 있네.":""):"";
+    await line(`확인 ${k+1} · ${c.name} ${c.han}`, mini+txt+revTxt); if(!live()) return;
+    await nextTap(k<n-1?"다음 확인의 패":"마무리 듣기"); if(!live()) return;
+  }
+  await line("확인의 결", `확인의 패 ${n}장 가운데 <strong>${ok}장</strong>이 다시 짚었네.<br>`+
+    (ok*2>=n?"패의 말이 단단하네. 앞의 확답을 믿고 가게.":"패가 흔들리고 있네. 확답은 그대로이되, 때와 처방을 더 꼭 지키게."));
+}
+function toConfirmPick(n,done){
+  S.mode="confirm"; S.cNeed=n; S.confirm=[]; S.confirmDone=done; S.spin=0;
+  const host=$("boardPick"); host.innerHTML="";
+  host.classList.add("confirmboard"); host.style.setProperty("--n",n);
+  for(let i=0;i<n;i++){
+    const slot=document.createElement("div"); slot.className="slot";
+    slot.innerHTML=`<div class="pos">確${n>1?i+1:""}</div><div class="flipper empty" id="ps${i}"><div class="inner"><div class="face back"></div><div class="face front"></div></div></div>`;
+    host.appendChild(slot);
+  }
+  buildFan($("fan2"),true);
+  if(!pickWired){wireSpin("fanwrap2","fan2",false);pickWired=true;}
+  $("pickmsg").style.opacity="";
+  $("pickmsg").innerHTML=`확인의 패 ${n}장을 뽑게<small>조합 하나에 한 장씩, 패에게 다시 묻는 걸세</small>`;
+  setBg("img/seer-pick.webp");
+  show("s-pick");
+}
+function finishConfirm(){
+  S.mode="main";
+  setBg("img/seer-card.webp");
+  show("s-read");
+  const d=S.confirmDone; S.confirmDone=null; if(d) d();
 }
 
 function footButtons(done){
@@ -1621,6 +1847,8 @@ function reset(){
   RUN++;
   $("spot").hidden=true; $("spot").classList.remove("open","out");
   document.querySelectorAll(".flycard").forEach(g=>g.remove());
+  S.mode="main"; S.confirm=null; S.confirmDone=null; S.shown=new Set(); S.skip=false;
+  $("boardPick").classList.remove("confirmboard"); $("halt").hidden=true;
   Object.assign(S,{q:"",order:[],picked:[],brushN:0,pass:0,dir:0,sinceFlip:0,done:false,spin:0,paid:false,E:null,R:null,replay:false,rec:null,freeTexts:null,paidTexts:null,busy:false});
   ["same","hist","share","cv","terms","risk"].forEach(closeSheet);
   q.value=""; $("count").textContent="0 / 120"; $("go").disabled=true;
