@@ -23,6 +23,23 @@ function route(req) {
   return null;
 }
 
+/* 모델이 글 속에 큰따옴표를 그대로 넣어 JSON이 깨지는 일이 있다 — 그때는 자리별로 떼어 읽는다 */
+function parseSections(txt) {
+  try {
+    return JSON.parse(txt);
+  } catch {}
+  const out = [];
+  const re = /\{\s*"pos"\s*:\s*"([^"]{0,8})"\s*,\s*"text"\s*:\s*"([\s\S]*?)"\s*\}\s*(?=,\s*\{|\s*\]\s*$)/g;
+  let m;
+  while ((m = re.exec(txt))) {
+    out.push({
+      pos: m[1],
+      text: m[2].replace(/\\n/g, "<br>").replace(/\\"/g, "'").replace(/"/g, "'").replace(/\\\\/g, "\\"),
+    });
+  }
+  return out;
+}
+
 async function callModel(req, system, prompt, maxTok = 3200) {
   const r = route(req);
   if (!r) return null;
@@ -123,6 +140,7 @@ const SYSTEM = `너는 '백귀술사 호연(狐煙)'이다. 여우의 연기라�
 형식
 - 결과는 JSON 배열 하나만 내놓는다. 설명이나 머리말, 코드 울타리를 붙이지 않는다.
 - 각 원소는 {"pos":"자리한자","text":"풀이"} 꼴이고, 주어진 순서와 개수를 그대로 지킨다.
+- text 안에서는 큰따옴표(")를 쓰지 않는다. 말을 따올 때는 '작은따옴표'나 「」를 쓴다. 줄바꿈은 <br>로 쓴다.
 - text 안에는 <br>, <em>, <strong> 만 쓸 수 있다. <em>은 귀 이름, <strong>은 못 박는 말(시기·확답·처방)에 쓴다.`;
 
 const TONE = [
@@ -310,7 +328,7 @@ export default async function handler(req, res) {
       res.status(502).json({ error: "풀이를 못 알아보겠다" });
       return;
     }
-    const sections = JSON.parse(raw.slice(start, end + 1));
+    const sections = parseSections(raw.slice(start, end + 1));
     if (!Array.isArray(sections) || sections.length !== cards.length) {
       res.status(502).json({ error: "풀이 수가 맞지 않는다" });
       return;
