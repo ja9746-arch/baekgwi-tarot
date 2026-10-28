@@ -75,7 +75,7 @@ async function callModel(req, system, prompt) {
   return (d.content || []).filter((b) => b.type === "text").map((b) => b.text).join("");
 }
 const MAX_Q = 200;
-const RISK = /죽고\s*싶|자살|목숨을?\s*끊|살기\s*싫|뛰어내리|극단적\s*선택|죽이고\s*싶|죽여\s*버리|해치고\s*싶/;
+const RISK = /죽고\s*싶|자살|목숨을?\s*끊|살기\s*싫|살고\s*싶지\s*않|사라지고\s*싶|뛰어내[리릴려]|극단적인?\s*선택|자해|손목\s*(을|를)?\s*긋|목\s*(을|를)?\s*매|번개탄|유서|약을?\s*(다|한꺼번에|몽땅|많이|잔뜩)\s*(먹|삼키)|죽어\s*버릴|죽이고\s*싶|죽여\s*버리|죽일까|해치고\s*싶|복수하고\s*싶/;
 
 /* 아주 단순한 주소별 횟수 제한 (한 대에 한정) */
 const hits = new Map();

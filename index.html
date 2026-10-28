@@ -89,7 +89,7 @@ body{word-break:keep-all;overflow-wrap:anywhere}
   text-align:center;margin:0;color:var(--jae);text-wrap:balance;line-height:1.95;
   letter-spacing:-.012em;text-shadow:0 2px 14px #000,0 0 30px rgba(0,0,0,.85)}
 .field{position:relative}
-.field textarea{display:block;width:100%;min-height:98px;resize:none;color:var(--jae);
+.field textarea{display:block;width:100%;min-height:112px;resize:none;color:var(--jae);
   background:radial-gradient(ellipse 70% 120% at 50% 50%,rgba(12,5,6,.82) 0%,rgba(12,5,6,.66) 55%,rgba(12,5,6,0) 100%);
   border:0;border-radius:0;box-shadow:none;
   padding:16px 20px;font:inherit;font-size:16px;line-height:1.75;max-height:190px;overflow-y:auto;text-align:center}
@@ -114,6 +114,14 @@ body{word-break:keep-all;overflow-wrap:anywhere}
 .chips button:active{transform:scale(.96)}
 @media (max-width:400px){.chips{gap:6px 5px}.chips button{padding:5px 10px;font-size:13px;letter-spacing:.02em}}
 @media (max-height:900px){#s-ask .ask .hint:last-child{display:none}}
+@media (max-height:720px){
+  #s-ask .brand{padding-top:6px}#s-ask .brand .mark img{width:min(54vw,214px)}#s-ask .rule{margin-top:6px}
+  #s-ask .visit{margin-top:4px;font-size:12px}#s-ask .visit b{font-size:16px;margin-top:0}#s-ask .visit b i{font-size:20px}
+  #s-ask .ask{padding-top:6px;gap:10px}#s-ask .ask h2{font-size:17px;line-height:1.55}
+  .topics-h{margin-bottom:6px}.chips{gap:5px 5px}.chips button{padding:4px 10px;font-size:13px}
+  .field textarea{min-height:106px;padding:12px 18px}#s-ask .ask .hint{display:none}
+  .foot{padding-top:6px}
+}
 @media (max-width:340px){.visit{font-size:12px;letter-spacing:.02em}.visit b{font-size:15px;white-space:nowrap}.visit b i{font-size:18px}.chips button{padding:4px 9px;font-size:12.5px}}
 
 .chips button.on{color:#fff;border-color:#f0cf7a;background:linear-gradient(180deg,#8a2418,#4e100b);
@@ -121,10 +129,16 @@ body{word-break:keep-all;overflow-wrap:anywhere}
 .field textarea::placeholder{color:#978679}
 .field textarea:focus{outline:none}
 .count{display:block;text-align:right;margin-top:6px;font-size:11px;color:#9a8b7e;font-variant-numeric:tabular-nums}
-.seer-name{margin:0 0 2px;text-align:center;font-family:var(--serif);font-size:13px;
-  letter-spacing:.16em;color:var(--geum-dim);text-shadow:0 2px 12px #000,0 0 24px #000}
-.seer-name b{color:var(--geum);font-weight:700;font-size:15px;letter-spacing:.1em}
-.seer-name span{color:var(--jusa);font-size:12px}
+.seer-name{margin:0;display:flex;align-items:center;justify-content:center;gap:10px;font-family:var(--serif);
+  text-shadow:0 2px 12px #000,0 0 24px #000}
+.seer-name span{font-size:12.5px;letter-spacing:.32em;color:#b99a5a;margin-right:-.2em}
+.seer-name b{font-size:20px;font-weight:700;letter-spacing:.24em;margin-right:-.24em;color:#f0cf7a;
+  text-shadow:0 0 18px rgba(240,190,90,.45),0 2px 10px #000}
+.seer-name i{display:block;width:38px;height:1px;position:relative}
+.seer-name .sn-l{background:linear-gradient(90deg,transparent,rgba(201,162,74,.85))}
+.seer-name .sn-r{background:linear-gradient(90deg,rgba(201,162,74,.85),transparent)}
+.seer-name i::after{content:"";position:absolute;top:-2.5px;width:5px;height:5px;transform:rotate(45deg);background:#c0362a}
+.seer-name .sn-l::after{right:-2px}.seer-name .sn-r::after{left:-2px}
 .hint{margin:0;font-size:12.5px;font-weight:200;color:#b9aa9c;text-align:center;letter-spacing:.04em;
   text-shadow:0 2px 12px #000,0 0 24px #000}
 
@@ -264,6 +278,7 @@ body{word-break:keep-all;overflow-wrap:anywhere}
   font-size:12.5px;color:#ffb39c;letter-spacing:.02em}
 .seal .timer b{font-family:var(--serif);font-size:16px;color:#fff;margin-left:4px;font-variant-numeric:tabular-nums}
 .seal .timer.over{border-color:var(--line);background:none;color:var(--jae-dim)}
+.tel{color:#ffcf6a;font-weight:700;text-decoration:underline;text-underline-offset:3px;padding:0 2px}
 .visit{margin:10px 0 0;text-align:center;font-family:var(--serif);font-size:13.5px;line-height:1.5;letter-spacing:.06em;color:rgba(236,224,210,.82);
   text-shadow:0 2px 10px #000,0 0 22px #000;transition:opacity 1.6s ease;opacity:0}
 .visit b{display:block;margin-top:2px;font-weight:700;font-size:19px;letter-spacing:.1em;color:#f0cf7a;
@@ -453,7 +468,7 @@ body{word-break:keep-all;overflow-wrap:anywhere}
       <p class="visit" id="visit" aria-hidden="true"></p>
     </div>
     <div class="ask">
-      <p class="seer-name">백귀술사 <b>호연</b> <span>狐煙</span></p>
+      <p class="seer-name"><i class="sn-l"></i><span>백귀술사</span><b>호연</b><i class="sn-r"></i></p>
       <h2>자네가 품고 온 이야기를 들려주게<br>카드는 이미 알고 있을지도 모르니</h2>
       <div class="topics" id="topics" aria-label="물음 고르기">
         <p class="topics-h">무엇이 궁금한가</p>
@@ -932,7 +947,8 @@ const INTENTS=[
  {k:"운세",t:"기타",re:/운세|올해|내년|올\s*한\s*해|운이|운은|앞으로\s*(어떻|어찌)|내\s*운명|팔자|총운/,
   v:["트이는 때일세. 묵혀 둔 일을 꺼내게.","한 번 꺾인 뒤에 트이네. 첫 고비를 잘 버티게.","더딘 때일세. 크게 벌이기보다 다지는 데 쓰게.","조심할 때일세. 지키는 것이 버는 것이네."]}
 ];
-function intentOf(q){ return INTENTS.find(x=>x.re.test(q))||null; }
+/* 여러 가지를 한꺼번에 물으면 맨 앞에 꺼낸 것을 본 물음으로 친다 */
+function intentOf(q){ let best=null, at=1e9; INTENTS.forEach((x,k)=>{ const m=q.match(x.re); if(m&&m.index<at){ at=m.index; best=x; } }); return best; }
 
 /* 패의 갈래가 물음과 다를 때 — 설화를 그대로 읊지 않고 물음의 일에 빗대어 잇는다 */
 const BRIDGE={
@@ -996,7 +1012,7 @@ const S = {q:"",order:[],picked:[],brushN:0,pass:0,dir:0,sinceFlip:0,
 const $ = id => document.getElementById(id);
 const show = id => {document.querySelectorAll(".screen").forEach(s=>s.hidden=true); $(id).hidden=false; const h=document.getElementById("home"); if(h) h.hidden=(id==="s-ask");};
 let toastT=null;
-function toast(msg){ const t=$("toast"); t.textContent=msg; t.hidden=false; clearTimeout(toastT); toastT=setTimeout(()=>t.hidden=true,2200); }
+function toast(msg){ const t=$("toast"); t.textContent=msg; t.hidden=false; clearTimeout(toastT); toastT=setTimeout(()=>t.hidden=true,3200); }
 function esc(t){return String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
 function wait(ms){return new Promise(r=>setTimeout(r,ms));}
 /* 오늘 판 앞에 앉은 인연 — 백귀사주와 같은 방식(한 번 방문하는 동안 같은 수) */
@@ -1011,11 +1027,15 @@ function store(k,v){try{ if(v===undefined) return JSON.parse(localStorage.getIte
 const IN_KAKAO=/KAKAOTALK/i.test(navigator.userAgent||"");
 
 /* ── 패를 펴지 않는 물음 ── */
-const RISK_SELF=/죽고\s*싶|죽을까|자살|목숨을?\s*끊|사라지고\s*싶|살기\s*싫|살고\s*싶지\s*않|죽어\s*버릴|뛰어내리|극단적\s*선택|생을\s*마감|그만\s*살|(삶|인생|목숨|모든\s*걸)\s*(을|를)?\s*끝내|다\s*끝내고\s*싶|그냥\s*끝내도\s*될/;
+const RISK_SELF=/죽고\s*싶|죽을까|자살|목숨을?\s*끊|사라지고\s*싶|살기\s*싫|살고\s*싶지\s*않|죽어\s*버릴|뛰어내[리릴려]|극단적인?\s*선택|자해|손목\s*(을|를)?\s*긋|목\s*(을|를)?\s*매|번개탄|유서|약을?\s*(다|한꺼번에|몽땅|많이|잔뜩)\s*(먹|삼키)|내가\s*(죽으면|죽어도|없어지면|사라지면)|죽어야|없어지고\s*싶|생을\s*마감|그만\s*살|(삶|인생|목숨|모든\s*걸)\s*(을|를)?\s*끝내|다\s*끝내고\s*싶|그냥\s*끝내도\s*될/;
 const RISK_HARM=/죽이고\s*싶|죽여\s*버리|죽일까|해치고\s*싶|해코지|복수하고\s*싶|복수할까|저주해\s*줘|저주를\s*걸|불\s*질러/;
-function riskOf(t){ if(RISK_SELF.test(t)) return "self"; if(RISK_HARM.test(t)) return "harm"; return ""; }
+const RISK_HURT=/때려요|때려서|때린다|때리는데|맞고\s*(살|있|지내)|맞았어|폭행|폭력|학대|스토킹|스토커|협박|감금|성추행|성폭/;
+const RISK_MED=/지워야|지울까|낙태|중절|수술\s*(을|를)?\s*(해야|받아야|할까|말까|안\s*해도)|약\s*(을|를)?\s*(끊어도|끊을까|안\s*먹어도|그만\s*먹)|치료\s*(를|을)?\s*(그만|안\s*받아도|받아야\s*할까)|병원\s*(에)?\s*(안\s*가도|가야\s*할까)/;
+function riskOf(t){ if(RISK_SELF.test(t)) return "self"; if(RISK_HARM.test(t)) return "harm"; if(RISK_HURT.test(t)) return "hurt"; if(RISK_MED.test(t)) return "med"; return ""; }
 const RISK_MSG={
- self:"이 물음에는 패를 펴지 않겠네.<br>패는 자네 목숨을 두고는 답하지 않네.<br><br>그런 마음이 들 만큼 무거운 것을 지고 있다는 건 알겠네. 오늘 밤은 혼자 두지 말게. 곁에 있는 사람 하나에게 지금 그 마음을 그대로 말하게.<br><br>말할 사람이 없거든 <b>109</b>에 전화하게. 밤에도 받네.<br><br>그 짐이 조금 내려앉거든, 그때 다른 물음을 들고 오게. 그때는 패를 펴 주지.",
+ self:"이 물음에는 패를 펴지 않겠네.<br>패는 자네 목숨을 두고는 답하지 않네.<br><br>그런 마음이 들 만큼 무거운 것을 지고 있다는 건 알겠네. 오늘 밤은 혼자 두지 말게. 곁에 있는 사람 하나에게 지금 그 마음을 그대로 말하게.<br><br>말할 사람이 없거든 <a class="tel" href="tel:109">109</a>에 전화하게. 밤에도 받네.<br><br>그 짐이 조금 내려앉거든, 그때 다른 물음을 들고 오게. 그때는 패를 펴 주지.",
+ hurt:"이 일은 패보다 사람의 손이 먼저일세.<br>누가 자네 몸이나 마음을 해치고 있다면, 그건 운이 아니라 멈춰야 할 일이네.<br><br>지금 위험하면 <a class="tel" href="tel:112">112</a>에 바로 알리게. 가정폭력·데이트폭력·스토킹은 <a class="tel" href="tel:1366">1366</a>(여성긴급전화)이 밤낮없이 받네.<br><br>몸이 안전한 곳에 닿거든, 그때 다른 물음을 들고 오게. 그때는 패를 펴 주지.",
+ med:"몸과 목숨이 걸린 결정은 패로 정하지 않네.<br>그건 패가 아니라 자네 몸을 직접 본 의원과 정할 일일세.<br><br>망설여지는 마음 그대로 의원에게 물어보게. 한 사람의 말로 부족하거든 다른 의원의 말도 들어 보게.<br><br>그 결정과 별개로 자네 마음이 어디로 흐르는지가 궁금하거든, 그때 그 물음을 들고 오게.",
  harm:"남을 해치는 일에는 패를 펴지 않겠네.<br>그 마음은 상대보다 자네를 먼저 삼키네.<br><br>자네가 정말 묻고 싶은 건 그 사람이 아니라, 그 일로 다친 자네 자리일 것일세. 그걸 물어 오게. 그 물음에는 패를 펴 주지."
 };
 
@@ -1148,7 +1168,7 @@ S.tp=""; const chipN={};
     box.appendChild(b);
   });
 })();
-function growQ(){ q.style.height="auto"; q.style.height=Math.min(190,Math.max(98,q.scrollHeight+2))+"px"; }
+function growQ(){ q.style.height="auto"; q.style.height=Math.min(190,Math.max(parseFloat(getComputedStyle(q).minHeight)||88,q.scrollHeight+2))+"px"; }
 q.addEventListener("input",()=>{
   growQ();
   $("count").textContent=q.value.length+" / 120";
@@ -1157,6 +1177,9 @@ q.addEventListener("input",()=>{
 $("go").addEventListener("click",()=>{
   audio(); startBed();
   const text=q.value.trim(); if(text.length<2) return;
+  /* 사정이 담기지 않은 물음(ㅋㅋㅋ, ?, 숫자, 영어만)은 패를 펴지 않는다 */
+  const han=(text.match(/[가-힣]/g)||[]).length;
+  if(han<4){ toast("자네 사정을 한 줄만 더 적어 주게. 예) 그 사람과 다시 이어질까요"); q.focus(); return; }
   const risk=riskOf(text);
   if(risk){ $("riskMsg").innerHTML=RISK_MSG[risk]; openSheet("risk"); return; }
   const same=findSame(text);
@@ -1503,7 +1526,7 @@ function frameCore(i,p,E){
   const rv=p.rev?(rk<REV_TALK.length?REV_TALK[rk]:" 이 귀도 깨어 있네."):"";
   let br=bridgeOf(c,E.topic);
   if(br&&P.slice(0,i).some(x=>x.card.suit===c.suit)){ /* 같은 갈래의 빗댐은 처음 한 번만 길게 */
-    br=pickV([`이것도 ${SUIT_SHORT[c.suit]}에서 나왔네. 앞서 짚은 그 뜻이 한 번 더 겹치는 걸세.`,`또 ${SUIT_SHORT[c.suit]}일세. 같은 말을 패가 거듭하니 가볍게 넘기지 말게.`,`${SUIT_SHORT[c.suit]}의 귀가 다시 나왔네. 그만큼 이 일의 무게가 그쪽에 실려 있다는 말일세.`],sd);
+    br=pickV([`이것도 ${SUIT_SHORT[c.suit]}에서 나왔네. 앞서 짚은 그 뜻이 한 번 더 겹치는 걸세.`,`또 ${SUIT_SHORT[c.suit]}일세. 같은 말을 패가 거듭하니 가볍게 넘기지 말게.`,`${c.suit==="대귀"?"대귀가":SUIT_SHORT[c.suit]+"의 귀가"} 다시 나왔네. 그만큼 이 일의 무게가 그쪽에 실려 있다는 말일세.`],sd);
   }
   const tale=haji(c.act)+" "+(br||haji(c.warn)), actB=haji(c.act)+(br?" "+br:"");
   const W=E.worry;
@@ -1584,6 +1607,7 @@ function wholeTalk(E){
   if(E.daegui>=3&&E.leanSuit!=="대귀") t+=`대귀가 여럿 들었으니, 사람 힘만으로는 안 되는 대목이 하나 있을 걸세. `;
   t+= fv.rev ? `무엇보다 끝자리 ${fv.card.nm}${jo(fv.card.nm,"이가")} 거꾸로 선 게 마음에 걸리네. `
              : `끝자리 ${fv.card.nm}${jo(fv.card.nm,"이가")} 바로 서 있는 건 다행일세. `;
+  if(fv.rev&&E.grade<=1) t+=`허나 열 장을 모두 놓고 보면 흐름은 자네 쪽일세. `;
   t+= fv.rev&&P[4].rev ? `받쳐 줄 자리마저 흔들리고 있고. `
     : fv.rev ? `그래도 받쳐 주는 자리는 굳건하네. `
     : P[4].rev ? `다만 받쳐 줄 자리가 흔들리고 있네. ` : `받쳐 주는 자리도 굳건하네. `;
@@ -1612,17 +1636,27 @@ const FAMILY=[
  {id:"fox",name:"여우 둔갑진",han:"狐變陣",ids:[20,21,30,33,38,80],tone:1,line:"여우가 둘 이상 들었네. 이 판에 둔갑한 것이 있다는 뜻일세. 웃는 얼굴 하나가 자네를 홀리고 있네. 나도 여우라, 그 기척만은 놓치지 않네."},
  {id:"jailer",name:"우두마두",han:"牛頭馬頭",ids:[45,46],tone:1,line:"저승 옥졸 한 쌍이 나란히 섰네. 미뤄 둔 셈을 받으러 온 것일세. 갚을 것, 사과할 것, 끝낼 것이 있다면 이달 안에 하게."},
  {id:"tiger",name:"범의 그림자",han:"虎影",ids:[41,55],tone:1,line:"범 둘이 한 판에 들었네. 자네를 꾀어내는 손과 덮치는 손이 따로 있네. 급히 부르는 소리엔 한 번 멈추게."},
- {id:"gold",name:"금맥",han:"金脈",ids:[1,4,9,18],tone:-1,line:"재물을 쥔 귀가 둘이나 들었네. 흔치 않은 금맥일세. 다만 금은 서두르는 손엔 안 쥐어지네. 천천히 캐게."},
+ {id:"gold",name:"금맥",han:"金脈",ids:[1,4,9,18],tone:-1,line:"재물을 쥔 귀가 둘이나 들었네. 흔치 않은 금맥일세. 다만 금은 서두르는 손엔 안 쥐어지네. 천천히 캐게.",
+  by:{연애:"재물을 쥔 귀가 둘이나 들었네. 사랑 물음에 금맥이 비친다는 건, 이 인연이 자네 살림과 형편까지 함께 일으킨다는 뜻일세. 다만 서두르는 손엔 안 쥐어지네.",
+      사람:"재물을 쥔 귀가 둘이나 들었네. 이 사람 사이엔 함께 일으킬 수 있는 길이 숨어 있다는 뜻일세. 셈을 분명히 해 두면 오래 가네.",
+      건강:"재물을 쥔 귀가 둘이나 들었네. 몸을 돌보는 데 쓰는 돈을 아끼지 말라는 뜻일세. 그 돈이 곧 금맥일세."}},
  {id:"immortal",name:"죽지 않는 둘",han:"不殺雙",ids:[0,83],tone:1,line:"죽지 않는 것 둘이 나란히 섰네. 끝난 줄 안 일이 다시 살아나는 판일세. 마무리를 확실히 짓게."},
  {id:"snake",name:"뱀의 똬리",han:"蛇蟠",ids:[4,37,39],tone:1,line:"뱀이 똬리를 틀었네. 얽힌 일이 한 번에 풀리지 않고 감기고 또 감기는 판일세. 한 가닥씩 풀어야 하네."},
  {id:"neck",name:"목의 살",han:"頸煞",ids:[40,51,52],tone:1,line:"머리와 목을 노리는 귀가 겹쳤네. 머리로만 버티고 있다는 뜻일세. 생각을 내려놓고 몸부터 쉬게 하게."},
  {id:"blade",name:"쇠와 피",han:"金血",ids:[53,56,57,58],tone:1,line:"날붙이와 피의 귀가 겹쳤네. 다툼이 몸싸움으로 번지기 쉬운 판일세. 날 선 말 한마디도 아끼게."},
  {id:"night",name:"밤의 행렬",han:"夜行",ids:[60,64,65,67,74],tone:1,line:"밤의 귀들이 줄을 섰네. 자네가 이 일을 낮이 아니라 밤에 붙들고 있다는 뜻일세. 밤에 내린 결정은 아침에 한 번 더 보게."},
  {id:"mouth",name:"뭇 입의 합창",han:"衆口",ids:[82,84,87,89,92,98],tone:1,line:"입의 귀가 겹쳤네. 이 일은 사실보다 말이 먼저 커진 판일세. 자네 입부터 닫으면 절반은 가라앉네."},
- {id:"court",name:"관재 겹침",han:"官災",ids:[85,94,95,96,97],tone:1,line:"문서와 송사의 귀가 겹쳤네. 말로 끝날 일이 종이로 번질 수 있는 판일세. 서명하기 전에 반드시 한 번 더 읽게."},
+ {id:"court",name:"관재 겹침",han:"官災",ids:[85,94,95,96,97],tone:1,line:"문서와 송사의 귀가 겹쳤네. 말로 끝날 일이 종이로 번질 수 있는 판일세. 서명하기 전에 반드시 한 번 더 읽게.",
+  by:{연애:"문서와 송사의 귀가 겹쳤네. 둘 사이의 일이 말로 끝나지 않고 남의 입이나 기록으로 번질 수 있는 판일세. 감정이 앞선 말과 글은 남기지 말게.",
+      아이:"문서와 송사의 귀가 겹쳤네. 절차와 서류에서 탈이 나기 쉬운 때일세. 진료 기록과 서류는 꼭 챙겨 두게.",
+      건강:"문서와 송사의 귀가 겹쳤네. 절차와 서류에서 탈이 나기 쉬운 때일세. 검사와 진료 기록은 꼭 챙겨 두게."}},
  {id:"betray",name:"등 뒤의 칼",han:"背刃",ids:[86,88,90,93,99],tone:1,line:"얼굴을 바꾸는 귀가 겹쳤네. 앞에서 웃는 사람 가운데 하나가 등 뒤에서 다른 말을 하고 있네."},
  {id:"longing",name:"그리움의 사슬",han:"相思鎖",ids:[23,25,28,29,34],tone:0,line:"그리움의 귀가 겹쳤네. 이 일의 밑바닥엔 놓지 못한 사람이 있네. 그 마음을 인정하는 데서 매듭이 풀리네."},
- {id:"leak",name:"곳간의 구멍",han:"庫穴",ids:[3,8,11,15,16,19],tone:1,line:"새는 돈의 귀가 겹쳤네. 큰 손해보다 작은 구멍들이 자네를 말리고 있네. 이레만 지출을 적어 보게."},
+ {id:"leak",name:"곳간의 구멍",han:"庫穴",ids:[3,8,11,15,16,19],tone:1,line:"새는 돈의 귀가 겹쳤네. 큰 손해보다 작은 구멍들이 자네를 말리고 있네. 이레만 지출을 적어 보게.",
+  by:{연애:"새는 돈의 귀가 겹쳤네. 사랑 물음에 이 귀들이 몰렸다는 건, 정이 조금씩 새고 있다는 뜻일세. 작은 서운함들을 그냥 넘기지 말게.",
+      사람:"새는 돈의 귀가 겹쳤네. 이 사이에서 마음이 조금씩 새고 있다는 뜻일세. 말 못 한 섭섭함이 쌓였네.",
+      건강:"새는 돈의 귀가 겹쳤네. 기운이 조금씩 새고 있다는 뜻일세. 잠과 끼니부터 챙기게.",
+      아이:"새는 돈의 귀가 겹쳤네. 기운이 조금씩 새고 있다는 뜻일세. 몸과 마음을 먼저 채우게."}},
  {id:"illusion",name:"헛것의 장막",han:"幻幕",ids:[17,24,61,72,73],tone:1,line:"헛것을 보이는 귀가 겹쳤네. 지금 자네 눈에 비친 그림이 실제와 다르네. 믿을 만한 사람의 눈을 한 번 빌리게."},
  {id:"fire",name:"불의 길",han:"火路",ids:[42,66],tone:0,line:"불의 귀 둘이 길을 냈네. 일이 한 번 붙으면 걷잡을 수 없이 번지네. 좋은 일이든 나쁜 일이든 빠르게 오네."},
  {id:"faces",name:"여러 얼굴",han:"多面",ids:[32,80,82,88],tone:1,line:"머리와 얼굴이 여럿인 귀가 겹쳤네. 한 사람 안에 두 마음이 있다는 뜻일세. 자네일 수도, 상대일 수도 있네."}
@@ -1633,9 +1667,10 @@ function rankOf(c){ if(c.suit==="대귀") return KO_NUM.indexOf(c.no.replace(/^�
 
 function findCombos(P){
   const out=[], add=o=>{ if(!out.some(x=>x.id===o.id)) out.push(o); };
+  const tp=(intentOf(S.q||"")||{}).t||topicOf(S.q||"");
   FAMILY.forEach(f=>{
     const pos=P.map((p,i)=>f.ids.includes(p.idx)?i:-1).filter(i=>i>=0);
-    if(pos.length>=2) add({...f,pos,rank:1});
+    if(pos.length>=2) add({...f,line:(f.by&&f.by[tp])||f.line,pos,rank:1});
   });
   const bySuit={}; P.forEach((p,i)=>(bySuit[p.card.suit]=bySuit[p.card.suit]||[]).push(i));
   Object.entries(bySuit).forEach(([s,pos])=>{
