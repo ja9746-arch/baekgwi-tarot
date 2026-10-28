@@ -2259,12 +2259,21 @@ const HAN_NUM=["一","二","三","四","五","六","七","八","九","十","十�
 const KO_NUM=["일","이","삼","사","오","육","칠","팔","구","십","십일","십이","십삼","십사","십오","십육","십칠","십팔","십구","이십"];
 function rankOf(c){ if(c.suit==="대귀") return KO_NUM.indexOf(c.no.replace(/^제/,"").replace(/귀$/,""))+1; return HAN_NUM.indexOf(c.no)+1; }
 
+const FAMILY_KIN={
+ fox:"여우가 둘 이상 들었네. 괜찮다는 겉모습 속에 다른 사정이 숨어 있다는 뜻일세. 괜찮아 보여도 한 번 더 살피게.",
+ longing:"그리움의 귀가 겹쳤네. 이 판 밑바닥엔 서로를 아끼는 마음이 깊게 깔려 있네. 그 마음을 말로 한 번 전하게.",
+ illusion:"헛것을 보이는 귀가 겹쳤네. 걱정이 일을 실제보다 크게 보이게 한다는 뜻일세. 믿을 만한 사람의 눈을 한 번 빌리게.",
+ faces:"머리와 얼굴이 여럿인 귀가 겹쳤네. 여기저기서 다른 말을 듣게 된다는 뜻일세. 믿는 한 사람의 말을 정해 따르게.",
+ mouth:"입의 귀가 겹쳤네. 여기저기서 들리는 말이 걱정을 키우는 판일세. 믿는 한 사람의 말만 듣게."
+};
 function findCombos(P){
   const out=[], add=o=>{ if(!out.some(x=>x.id===o.id)) out.push(o); };
   const tp=(intentOf(S.q||"")||{}).t||topicOf(S.q||"");
+  /* 가족·반려·아이의 아픔을 묻는 판엔 그 결에 맞는 말을 먼저 쓴다 */
+  const grp=/^(가족건강|반려|자녀)/.test((intentOf(S.q||"")||{}).k||"")?"가족":"";
   FAMILY.forEach(f=>{
     const pos=P.map((p,i)=>f.ids.includes(p.idx)?i:-1).filter(i=>i>=0);
-    if(pos.length>=2) add({...f,line:(f.by&&f.by[tp])||f.line,pos,rank:1});
+    if(pos.length>=2) add({...f,line:(f.by&&((grp&&(f.by[grp]||FAMILY_KIN[f.id]))||f.by[tp]))||(grp&&FAMILY_KIN[f.id])||f.line,pos,rank:1});
   });
   const bySuit={}; P.forEach((p,i)=>(bySuit[p.card.suit]=bySuit[p.card.suit]||[]).push(i));
   Object.entries(bySuit).forEach(([s,pos])=>{
@@ -2878,8 +2887,8 @@ async function confirmStage(T){
   }
   const NUM=["","한","두","세","네","다섯"];
   await line("확인의 결", (n===1 ? (ok ? `한 번 더 물었는데 패가 같은 말을 했네.<br>` : `한 번 더 물었더니 패가 다른 말을 했네.<br>`)
-      : `${NUM[n]} 번을 다시 물었네. 그중 <strong>${NUM[ok]||"한 번도"}${ok?" 번":""}</strong> 패가 같은 말을 했군.<br>`)+
-    (ok*2>=n?"패의 말이 흔들리지 않네. 앞서 내린 답을 믿고 가게.":"패가 아직 망설이고 있네. 답은 그대로 두되, 때와 푸는 법은 더 꼭 지키게."));
+      : (ok ? `${NUM[n]} 번을 다시 물었네. 그중 <strong>${ok===n?"모두":NUM[ok]+" 번"}</strong> 패가 같은 말을 했군.<br>` : `${NUM[n]} 번을 다시 물었네. 패가 <strong>한 번도</strong> 같은 말을 하지 않았군.<br>`))+
+    (ok===n?"패의 말이 흔들리지 않네. 앞서 내린 답을 믿고 가게.":ok*2>=n?"패의 말이 반은 굳었네. 답은 믿되, 꺾이는 대목은 한 번 더 살피게.":"패가 아직 망설이고 있네. 답은 그대로 두되, 때와 푸는 법은 더 꼭 지키게."));
 }
 function toConfirmPick(n,done){
   S.mode="confirm"; S.cNeed=n; S.confirm=[]; S.confirmDone=done; S.spin=0;
@@ -2926,7 +2935,7 @@ function ledger(){
   const combos=E.combos.length?`<div class="lg-lt">조합</div><div class="lg-chips">${E.combos.map(c=>`<span>${c.name}<small>${c.han}</small></span>`).join("")}</div>`:"";
   const n=(S.confirm||[]).length, ok=S.cOk||0;
   const NW=["","한","두","세","네","다섯"];
-  const conf=n?`<div class="lg-lt">확인의 패</div><p class="lg-cf">${NW[n]} 번 다시 물어 `+(ok?`<b style="color:var(--geum);font-weight:400">${NW[ok]} 번</b> 같은 말이 나왔네. `:`한 번도 같은 말이 나오지 않았네. `)+`${ok*2>=n?"패의 말이 흔들리지 않네.":"패가 아직 망설이고 있네."}</p>`:"";
+  const conf=n?`<div class="lg-lt">확인의 패</div><p class="lg-cf">${NW[n]} 번 다시 물어 `+(ok?`<b style="color:var(--geum);font-weight:400">${ok===n&&n>1?"모두":NW[ok]+" 번"}</b> 같은 말이 나왔네. `:`한 번도 같은 말이 나오지 않았네. `)+`${ok===n?"패의 말이 흔들리지 않네.":ok*2>=n?"패의 말이 반은 굳었네.":"패가 아직 망설이고 있네."}</p>`:"";
   const box=document.createElement("div"); box.className="ledger";
   box.innerHTML=`<h3>종합장<small>總合帳 · ${fmtDate(S.rec?S.rec.t:Date.now())}의 패</small></h3>`+
     `<p class="lg-lq">“${esc(S.q)}”</p>`+
