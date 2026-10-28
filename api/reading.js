@@ -75,7 +75,7 @@ async function callModel(req, system, prompt, maxTok = 3200) {
   return (d.content || []).filter((b) => b.type === "text").map((b) => b.text).join("");
 }
 const MAX_Q = 200;
-const RISK = /죽고\s*싶|자살|목숨을?\s*끊|살기\s*싫|살고\s*싶지\s*않|사라지고\s*싶|뛰어내[리릴려]|극단적인?\s*선택|자해|손목\s*(을|를)?\s*긋|목\s*(을|를)?\s*매|번개탄|유서|약을?\s*(다|한꺼번에|몽땅|많이|잔뜩)\s*(먹|삼키)|죽어\s*버릴|죽이고\s*싶|죽여\s*버리|죽일까|해치고\s*싶|복수하고\s*싶/;
+const RISK = /살\s*이유(가)?\s*(없|있을까|모르)|사는\s*(게|의미가)\s*(의미|무슨\s*의미|없)|다\s*포기하고\s*싶|모든\s*걸\s*포기|안\s*깨어났으면|눈\s*뜨지\s*않았으면|없어지는\s*게\s*나을|태어나지\s*말|죽고\s*싶|자살|목숨을?\s*끊|살기\s*싫|살고\s*싶지\s*않|사라지고\s*싶|뛰어내[리릴려]|극단적인?\s*선택|자해|손목\s*(을|를)?\s*긋|목\s*(을|를)?\s*매|번개탄|유서|약을?\s*(다|한꺼번에|몽땅|많이|잔뜩)\s*(먹|삼키)|죽어\s*버릴|죽이고\s*싶|죽여\s*버리|죽일까|해치고\s*싶|복수하고\s*싶/;
 
 /* 아주 단순한 주소별 횟수 제한 (한 대에 한정) */
 const hits = new Map();
@@ -131,6 +131,25 @@ const TONE = [
   "지금 방식으로는 안 된다. 무겁게 경고하되, 바꿔야 할 한 가지를 똑똑히 짚어라.",
   "흐름이 등을 돌렸다. 엄숙하게 판결하듯 짧게 끊되, 끝에는 반드시 살 길 하나를 남겨라.",
 ];
+
+/* 뼈대도 길이를 자르고, 지시문에 그대로 들어가는 말은 정해진 꼴만 받는다 */
+function cleanBone(b, cut) {
+  if (!b || typeof b !== "object") return {};
+  const word = (v, n) => (/^[가-힣·\s]{1,12}$/.test(String(v ?? "")) ? cut(v, n) : "");
+  const list = (v, n, m) => (Array.isArray(v) ? v.slice(0, n).map((x) => cut(x, m)) : []);
+  const num = (v) => (Number.isFinite(+v) ? Math.max(0, Math.min(10, Math.round(+v))) : 0);
+  return {
+    stage: b.stage === "free" ? "free" : "paid",
+    topic: word(b.topic, 6), qtype: word(b.qtype, 4), intent: word(b.intent, 8), worry: cut(b.worry, 30),
+    subject: ["반려", "자녀"].includes(b.subject) ? b.subject : "",
+    who: cut(b.who, 20), feel: cut(b.feel, 20), whenWord: cut(b.whenWord, 20),
+    opened: Array.isArray(b.opened) ? b.opened.slice(0, 10).map((o) => ({ pos: cut(o?.pos, 4), nm: cut(o?.nm, 30) })) : [],
+    verdict: cut(b.verdict, 160), why: list(b.why, 6, 120), combos: list(b.combos, 8, 40),
+    when: b.when ? { t: cut(b.when.t, 40), d: cut(b.when.d, 80) } : null,
+    daegui: num(b.daegui), el: cut(b.el, 4), elN: num(b.elN), grade: num(b.grade), leanN: num(b.leanN),
+    leanSuit: cut(b.leanSuit, 12), rev: num(b.rev),
+  };
+}
 
 function buildPrompt(q, cards, bone, stage) {
   const list = cards
@@ -270,7 +289,7 @@ export default async function handler(req, res) {
     res.status(422).json({ error: "이 물음에는 패를 펴지 않는다" });
     return;
   }
-  const bone = body?.bone;
+  const bone = cleanBone(body?.bone, cut);
   if (!q || !cards.length || (stage === "paid" && (!bone?.when?.t || !bone?.verdict))) {
     res.status(400).json({ error: "패가 모자란다" });
     return;
