@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0a0507">
+<title>백귀타로 — 백귀술사 호연</title>
 <meta name="description" content="백귀술사 호연이 해동 백귀 백 장으로 자네 물음을 읽는다. 질문 하나를 넣으면 열 장을 뽑아 인·연·과로 풀어준다.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="백귀타로">
@@ -79,6 +80,10 @@ button{font-family:inherit;color:inherit;cursor:pointer}
   display:flex;flex-direction:column;justify-content:center;gap:18px;padding-block:10px}
 #s-ask .ask{justify-content:flex-start;padding-top:min(5vh,44px)}
 @media (max-height:700px){#s-ask .ask .hint:last-child{display:none}#s-ask .rule{margin-top:10px}}
+body{word-break:keep-all;overflow-wrap:anywhere}
+@media (max-width:340px){#s-ask .ask h2{font-size:15.5px;line-height:1.75;letter-spacing:-.03em}.brand .mark img{width:min(60vw,220px)}}
+@media (max-height:680px){#s-ask .brand{padding-top:10px}#s-ask .visit{margin-top:4px}#s-ask .visit b{display:inline;margin-left:4px}
+  #s-ask .ask{padding-top:8px;gap:12px}#s-ask .ask h2{line-height:1.6}.field textarea{min-height:76px}#s-ask .ask .hint{display:none}}
 .ask::-webkit-scrollbar{width:0}
 .ask h2{font-family:var(--serif);font-weight:700;font-size:clamp(19px,5.2vw,23px);
   text-align:center;margin:0;color:var(--jae);text-wrap:balance;line-height:1.95;
@@ -471,7 +476,7 @@ button{font-family:inherit;color:inherit;cursor:pointer}
     <h4>복비(결제)</h4>
     <ul>
       <li>봉인 해제(덮인 일곱 장 전체 풀이)의 복비는 정가 15,000원(부가세 포함)입니다. 앞의 세 장은 무료입니다.</li>
-      <li>무료 세 장을 처음 연 때부터 10분 안에 봉인을 풀면 할인가 3,990원이 적용됩니다. 10분이 지나면 정가가 적용됩니다.</li>
+      <li>무료 세 장 풀이가 끝나 봉인 안내가 처음 나온 때부터 10분 안에 봉인을 풀면 할인가 3,990원이 적용됩니다. 10분이 지나면 정가가 적용됩니다.</li>
       <li>단건 결제이며 자동 갱신이나 정기 결제는 없습니다.</li>
       <li>결제는 결제대행사를 통해 처리되며, 본 서비스는 카드번호 등 결제수단 정보를 보관하지 않습니다.</li>
     </ul>
@@ -1630,7 +1635,7 @@ async function askSeer(E,from,to,stage){
       nature:c.nature, act:c.act, warn:c.warn, fix:c.fix,
       base: frame(i,p,E).replace(/<br>/g," ").replace(/<\/?(em|strong)>/g,"")});
   }
-  const opened=[0,1,2].map(i=>({pos:POS[i].k, nm:S.picked[i].card.full}));
+  const opened=Array.from({length:from},(_,i)=>({pos:POS[i].k, nm:S.picked[i].card.full}));
   const R=S.R||readQ(S.q);
   const bone={stage, opened, combos:(E.combos||[]).map(c=>c.name), grade:E.grade, why:E.why, topic:E.topic, qtype:E.qtype, el:E.el, elN:E.elN, rev:E.rev,
     leanSuit:E.leanSuit, leanN:E.leanN, daegui:E.daegui, when:E.when, verdict:E.verdict,
@@ -1786,7 +1791,9 @@ async function unseal(){
   const T=RUN, live=()=>T===RUN;
   S.paid=true; S.replay=false;
   const E=S.E;
-  const job=askSeer(E,3,10,"paid");
+  /* 앞 두 장과 뒤 다섯 장을 따로 불러 첫 패를 빨리 연다 */
+  S.paidTexts=null;
+  S.paidJobs=[askSeer(E,3,5,"paid"), askSeer(E,5,10,"paid")];
   document.querySelector(".seal")?.remove();
   $("readfoot").innerHTML="";
   document.querySelectorAll("#board .slot.combo").forEach(s=>s.classList.remove("combo"));
@@ -1798,19 +1805,27 @@ async function unseal(){
   document.querySelectorAll("#board .slot.sealed").forEach(s=>s.classList.remove("sealed","breaking"));
   setBg("img/seer-card.webp");
   await line("호연","봉인이 풀렸네. 패를 하나씩 들여다보겠네… 숨을 고르게."); if(!live()) return;
-  await dots(900); if(!live()) return;
-  S.paidTexts = await job; if(!live()) return;
   await showPaid();
   S.busy=false;
 }
 
+/* 패 한 장의 풀이 — 다 쓴 것이 있으면 그것, 없으면 AI를 기다리되 15초를 넘기면 규칙 풀이 */
+function paidText(i,written){
+  if(written&&written[i-3]) return Promise.resolve(written[i-3]);
+  if(!S.paidJobs) return Promise.resolve(null);
+  const half=i<5?0:1, off=i<5?3:5;
+  return Promise.race([S.paidJobs[half].then(a=>a?a[i-off]:null), wait(15000).then(()=>null)]);
+}
 async function showPaid(){
   const T=RUN, live=()=>T===RUN;
   const E=S.E, written=S.paidTexts, used=[];
   for(let i=3;i<10;i++){
+    const pend=paidText(i,written);
     await dots(); if(!live()) return;
     await reveal(i); if(!live()) return;
-    const body=(written&&written[i-3])?written[i-3]:frame(i,S.picked[i],E);
+    let got=null, fin=false; pend.then(v=>{ got=v; fin=true; });
+    while(!fin){ await dots(700); if(!live()) return; }
+    const body=got||frame(i,S.picked[i],E);
     used.push(body);
     await line(POS[i].ko+" · "+posLabel(i), body); if(!live()) return;
     $("fl"+i).parentElement.classList.remove("cur");
@@ -1818,7 +1833,7 @@ async function showPaid(){
     await nextTap(i<9?"다음 패 열기":"열 장 모아 보기"); if(!live()) return;
   }
   for(const c of E.combos.filter(c=>!S.shown.has(c.id))){ S.shown.add(c.id); if(!(await comboEvent(c,T))) return; }
-  S.paidTexts=used;
+  S.paidTexts=used; S.paidJobs=null;
 
   await dots(); if(!live()) return;
   const R=S.R;
@@ -1839,9 +1854,9 @@ async function showPaid(){
 
   await dots(); if(!live()) return;
   await line("호연",
-    `${E.grade<=1?"끝은 자네 쪽으로 기우네.":"끝은 그냥 두면 자네 쪽이 아닐세."} `+
-    `다만 패는 끝을 이미 정해 뒀네… <strong>${E.when.t}</strong>, 그때 자네가 어느 손을 쓰느냐만 남았네.<br>`+
-    `부(符)에 적힌 것부터 하게. 그게 첫 매듭일세.`); if(!live()) return;
+    (E.grade<=1
+      ? `끝은 자네 쪽으로 기우네. 그렇다고 손을 놓으면 안 되네… <strong>${E.when.t}</strong>, 그 언저리에 판이 갈리네.<br>그 전에 부(符)에 적힌 두 가지를 해 두게. 그래야 기운 쪽으로 끝까지 가네.`
+      : `그냥 두면 끝은 자네 쪽이 아닐세. 허나 패가 정한 건 흐름이지 자네가 아닐세… <strong>${E.when.t}</strong>, 그 전까지는 아직 바꿀 틈이 있네.<br>부(符)에 적힌 두 가지부터 하게. 그게 첫 매듭일세.`)); if(!live()) return;
 
   await dots(); if(!live()) return;
   await line("호연","이 판을 한 장에 적어 두었네. 두고두고 보게.");
@@ -1906,6 +1921,10 @@ async function confirmStage(T){
 }
 function toConfirmPick(n,done){
   S.mode="confirm"; S.cNeed=n; S.confirm=[]; S.confirmDone=done; S.spin=0;
+  /* 지난 물음을 다시 연 경우엔 부채에 깔 패 순서가 없다 — 뽑힌 열 장을 뺀 나머지로 새로 깐다 */
+  if(!S.order||S.order.length<WHEEL||S.order.some(i=>DECK[i]===undefined)){
+    const rest=DECK.map((_,i)=>i).filter(i=>!S.picked.some(p=>p.idx===i)); shuffleArr(rest); S.order=rest.slice(0,WHEEL);
+  }
   const host=$("boardPick"); host.innerHTML="";
   host.classList.add("confirmboard"); host.style.setProperty("--n",n);
   for(let i=0;i<n;i++){
@@ -2032,7 +2051,9 @@ async function makeShare(){
     x.fillStyle="#a39486"; x.font='400 32px "Noto Sans KR", sans-serif'; x.fillText("때와 확답, 붙은 귀는 봉인 너머에",W/2,ty+150);
   }
   x.fillStyle="#9a8b7e"; x.font='400 32px "Noto Sans KR", sans-serif';
-  x.fillText(`${fmtDate(S.rec?S.rec.t:Date.now())}의 패 · 백귀타로`,W/2,H-80);
+  x.fillText(`${fmtDate(S.rec?S.rec.t:Date.now())}의 패 · 백귀타로`,W/2,H-92);
+  x.fillStyle="#6f6258"; x.font='400 22px "Noto Sans KR", sans-serif';
+  x.fillText("해석 규칙과 생성형 AI가 함께 쓴 풀이 · 오락용",W/2,H-48);
   let url="";
   try{ url=cv.toDataURL("image/jpeg",.9); }catch(e){}
   btn.disabled=false; btn.textContent="한 장으로 남기기";
@@ -2062,7 +2083,7 @@ function reset(){
   document.querySelectorAll(".flycard").forEach(g=>g.remove());
   S.mode="main"; S.confirm=null; S.confirmDone=null; S.shown=new Set(); S.skip=false;
   $("boardPick").classList.remove("confirmboard"); $("halt").hidden=true;
-  Object.assign(S,{q:"",order:[],picked:[],brushN:0,pass:0,dir:0,sinceFlip:0,done:false,spin:0,paid:false,E:null,R:null,replay:false,rec:null,freeTexts:null,paidTexts:null,busy:false});
+  Object.assign(S,{q:"",order:[],picked:[],brushN:0,pass:0,dir:0,sinceFlip:0,done:false,spin:0,paid:false,E:null,R:null,replay:false,rec:null,freeTexts:null,paidTexts:null,paidJobs:null,cOk:0,price:0,busy:false});
   ["same","hist","share","cv","terms","risk"].forEach(closeSheet);
   q.value=""; $("count").textContent="0 / 120"; $("go").disabled=true;
   $("dealmsg").style.opacity=""; $("pickmsg").style.opacity="";
