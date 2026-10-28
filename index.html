@@ -81,6 +81,8 @@ button{font-family:inherit;color:inherit;cursor:pointer}
 .ask{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;
   display:flex;flex-direction:column;justify-content:center;gap:18px;padding-block:10px}
 #s-ask .ask{justify-content:flex-start;padding-top:min(5vh,44px)}
+/* 아래로 넘친 글이 반쯤 잘려 보이지 않게 끝을 흐린다 */
+#s-ask .ask{-webkit-mask-image:linear-gradient(#000 calc(100% - 34px),transparent);mask-image:linear-gradient(#000 calc(100% - 34px),transparent)}
 @media (max-height:700px){#s-ask .ask .hint:last-child{display:none}#s-ask .rule{margin-top:10px}}
 body{word-break:keep-all;overflow-wrap:anywhere}
 @media (max-width:340px){#s-ask .ask h2{font-size:15.5px;line-height:1.75;letter-spacing:-.03em}.brand .mark img{width:min(60vw,220px)}}
@@ -362,6 +364,7 @@ body{word-break:keep-all;overflow-wrap:anywhere}
 .ledger .lg-th.rev{transform:rotate(180deg);border-color:var(--jusa-hot)}
 .ledger .lg-ps{font-family:var(--serif);font-weight:700;font-size:16px;color:var(--jusa-hot);text-align:center;line-height:1.1}
 .ledger .lg-ps small{display:block;font-size:9.5px;font-weight:400;color:var(--jae-dim);letter-spacing:0;margin-top:2px}
+.ledger .lg-wake{display:block;margin-top:4px;font-size:11px;letter-spacing:.06em;color:#e0705e;font-weight:400}
 .ledger .lg-nm{font-size:13px;line-height:1.55;color:#cdbfb1}
 .ledger .lg-nm em{font-style:normal;font-family:var(--serif);font-weight:700;font-size:14px;color:#e8c977;margin-right:4px}
 .ledger .lg-nm i{font-style:normal;font-size:10px;color:#fff;background:rgba(192,54,42,.92);padding:0 4px;margin-left:4px;border-radius:1px;vertical-align:1px}
@@ -1163,7 +1166,7 @@ const TOPIC_LABEL={연애:"사랑",금전:"돈",직장:"일",사람:"사람 사�
 /* 출전 — 전승: 옛이야기·기록에 있는 귀 / 바탕: 옛이야기에서 빚은 귀 / 창작: 백귀야행이 새로 그린 귀 */
 function srcText(c){ return c.kind==="전승"?`${c.src}에 전하는 귀네`:c.kind==="바탕"?`${c.src}에서 빚은 귀네`:"해동 백귀야행에 이름을 올린 귀네"; }
 function srcTag(c){ return c.kind==="전승"?`전승 · ${c.src}`:c.kind==="바탕"?`${c.src}에서`:"해동 백귀야행"; }
-function posLabel(i){ if(i!==5) return POS[i].desc; const R=S.R||readQ(S.q), E=S.E; if(E&&/^반려/.test(E.dkey)) return "그 아이의 속"; if(E&&E.dkey==="자녀") return (R.who&&/아들|딸/.test(R.who)?R.who:"아이")+"의 속"; const who=R.who||(E&&["연애","사람"].includes(E.topic)?"상대":""); return who?`${who}의 속`:"이 일의 속"; }
+function posLabel(i){ if(i!==5) return POS[i].desc; const R=S.R||readQ(S.q), E=S.E; if(E&&/^반려/.test(E.dkey)) return "그 아이의 속"; if(E&&E.dkey==="자녀") return (R.who&&/아들|딸/.test(R.who)?R.who:"아이")+"의 속"; if(E&&E.dkey==="가족건강"&&R.who) return honorWho("그 사람","가족건강",R)+"의 속"; const who=R.who||(E&&["연애","사람"].includes(E.topic)?"상대":""); return who?`${who}의 속`:"이 일의 속"; }
 const GEN={목:"화",화:"토",토:"금",금:"수",수:"목"};
 const KE={목:"토",토:"수",수:"화",화:"금",금:"목"};
 const QTYPE = [
@@ -1863,7 +1866,7 @@ function pick(el){
   const used=i=>S.picked.some(p=>p.idx===i)||(S.confirm||[]).some(p=>p.idx===i);
   /* 몸·아이·반려·가족의 아픔을 묻는 판엔 죽음과 피를 짙게 품은 귀를 내지 않는다 */
   const I1=intentOf(S.q)||{};
-  const avoid=(["건강","아이"].includes(topicOf(S.q))||/^(반려|자녀|가족건강)/.test(I1.k||""))?[7,22,31,36,50,51,52,53,56,59,62]:[];
+  const avoid=(["건강","아이"].includes(topicOf(S.q))||/^(반려|자녀|가족건강)/.test(I1.k||""))?[7,22,31,36,48,50,51,52,53,56,59,62]:[];
   let use=idx;
   if(used(use)||avoid.includes(use)){
     const free=DECK.map((_,i)=>i).filter(i=>!used(i)&&!avoid.includes(i));
@@ -2116,7 +2119,7 @@ function frameCore(i,p,E){
     case 4: return `${open}<br>${nm}${jo(n,"이가")} 자네 편 자리에 나왔네.${rv}<br>${pickV(D.助,sd)}`+
       (W&&good?`<br>그 ${W}${jo(W,"을를")} 막아 줄 힘도 이 자리에 있네.`:"");
     case 5: {
-      const who=/^반려/.test(E.dkey)?"그 아이":E.dkey==="자녀"?(R.who&&/아들|딸/.test(R.who)?R.who:"아이"):(R.who||(["연애","사람"].includes(E.topic)?"상대":""));
+      const who=/^반려/.test(E.dkey)?"그 아이":E.dkey==="가족건강"&&R.who?honorWho("그 사람","가족건강",R):E.dkey==="자녀"?(R.who&&/아들|딸/.test(R.who)?R.who:"아이"):(R.who||(["연애","사람"].includes(E.topic)?"상대":""));
       if(!who) return `${open}<br>이 일의 속에 ${nm}${jo(n,"이가")} 비치네.${rv}<br>${heartLine(E,D,sd)}`;
       return `${open}<br>${who}의 속에 ${nm}의 그림자가 비치네.${rv}<br>${heartLine(E,D,sd)}`;
     }
@@ -2186,7 +2189,7 @@ const FAMILY=[
  {id:"immortal",name:"죽지 않는 둘",han:"不殺雙",ids:[0,83],tone:1,line:"죽지 않는 것 둘이 나란히 섰네. 끝난 줄 안 일이 다시 살아나는 판일세. 마무리를 확실히 짓게."},
  {id:"snake",name:"뱀의 똬리",han:"蛇蟠",ids:[4,37,39],tone:1,line:"뱀이 똬리를 틀었네. 얽힌 일이 한 번에 풀리지 않고 감기고 또 감기는 판일세. 한 가닥씩 풀어야 하네."},
  {id:"neck",name:"목의 살",han:"頸煞",ids:[40,51,52],tone:1,line:"머리와 목을 노리는 귀가 겹쳤네. 머리로만 버티고 있다는 뜻일세. 생각을 내려놓고 몸부터 쉬게 하게."},
- {id:"blade",name:"쇠와 피",han:"金血",ids:[53,56,57,58],tone:1,line:"날붙이와 피의 귀가 겹쳤네. 다툼이 몸싸움으로 번지기 쉬운 판일세. 날 선 말 한마디도 아끼게.",
+ {id:"blade",name:"쇠와 피",han:"金血",ids:[53,56,57,58],tone:1,line:"날 선 귀가 겹쳤네. 이 일로 누군가와 날카롭게 부딪히기 쉬운 판일세. 날 선 말 한마디도 아끼게.",
   by:{연애:"날 선 귀가 겹쳤네. 둘 사이에 오가는 말이 칼처럼 날카로워지기 쉬운 판일세. 홧김에 하는 말 한마디가 오래 남으니 아끼게.",
       사람:"날 선 귀가 겹쳤네. 말다툼이 크게 번지기 쉬운 판일세. 오늘은 맞서지 말고 한 발 물러서게.",
       금전:"날 선 귀가 겹쳤네. 돈 문제로 얼굴 붉힐 일이 생기기 쉬운 판일세. 감정보다 글과 숫자로 말하게.",
@@ -2284,7 +2287,7 @@ function findCombos(P){
     line:"열 장 가운데 거꾸로 나온 패가 하나도 없네. 귀들이 모두 잠든 고요한 판일세. 지금 움직이면 막는 것이 없네."});
   /* 몸·아이·반려·가족의 아픔을 물은 판에는 겁주는 조합을 걸지 않는다 */
   { const I0=intentOf(S.q||"")||{}; const sens=["건강","아이"].includes(tp)||/^(반려|자녀|가족건강)/.test(I0.k||"");
-    if(sens){ const BAN=/^(daegui3|betray|wake2|wake09|blade|neck|jailer|tiger|miss-|immortal|night|wakeline|guiwin|flood-)/; for(let k=out.length-1;k>=0;k--) if(BAN.test(out[k].id)) out.splice(k,1); } }
+    if(sens){ const BAN=/^(daegui3|betray|wake2|wake09|blade|neck|jailer|tiger|miss-|immortal|night|wakeline|guiwin|flood-|fire|court|snake)/; for(let k=out.length-1;k>=0;k--) if(BAN.test(out[k].id)) out.splice(k,1); } }
   /* 자리끼리 맞물리는 조합(4·5위)은 한 판에 둘까지만 — 너무 잦으면 무게가 없다 */
   let lim=0;
   const keep=[]; out.sort((a,b)=>a.rank-b.rank).forEach(o=>{ if(o.rank>=4){ if(lim>=2) return; lim++; } keep.push(o); });
@@ -2594,7 +2597,7 @@ async function openReading(){
     <p class="price big" id="price">복비 <span>3,990원</span></p>
     <p class="timer" id="offer">할인이 끝나기까지<b id="offerT">10:00</b></p>
     <p class="small">복비는 한 번만 받네. 자동으로 다시 나가는 일은 없네.</p>
-    <p class="agree"><b>복비를 내면 풀이가 바로 열려, 열람 후에는 환불되지 않습니다.</b><br>결제하면 이용약관·환불규정에 동의한 것으로 봅니다.</p>
+    <p class="agree"><b>풀이가 바로 열려 열람 후엔 환불이 안 됩니다.</b><br>결제하면 이용약관·환불규정에 동의한 것으로 봅니다.</p>
     <button class="btn" id="pay">복비 내고 봉인 풀기</button>
     <p class="minor">풀이는 해석 규칙과 생성형 AI가 함께 쓰는 오락 목적의 해석이며 미래를 보장하지 않습니다.<br>만 19세 미만이 법정대리인 동의 없이 결제한 경우 본인 또는 법정대리인이 취소할 수 있습니다.</p>
     <p class="legal" style="margin-top:12px"><button id="t2">이용안내 · 환불규정</button></p>`;
@@ -2769,7 +2772,11 @@ async function showPaid(){
 
   await dots(); if(!live()) return;
   await line("호연",
-    (E.qtype==="어느"&&S.R&&S.R.A&&S.R.B
+    (/^(반려|가족건강|자녀)/.test(E.dkey)||["건강","아이"].includes(E.topic)
+      ? honorWho(E.grade<=1
+        ? `좋아지는 쪽일세. <strong>${E.when.t}</strong> 무렵 한결 나아지네.<br>그 전에 부(符)에 적힌 두 가지를 해 두게. 곁을 지키는 자네 손이 가장 큰 힘일세.`
+        : `서두를 일이 아닐세. <strong>${E.when.t}</strong>까지는 무리하지 말고 곁을 지키게.<br>부(符)에 적힌 두 가지부터 하게. 의원·수의사의 말이 늘 먼저일세.`,E.dkey,S.R)
+      : E.qtype==="어느"&&S.R&&S.R.A&&S.R.B
       ? `패가 고른 쪽으로 가게. 고른 길도 거저 열리진 않네… <strong>${E.when.t}</strong>, 그 언저리에 판이 갈리네.<br>그 전에 부(符)에 적힌 두 가지를 해 두게. 그래야 고른 길이 끝까지 자네 편이 되네.`
       : E.grade<=1
       ? `끝은 자네 쪽으로 기우네. 그렇다고 손을 놓으면 안 되네… <strong>${E.when.t}</strong>, 그 언저리에 판이 갈리네.<br>그 전에 부(符)에 적힌 두 가지를 해 두게. 그래야 기운 쪽으로 끝까지 가네.`
@@ -2821,7 +2828,7 @@ async function confirmStage(T){
     const why = `${key.nm}${jo(key.nm,"과와")} 같은 말을 하는군`;
     const txt = rel==="確"
       ? `<em>${dc.full}</em>${jo(dc.nm,"이가")} 나왔네. ${why}… 패가 같은 말을 두 번 하는 걸세. <strong>‘${c.name}’, 이건 틀림없네.</strong> `+
-        (c.tone<0?"좋은 쪽으로 더 단단해졌으니 믿고 가게.":c.tone>0?"그러니 이 경고는 절대 흘려듣지 말게.":"이 흐름은 그대로 가네.")
+        (c.tone<0?(S.E.grade<=1?"좋은 쪽으로 더 단단해졌으니 믿고 가게.":"좋은 기운이 숨어 있다는 말이니, 막힌 것만 치우면 드러나네."):c.tone>0?(S.E.grade<=1?"이 경고만은 흘려듣지 말게. 조심하면 그냥 지나가네.":"그러니 이 경고는 절대 흘려듣지 말게."):"이 흐름은 그대로 가네.")
       : rel==="轉"
       ? `<em>${dc.full}</em>… 이건 좀 다르군. ${key.nm}${jo(key.nm,"과와")} 반대 말을 하네. <strong>‘${c.name}’, 이 흐름은 그대로 가지 않고 한 번 꺾이네.</strong> `+(c.tone<0?"좋은 흐름이라도 방심하지 말고 끝까지 챙기게.":c.tone>0?"다행히 이 경고는 생각보다 약하게 지나가네.":"그러니 이 대목은 한 번 더 살피고 움직이게.")
       : `<em>${dc.full}</em>… 이 패는 ‘${c.name}’에 대해선 입을 다무네. 좋다 나쁘다 하지 않으니, 서두르지 말고 지켜보라는 뜻일세.`;
@@ -2885,9 +2892,9 @@ function ledger(){
   box.innerHTML=`<h3>종합장<small>總合帳 · ${fmtDate(S.rec?S.rec.t:Date.now())}의 패</small></h3>`+
     `<p class="lg-lq">“${esc(S.q)}”</p>`+
     `<div class="lg-lk"><div class="wide"><b>확답</b><span class="hot">${E.verdict}</span></div>`+
-    `<div><b>갈리는 때</b><span>${E.when.t}</span></div><div><b>붙은 귀</b><span>${g.nm}${P[7].rev?" (깨어 있음)":""}</span></div></div>`+
+    `<div><b>갈리는 때</b><span>${E.when.t}</span></div><div><b>붙은 귀</b><span>${g.nm}${P[7].rev?'<small class="lg-wake">깨어 있음</small>':""}</span></div></div>`+
     `<div class="lg-lt">열 장</div><ol>${rows}</ol>`+
-    `<div class="lg-lt">푸는 법</div><div class="lg-fx"><p>${g.fix}</p><p>${actLine(E,P[8].idx+8)}</p></div>`+
+    `<div class="lg-lt">푸는 법</div><div class="lg-fx"><p>${g.fix}</p><p>${honorWho(actLine(E,P[8].idx+8),E.dkey,S.R||readQ(S.q))}</p></div>`+
     combos+conf+
     `<div class="lg-seal2">狐煙<br>之印</div>`+
     `<p class="lg-note">오락 목적의 해석이며 미래를 보장하지 않습니다.</p>`;
