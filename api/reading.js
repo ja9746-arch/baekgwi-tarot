@@ -219,7 +219,7 @@ export default async function handler(req, res) {
   if (req.method === "GET") {
     const r = route(req);
     res.setHeader("cache-control", "no-store");
-    res.status(200).json({ ok: !!r, how: r ? r.how : null, model: MODEL });
+    res.status(200).json({ ok: !!r });
     return;
   }
   if (req.method !== "POST") {
@@ -248,15 +248,26 @@ export default async function handler(req, res) {
       return;
     }
   }
+  if (JSON.stringify(body || {}).length > 24000) {
+    res.status(413).json({ error: "너무 길다" });
+    return;
+  }
   const q = String(body?.q || "").slice(0, MAX_Q).trim();
-  const cards = Array.isArray(body?.cards) ? body.cards.slice(0, 10) : [];
+  /* 들어온 값은 길이를 잘라 쓴다 — 지시문을 부풀려 비용을 키우는 것을 막는다 */
+  const cut = (v, n) => String(v ?? "").slice(0, n);
+  const cards = (Array.isArray(body?.cards) ? body.cards.slice(0, 10) : []).map((c) => ({
+    pos: cut(c?.pos, 4), posDesc: cut(c?.posDesc, 30), rev: !!c?.rev, nm: cut(c?.nm, 30), src: cut(c?.src, 60),
+    suit: cut(c?.suit, 12), no: cut(c?.no, 8), el: cut(c?.el, 2), nature: cut(c?.nature, 60), act: cut(c?.act, 160),
+    warn: cut(c?.warn, 160), fix: cut(c?.fix, 160), kind: cut(c?.kind, 4), lore: cut(c?.lore, 260), bridge: cut(c?.bridge, 200),
+    base: cut(c?.base, 900),
+  }));
   const stage = body?.bone?.stage === "free" ? "free" : "paid";
   if (RISK.test(q)) {
     res.status(422).json({ error: "이 물음에는 패를 펴지 않는다" });
     return;
   }
   const bone = body?.bone;
-  if (!q || !cards.length || !bone?.when?.t || !bone?.verdict) {
+  if (!q || !cards.length || (stage === "paid" && (!bone?.when?.t || !bone?.verdict))) {
     res.status(400).json({ error: "패가 모자란다" });
     return;
   }
@@ -284,10 +295,12 @@ export default async function handler(req, res) {
 
     const clean = sections.map((s) => ({
       pos: String(s.pos || ""),
-      text: String(s.text || "").replace(
-        /<(?!\/?(br|em|strong)\b)[^>]*>/gi,
-        ""
-      ),
+      /* 모든 꺾쇠를 막고 속성 없는 <br><em><strong>만 살린다 */
+      text: String(s.text || "")
+        .replace(/<(?!\/?(br|em|strong)\s*\/?>)\/?[a-z!][^<>]*>/gi, "")
+        .replace(/<(?!\/?(br|em|strong)\s*\/?>)/gi, "〈")
+        .replace(/>/g, (m, i, str) => (/<\/?(br|em|strong)\s*\/?$/i.test(str.slice(Math.max(0, i - 9), i)) ? ">" : "〉"))
+        .replace(/<(\/?)(br|em|strong)\s*\/?>/gi, (m, c, t) => (t.toLowerCase() === "br" ? "<br>" : `<${c}${t.toLowerCase()}>`)),
     }));
 
     res.setHeader("cache-control", "no-store");
