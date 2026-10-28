@@ -6,6 +6,8 @@
  */
 
 /* 백귀사주와 같은 통로를 쓴다. 베르셀 안에서는 열쇠 없이도 붙는다. */
+import { payConfig, payTokenOk } from "./pay.js";
+
 const MODEL = process.env.BAEKGWI_MODEL || "anthropic/claude-haiku-4.5";
 const GATEWAY = "https://ai-gateway.vercel.sh/v1/chat/completions";
 const DIRECT = "https://api.anthropic.com/v1/messages";
@@ -234,7 +236,6 @@ ${list}
 뼈대 (바꾸지 말 것)
 - 갈리는 때: ${bone.when.t} (${bone.when.d})
 - 확답: ${bone.verdict}
-- 확답의 근거: ${(bone.why || []).join(" / ")}
 - 열 장 속 조합: ${(bone.combos || []).join(", ") || "없음"} (조합은 화면에서 따로 짚으니 길게 되풀이하지 말고, 해당 자리에서 한 마디만 걸쳐 둔다)
 
 이번 풀이의 결
@@ -267,6 +268,16 @@ export default async function handler(req, res) {
   if (req.method !== "POST") {
     res.status(405).json({ error: "POST만 받는다" });
     return;
+  }
+  /* 다른 사이트에서 이 통로를 몰래 부르지 못하게 — 같은 주소에서 온 요청만 받는다 */
+  const origin = req.headers.origin;
+  if (origin) {
+    let oh = "";
+    try { oh = new URL(origin).host; } catch {}
+    if (oh !== req.headers.host && !/^localhost(:\d+)?$/.test(oh)) {
+      res.status(403).json({ error: "다른 곳에서 온 요청이다" });
+      return;
+    }
   }
   if (!route(req)) {
     console.error("reading: no route (OIDC 머리·환경변수 모두 없음)");
@@ -309,6 +320,12 @@ export default async function handler(req, res) {
     return;
   }
   const bone = cleanBone(body?.bone, cut);
+  /* 결제를 붙인 뒤에는 결제 확인 증표가 있어야 유료 풀이를 쓴다(결제 키가 없으면 데모라 그냥 통과) */
+  const pc = payConfig();
+  if (stage === "paid" && pc.live && !payTokenOk(body?.pay, q, pc.secret)) {
+    res.status(402).json({ error: "복비가 확인되지 않았다" });
+    return;
+  }
   if (!q || !cards.length || (stage === "paid" && (!bone?.when?.t || !bone?.verdict))) {
     res.status(400).json({ error: "패가 모자란다" });
     return;

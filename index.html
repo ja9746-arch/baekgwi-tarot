@@ -620,7 +620,7 @@ body{word-break:keep-all;overflow-wrap:anywhere}
     <ul>
       <li>Vercel Inc.(미국): 웹사이트 운영, 풀이 요청 중계. 질문 글·뽑힌 패를 풀이 요청 시 전송, 저장하지 않음.</li>
       <li>Anthropic PBC(미국): 풀이 문장 생성. 질문 글·뽑힌 패를 풀이 요청 시 전송.</li>
-      <li>결제대행사: 결제 처리(결제 연동 시 업체명을 이곳에 적습니다).</li>
+      <li>코리아포트원 주식회사(포트원)와 포트원에 연결된 결제대행사: 결제 처리. 결제창에 입력하는 카드번호 등은 이들이 직접 처리하며 회사는 받지 않습니다.</li>
       <li>국외 이전을 원하지 않으시면 서비스 이용을 멈추시면 됩니다. 이 경우 풀이를 받을 수 없습니다.</li>
     </ul>
     <h4>4. 파기</h4>
@@ -1370,7 +1370,7 @@ function recordNow(){
   const h=hist().filter(r=>r.id!==S.rec?.id);
   const rec={id:S.rec?.id||("r"+Date.now()), q:S.q, k:normKey(S.q), t:S.rec?.t||Date.now(),
     picks:S.picked.map(p=>[p.idx,p.rev?1:0]), paid:S.paid, free:S.freeTexts, paidTexts:S.paidTexts,
-    confirm:S.confirm&&S.confirm.length?S.confirm.map(p=>[p.idx,p.rev?1:0]):null, tp:S.tp||"", agreed:S.agreedAt||S.rec?.agreed||null,
+    confirm:S.confirm&&S.confirm.length?S.confirm.map(p=>[p.idx,p.rev?1:0]):null, tp:S.tp||"", agreed:S.agreedAt||S.rec?.agreed||null, pay:S.pay||S.rec?.pay||null,
     fx:S.E?{v:S.E.verdict,w:S.E.when,g:S.E.grade,c:S.E.combos.map(c=>c.id)}:(S.rec&&S.rec.fx)||null};
   S.rec=rec; h.unshift(rec); saveHist(h); refreshHistLink();
 }
@@ -1549,7 +1549,7 @@ $("go").addEventListener("click",()=>{
     openSheet("same");
     return;
   }
-  S.q=text; S.rec=null; S.freeTexts=null; S.paidTexts=null; S.paid=false; S.agreedAt=null; S.replay=false; S.pin=false;
+  S.q=text; S.rec=null; S.freeTexts=null; S.paidTexts=null; S.paid=false; S.agreedAt=null; S.pay=null; S.replay=false; S.pin=false;
   S.order=[];
   while(S.order.length<WHEEL) S.order.push(...DECK.map((_,i)=>i));
   shuffleArr(S.order);
@@ -2308,7 +2308,7 @@ async function askSeer(E,from,to,stage){
   const bail=setTimeout(()=>ctrl.abort(), 45000);
   try{
     const go=()=>fetch("/api/reading",{method:"POST",headers:{"content-type":"application/json"},
-      body:JSON.stringify({q:S.q,cards,bone}),signal:ctrl.signal});
+      body:JSON.stringify({q:S.q,cards,bone,pay:stage==="free"?undefined:(S.pay||undefined)}),signal:ctrl.signal});
     let r=await go();
     /* 한 번 끊기면 곧바로 한 번 더 — 복비 낸 풀이가 규칙 문장으로 떨어지는 일을 줄인다 */
     if(!r.ok&&(r.status>=500||r.status===429)&&stage!=="free"){ await wait(700); r=await go(); }
@@ -2335,7 +2335,7 @@ function replay(rec){
   S.q=rec.q; S.rec=rec; S.replay=true; S.pin=false; S.tp=rec.tp||"";
   S.picked=rec.picks.map(([i,r])=>({card:DECK[i],idx:i,rev:!!r}));
   const cl=a=>Array.isArray(a)?a.map(x=>x==null?x:cleanAI(x)):null;   /* 저장된 글도 다시 걸러 낸다 */
-  S.paid=!!rec.paid; S.agreedAt=null; S.freeTexts=cl(rec.free); S.paidTexts=cl(rec.paidTexts);
+  S.paid=!!rec.paid; S.agreedAt=null; S.pay=rec.pay||null; S.freeTexts=cl(rec.free); S.paidTexts=cl(rec.paidTexts);
   S.confirm=rec.confirm?rec.confirm.map(([i,r])=>({card:DECK[i],idx:i,rev:!!r})):null;
   openReading();
 }
@@ -2433,10 +2433,66 @@ async function openReading(){
   /* 결제 버튼 바로 위에 열람 후 환불 제한을 알린다(전자상거래법 제17조 제6항의 표시) */
   let paidOnce=false;
   $("pay").addEventListener("click",()=>{
-    if(paidOnce) return; paidOnce=true; S.agreedAt=Date.now(); unseal();
+    if(paidOnce) return; paidOnce=true; S.agreedAt=Date.now();
+    startPay().then(ok=>{ if(!ok) paidOnce=false; });
   });
   $("t2").addEventListener("click",()=>openSheet("terms"));
   footButtons(false);
+}
+
+/* ── 복비 결제 ──
+   결제 키가 Vercel에 들어가기 전(데모)에는 누르면 바로 봉인이 풀린다.
+   키가 들어가면 포트원 결제창 → 서버가 포트원에 직접 조회해 결제 완료·금액을 확인 → 증표를 받아 유료 풀이를 연다. */
+const PAY={mode:"demo"};
+fetch("/api/pay").then(r=>r.ok?r.json():null).then(d=>{ if(d&&d.mode==="live"&&d.storeId&&d.channelKey) Object.assign(PAY,d); }).catch(()=>{});
+function loadPortOne(){
+  if(window.PortOne) return Promise.resolve();
+  return new Promise((ok,no)=>{ const sc=document.createElement("script"); sc.src="https://cdn.portone.io/v2/browser-sdk.js"; sc.onload=()=>ok(); sc.onerror=()=>no(new Error("sdk")); document.head.appendChild(sc); });
+}
+async function verifyPay(pid,amount,q){
+  for(let k=0;k<3;k++){
+    try{ const r=await fetch("/api/pay",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({paymentId:pid,amount,q})});
+      if(r.ok){ const d=await r.json(); if(d&&d.token) return {id:pid,token:d.token}; }
+      if(r.status===400||r.status===409) return null;
+    }catch(e){}
+    await wait(1200);   /* 결제 직후엔 포트원 쪽 반영이 한 박자 늦을 수 있다 */
+  }
+  return null;
+}
+async function startPay(){
+  if(PAY.mode!=="live"){ unseal(); return true; }
+  const btn=$("pay"); if(btn) btn.disabled=true;
+  const done=v=>{ if(btn) btn.disabled=false; return v; };
+  try{
+    await loadPortOne();
+    recordNow();
+    const pid="bg-"+Date.now().toString(36)+Math.random().toString(36).slice(2,10);
+    const amount=S.price===15000?15000:3990;
+    store("baekgwi.pending",{pid,amount,rec:S.rec&&S.rec.id,q:S.q,t:Date.now()});
+    const r=await window.PortOne.requestPayment({storeId:PAY.storeId,channelKey:PAY.channelKey,paymentId:pid,
+      orderName:"백귀타로 봉인 해제",totalAmount:amount,currency:"CURRENCY_KRW",payMethod:"CARD",
+      redirectUrl:location.origin+location.pathname});
+    if(!r||r.code!==undefined){ store("baekgwi.pending",null); toast(r&&/취소|cancel/i.test(String(r.message||r.code))?"결제를 그만두었네. 마음이 서면 다시 누르게.":"결제를 마치지 못했네. 잠시 뒤 다시 눌러 주게."); return done(false); }
+    const ok=await verifyPay(pid,amount,S.q);
+    if(!ok){ toast("복비가 확인되지 않았네. 결제가 됐다면 고객센터 1866-0423으로 알려 주게."); return done(false); }
+    store("baekgwi.pending",null);
+    S.pay=ok; unseal(); return true;
+  }catch(e){ toast("결제 창을 열지 못했네. 잠시 뒤 다시 눌러 주게."); return done(false); }
+}
+/* 휴대폰은 결제창이 다른 화면으로 넘어갔다가 돌아온다 — 돌아오면 확인하고 그 풀이를 연다 */
+async function resumePay(){
+  let u; try{ u=new URL(location.href); }catch(e){ return; }
+  const pid=u.searchParams.get("paymentId"); if(!pid) return;
+  try{ history.replaceState(null,"",location.pathname); }catch(e){}
+  const pend=store("baekgwi.pending"); if(!pend||pend.pid!==pid) return;
+  if(u.searchParams.get("code")){ store("baekgwi.pending",null); toast("결제를 마치지 못했네. 지난 물음에서 다시 열 수 있네."); return; }
+  toast("복비를 확인하는 중일세…");
+  const ok=await verifyPay(pid,pend.amount,pend.q);
+  if(!ok){ toast("복비가 확인되지 않았네. 결제가 됐다면 고객센터 1866-0423으로 알려 주게."); return; }
+  store("baekgwi.pending",null);
+  const h=hist(), rec=h.find(r=>r.id===pend.rec); if(!rec) return;
+  rec.paid=true; rec.pay=ok; saveHist(h);
+  replay(rec);
 }
 
 /* ── 봉인이 깨진다 ── */
@@ -2592,17 +2648,15 @@ async function confirmStage(T){
     if(rel==="確") ok++;
     S.cOk=ok;
     const mini=`<span class="minicard${d.rev?" rev":""}" style="background-image:url('${dc.art}')"></span>`;
-    const why = dc.suit===key.suit ? `${key.nm}${jo(key.nm,"과와")} 같은 갈래에서 나왔군`
-              : dc.el===key.el ? `${key.nm}${jo(key.nm,"과와")} 같은 ${dc.el} 기운이로군`
-              : `${dc.el} 기운이 ${key.nm}의 ${key.el} 기운을 살려 주는군`;
+    const why = `${key.nm}${jo(key.nm,"과와")} 같은 말을 하는군`;
     const txt = rel==="確"
       ? `<em>${dc.full}</em>${jo(dc.nm,"이가")} 나왔네. ${why}… 패가 같은 말을 두 번 하는 걸세. <strong>‘${c.name}’, 이건 틀림없네.</strong> `+
         (c.tone<0?"좋은 쪽으로 더 단단해졌으니 믿고 가게.":c.tone>0?"그러니 이 경고는 절대 흘려듣지 말게.":"이 흐름은 그대로 가네.")
       : rel==="轉"
-      ? `<em>${dc.full}</em>… 이건 좀 다르군. 이 패의 ${dc.el} 기운이 ${key.nm}의 ${key.el} 기운과 부딪히네. <strong>‘${c.name}’의 흐름이 ${SUIT_SHORT[dc.suit]} 쪽으로 꺾여 든다는 말일세.</strong> ${(PS.隱||{})[suitKey(dc.suit)]||""}`
-      : `<em>${dc.full}</em>… ${dc.nature}. 이 패는 ‘${c.name}’에 대해선 입을 다무네. 좋다 나쁘다 하지 않으니, 서두르지 말고 지켜보라는 뜻일세.`;
+      ? `<em>${dc.full}</em>… 이건 좀 다르군. ${key.nm}${jo(key.nm,"과와")} 반대 말을 하네. <strong>‘${c.name}’, 이 흐름은 그대로 가지 않고 한 번 꺾이네.</strong> `+(c.tone<0?"좋은 흐름이라도 방심하지 말고 끝까지 챙기게.":c.tone>0?"다행히 이 경고는 생각보다 약하게 지나가네.":"그러니 이 대목은 한 번 더 살피고 움직이게.")
+      : `<em>${dc.full}</em>… 이 패는 ‘${c.name}’에 대해선 입을 다무네. 좋다 나쁘다 하지 않으니, 서두르지 말고 지켜보라는 뜻일세.`;
     const revN=S.confirm.slice(0,k).filter(x=>x.rev).length;
-    const revTxt=d.rev?(revN===0?"<br>확인의 패마저 뒤집혀 나왔네. 이 일은 생각보다 빠르게 움직이네.":revN===1?"<br>이 패도 깨어 있네. 서두르는 기운이 겹치고 있네.":""):"";
+    const revTxt=d.rev?(revN===0?"<br>확인의 패마저 뒤집혀 나왔네. 이 일은 생각보다 빠르게 움직이네.":revN===1?"<br>이 패도 거꾸로일세. 일이 서두르듯 움직이네.":""):"";
     await line(`확인 ${k+1} · ${c.name} ${c.han}`, mini+txt+revTxt); if(!live()) return;
     await nextTap(k<n-1?"다음 확인의 패":"마무리 듣기"); if(!live()) return;
   }
@@ -2795,6 +2849,8 @@ function reset(){
   show("s-ask");
 }
 
+/* 결제창에서 돌아왔으면 확인부터 */
+setTimeout(()=>{ resumePay(); },0);
 </script>
 
 </body>
