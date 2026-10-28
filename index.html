@@ -103,14 +103,21 @@ body{word-break:keep-all;overflow-wrap:anywhere}
   background:#1a0a09;border:1px solid #e8c977;z-index:2}
 .field::before{top:-3px}.field::after{bottom:18px}
 .field textarea:focus{background:radial-gradient(ellipse 75% 130% at 50% 50%,rgba(14,6,7,.92) 0%,rgba(14,6,7,.75) 55%,rgba(14,6,7,0) 100%)}
-.topics{margin:-4px 0 0;text-align:center}
-.topics-h{margin:0 0 8px;font-size:11.5px;letter-spacing:.06em;color:#9a8b7e;text-shadow:0 2px 10px #000}
-.chips{display:flex;flex-wrap:wrap;justify-content:center;gap:2px 8px;max-width:340px;margin:0 auto}
-.chips button{appearance:none;background:none;border:0;padding:5px 9px;font-family:var(--serif);font-size:13.5px;letter-spacing:.06em;
-  color:#cdbfb1;position:relative;text-shadow:0 2px 10px #000;transition:color .2s}
+.topics{margin:0;text-align:center}
+.topics-h{margin:0 0 9px;font-family:var(--serif);font-size:13px;letter-spacing:.08em;color:#e8c977;text-shadow:0 2px 10px #000,0 0 20px #000}
+.topics-h::before,.topics-h::after{content:"◆";font-size:8px;vertical-align:2px;margin:0 8px;color:#c0362a}
+.chips{display:flex;flex-wrap:wrap;justify-content:center;gap:7px 6px;max-width:370px;margin:0 auto}
+.chips button{appearance:none;padding:6px 13px;border:1px solid rgba(201,162,74,.55);border-radius:999px;
+  background:linear-gradient(180deg,rgba(70,18,13,.72),rgba(22,8,8,.82));
+  font-family:var(--serif);font-size:14px;font-weight:700;letter-spacing:.05em;color:#f1e3cf;position:relative;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.5),0 4px 12px rgba(0,0,0,.55);text-shadow:0 1px 4px #000;transition:.2s}
+.chips button:active{transform:scale(.96)}
+@media (max-width:400px){.chips{gap:6px 5px}.chips button{padding:5px 10px;font-size:13px;letter-spacing:.02em}}
+@media (max-height:900px){#s-ask .ask .hint:last-child{display:none}}
+@media (max-width:340px){.visit{font-size:12px;letter-spacing:.02em}.visit b{font-size:15px;white-space:nowrap}.visit b i{font-size:18px}.chips button{padding:4px 9px;font-size:12.5px}}
 
-.chips button.on{color:#ffcf6a;text-shadow:0 0 12px rgba(255,180,80,.55),0 2px 10px #000}
-.chips button.on::after{content:"";position:absolute;left:22%;right:22%;bottom:1px;height:1px;background:linear-gradient(90deg,transparent,#ffcf6a,transparent)}
+.chips button.on{color:#fff;border-color:#f0cf7a;background:linear-gradient(180deg,#8a2418,#4e100b);
+  box-shadow:0 0 0 1px rgba(240,207,122,.35),0 0 18px rgba(255,110,60,.45),0 4px 12px rgba(0,0,0,.55)}
 .field textarea::placeholder{color:#978679}
 .field textarea:focus{outline:none}
 .count{display:block;text-align:right;margin-top:6px;font-size:11px;color:#9a8b7e;font-variant-numeric:tabular-nums}
@@ -257,8 +264,11 @@ body{word-break:keep-all;overflow-wrap:anywhere}
   font-size:12.5px;color:#ffb39c;letter-spacing:.02em}
 .seal .timer b{font-family:var(--serif);font-size:16px;color:#fff;margin-left:4px;font-variant-numeric:tabular-nums}
 .seal .timer.over{border-color:var(--line);background:none;color:var(--jae-dim)}
-.visit{margin:8px 0 0;text-align:center;font-size:12px;line-height:1.6;color:rgba(236,224,210,.5);transition:opacity 1.6s ease;opacity:0}
-.visit b{display:block;font-family:var(--serif);font-weight:400;font-size:14px;letter-spacing:.08em;color:rgba(201,162,74,.85)}
+.visit{margin:10px 0 0;text-align:center;font-family:var(--serif);font-size:13.5px;line-height:1.5;letter-spacing:.06em;color:rgba(236,224,210,.82);
+  text-shadow:0 2px 10px #000,0 0 22px #000;transition:opacity 1.6s ease;opacity:0}
+.visit b{display:block;margin-top:2px;font-weight:700;font-size:19px;letter-spacing:.1em;color:#f0cf7a;
+  text-shadow:0 0 16px rgba(240,190,90,.55),0 2px 10px #000}
+.visit b i{font-style:normal;font-size:24px;color:#ffd98a;margin-right:2px}
 .visit.on{opacity:1}
 .seal .small{margin:0 0 14px;font-size:11px;color:#8d7f73}
 .tail{margin:12px 0 0;font-size:12px;color:var(--jae-dim);text-align:center;line-height:1.9}
@@ -445,14 +455,14 @@ body{word-break:keep-all;overflow-wrap:anywhere}
     <div class="ask">
       <p class="seer-name">백귀술사 <b>호연</b> <span>狐煙</span></p>
       <h2>자네가 품고 온 이야기를 들려주게<br>카드는 이미 알고 있을지도 모르니</h2>
+      <div class="topics" id="topics" aria-label="물음 고르기">
+        <p class="topics-h">무엇이 궁금한가</p>
+        <div class="chips"></div>
+      </div>
       <div class="field">
         <i class="cn cn1"></i><i class="cn cn2"></i><i class="cn cn3"></i><i class="cn cn4"></i>
         <textarea id="q" maxlength="120" placeholder="지금 가장 답답한 것 하나만 적어 보게.&#10;예) 지금 만나는 사람과 끝까지 갈 수 있을까요"></textarea>
         <span class="count" id="count">0 / 120</span>
-      </div>
-      <div class="topics" id="topics" aria-label="물음 고르기">
-        <p class="topics-h">무엇을 물을지 막막하면 하나 고르게</p>
-        <div class="chips"></div>
       </div>
       <p class="hint">생년월일은 묻지 않네. 질문 하나면 족하네.</p>
       <p class="hint" style="font-size:11px;color:#8d7f73">여우의 연기, 호연 — 해동 백귀 백 장으로<br>말 속에 숨은 마음과 보이지 않는 기운을 읽는다</p>
@@ -995,7 +1005,7 @@ function wait(ms){return new Promise(r=>setTimeout(r,ms));}
   try{ n=parseInt(sessionStorage.getItem(K),10); }catch(e){}
   if(!(n>=MIN&&n<=MAX)){ n=MIN+Math.floor(Math.random()*(MAX-MIN+1)); try{ sessionStorage.setItem(K,String(n)); }catch(e){} }
   const el=document.getElementById("visit");
-  if(el){ el.innerHTML=`오늘 호연의 판 앞에 앉은<b>${n}번째 인연</b>`; setTimeout(()=>el.classList.add("on"),900); }
+  if(el){ el.innerHTML=`오늘 호연의 판 앞에 앉은<b><i>${n}</i>번째 인연</b>`; setTimeout(()=>el.classList.add("on"),900); }
 })();
 function store(k,v){try{ if(v===undefined) return JSON.parse(localStorage.getItem(k)||"null"); localStorage.setItem(k,JSON.stringify(v)); }catch(e){ return null; }}
 const IN_KAKAO=/KAKAOTALK/i.test(navigator.userAgent||"");
