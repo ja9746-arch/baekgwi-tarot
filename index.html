@@ -89,10 +89,30 @@ body{word-break:keep-all;overflow-wrap:anywhere}
   text-align:center;margin:0;color:var(--jae);text-wrap:balance;line-height:1.95;
   letter-spacing:-.012em;text-shadow:0 2px 14px #000,0 0 30px rgba(0,0,0,.85)}
 .field{position:relative}
-.field textarea{width:100%;min-height:98px;resize:none;background:rgba(7,4,5,.88);color:var(--jae);
-  border:1px solid var(--line);border-radius:2px;padding:14px 16px;font:inherit;font-size:16px;line-height:1.7;max-height:190px;overflow-y:auto}
+.field textarea{display:block;width:100%;min-height:98px;resize:none;color:var(--jae);
+  background:radial-gradient(ellipse 70% 120% at 50% 50%,rgba(12,5,6,.82) 0%,rgba(12,5,6,.66) 55%,rgba(12,5,6,0) 100%);
+  border:0;border-radius:0;box-shadow:none;
+  padding:16px 20px;font:inherit;font-size:16px;line-height:1.75;max-height:190px;overflow-y:auto;text-align:center}
+.field textarea:not(:placeholder-shown){text-align:left}
+/* 위아래 금선이 가운데서 짙고 끝으로 갈수록 사라지는 두루마리 꼴 — 네모 테두리를 쓰지 않는다 */
+.field .cn{position:absolute;left:0;right:0;height:1px;pointer-events:none;z-index:1;
+  background:linear-gradient(90deg,transparent,rgba(201,162,74,.75) 30%,rgba(232,201,119,.95) 50%,rgba(201,162,74,.75) 70%,transparent)}
+.field .cn1{top:0}.field .cn2{top:4px;opacity:.35}
+.field .cn3{bottom:21px}.field .cn4{bottom:25px;opacity:.35}
+.field::before,.field::after{content:"";position:absolute;left:50%;width:7px;height:7px;margin-left:-3.5px;transform:rotate(45deg);
+  background:#1a0a09;border:1px solid #e8c977;z-index:2}
+.field::before{top:-3px}.field::after{bottom:18px}
+.field textarea:focus{background:radial-gradient(ellipse 75% 130% at 50% 50%,rgba(14,6,7,.92) 0%,rgba(14,6,7,.75) 55%,rgba(14,6,7,0) 100%)}
+.topics{margin:-4px 0 0;text-align:center}
+.topics-h{margin:0 0 8px;font-size:11.5px;letter-spacing:.06em;color:#9a8b7e;text-shadow:0 2px 10px #000}
+.chips{display:flex;flex-wrap:wrap;justify-content:center;gap:2px 8px;max-width:340px;margin:0 auto}
+.chips button{appearance:none;background:none;border:0;padding:5px 9px;font-family:var(--serif);font-size:13.5px;letter-spacing:.06em;
+  color:#cdbfb1;position:relative;text-shadow:0 2px 10px #000;transition:color .2s}
+
+.chips button.on{color:#ffcf6a;text-shadow:0 0 12px rgba(255,180,80,.55),0 2px 10px #000}
+.chips button.on::after{content:"";position:absolute;left:22%;right:22%;bottom:1px;height:1px;background:linear-gradient(90deg,transparent,#ffcf6a,transparent)}
 .field textarea::placeholder{color:#978679}
-.field textarea:focus{outline:none;border-color:var(--geum);background:rgba(6,3,4,.94);box-shadow:0 0 30px rgba(0,0,0,.8)}
+.field textarea:focus{outline:none}
 .count{display:block;text-align:right;margin-top:6px;font-size:11px;color:#9a8b7e;font-variant-numeric:tabular-nums}
 .seer-name{margin:0 0 2px;text-align:center;font-family:var(--serif);font-size:13px;
   letter-spacing:.16em;color:var(--geum-dim);text-shadow:0 2px 12px #000,0 0 24px #000}
@@ -102,11 +122,17 @@ body{word-break:keep-all;overflow-wrap:anywhere}
   text-shadow:0 2px 12px #000,0 0 24px #000}
 
 /* 단추 */
-.btn{display:block;width:100%;padding:16px 18px;border:1px solid var(--geum);
-  background:linear-gradient(180deg,rgba(192,54,42,.32),rgba(120,24,18,.48));color:var(--jae);
-  font-family:var(--serif);font-weight:700;font-size:16px;letter-spacing:.1em;border-radius:2px;
-  text-indent:.1em;transition:.22s}
-.btn:hover{background:linear-gradient(180deg,rgba(222,70,48,.46),rgba(150,30,22,.6));box-shadow:0 0 28px rgba(255,84,54,.3)}
+.btn{display:block;width:100%;padding:16px 18px;border:1px solid rgba(201,162,74,.8);position:relative;
+  background:linear-gradient(180deg,#5b1711 0%,#3a0d0a 55%,#2a0907 100%);color:#f3e6d6;
+  font-family:var(--serif);font-weight:700;font-size:16px;letter-spacing:.2em;border-radius:1px;
+  text-indent:.2em;transition:.22s;
+  box-shadow:inset 0 0 0 3px rgba(20,6,6,.85),inset 0 0 0 4px rgba(201,162,74,.38),inset 0 1px 0 4px rgba(255,200,140,.06),0 10px 26px rgba(0,0,0,.6)}
+.btn:not(.ghost)::before,.btn:not(.ghost)::after{content:"";position:absolute;top:50%;width:6px;height:6px;margin-top:-3px;transform:rotate(45deg);
+  border:1px solid rgba(232,201,119,.85);background:#2a0907}
+.btn:not(.ghost)::before{left:16px}
+.btn:not(.ghost)::after{right:16px}
+.btn:hover{background:linear-gradient(180deg,#6c1d15 0%,#470f0b 55%,#320a08 100%);
+  box-shadow:inset 0 0 0 3px rgba(20,6,6,.85),inset 0 0 0 4px rgba(232,201,119,.55),0 0 28px rgba(255,84,54,.28),0 10px 26px rgba(0,0,0,.6)}
 .btn:disabled{opacity:.82;cursor:default;box-shadow:none;filter:saturate(.7) brightness(.85)}
 .btn.ghost{background:transparent;border-color:var(--line);color:var(--jae-dim);font-weight:400;
   font-size:14px;letter-spacing:.06em;padding:13px}
@@ -146,9 +172,10 @@ body{word-break:keep-all;overflow-wrap:anywhere}
 .flycard{position:fixed;z-index:300;border-radius:5px;border:1px solid var(--geum);
   background:#120a0b url("img/back.webp") center/cover no-repeat;
   box-shadow:0 10px 36px rgba(0,0,0,.8),0 0 30px rgba(255,84,54,.55);
-  transition:left .62s cubic-bezier(.3,.9,.3,1),top .62s cubic-bezier(.3,.9,.3,1),
-    width .62s cubic-bezier(.3,.9,.3,1),height .62s cubic-bezier(.3,.9,.3,1),
-    transform .62s cubic-bezier(.3,.9,.3,1),opacity .2s ease .54s;pointer-events:none}
+  pointer-events:none;will-change:transform,opacity;transform-origin:0 0;backface-visibility:hidden}
+/* 누를 때 파란 덮개(눌림 강조)와 길게 눌러 선택되는 것을 막는다 */
+*{-webkit-tap-highlight-color:transparent}
+.fanwrap,.fan,.card,.board,.slot,.flipper,.spot,.halt,.btn,.nextbtn,.chips,.hrow,#stage .brand{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 
 /* 안내 글 */
 .deal{position:absolute;left:0;right:0;z-index:5;margin:0;text-align:center;
@@ -320,7 +347,11 @@ body{word-break:keep-all;overflow-wrap:anywhere}
 .spot{position:fixed;inset:0;z-index:400;display:flex;flex-direction:column;align-items:center;justify-content:center;
   gap:10px;background:rgba(5,2,3,.9);transition:opacity .3s}
 .spot.out{opacity:0}
-.spotcard{width:min(60vw,248px);aspect-ratio:2/3;perspective:1000px}
+.spotcard{width:min(72vw,290px,44vh);aspect-ratio:2/3;perspective:1000px}
+.spottap{margin:14px 0 0;font-size:12.5px;letter-spacing:.06em;color:#e8c977;opacity:0;transition:opacity .5s;text-shadow:0 2px 10px #000}
+.spot.ready .spottap{opacity:1;animation:tapPulse 1.8s ease-in-out infinite}
+.spot.ready{cursor:pointer}
+@keyframes tapPulse{0%,100%{opacity:.55}50%{opacity:1}}
 .spotcard .inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;
   transition:transform .75s cubic-bezier(.3,.9,.3,1);transform:scale(.9)}
 .spot.open .spotcard .inner{transform:rotateY(180deg) scale(1)}
@@ -414,8 +445,13 @@ body{word-break:keep-all;overflow-wrap:anywhere}
       <p class="seer-name">백귀술사 <b>호연</b> <span>狐煙</span></p>
       <h2>자네가 품고 온 이야기를 들려주게<br>카드는 이미 알고 있을지도 모르니</h2>
       <div class="field">
+        <i class="cn cn1"></i><i class="cn cn2"></i><i class="cn cn3"></i><i class="cn cn4"></i>
         <textarea id="q" maxlength="120" placeholder="지금 가장 답답한 것 하나만 적어 보게.&#10;예) 지금 만나는 사람과 끝까지 갈 수 있을까요"></textarea>
         <span class="count" id="count">0 / 120</span>
+      </div>
+      <div class="topics" id="topics" aria-label="물음 고르기">
+        <p class="topics-h">무엇을 물을지 막막하면 하나 고르게</p>
+        <div class="chips"></div>
       </div>
       <p class="hint">생년월일은 묻지 않네. 질문 하나면 족하네.</p>
       <p class="hint" style="font-size:11px;color:#8d7f73">여우의 연기, 호연 — 해동 백귀 백 장으로<br>말 속에 숨은 마음과 보이지 않는 기운을 읽는다</p>
@@ -579,6 +615,7 @@ body{word-break:keep-all;overflow-wrap:anywhere}
   <div class="spotcard"><div class="inner"><div class="face back"></div><div class="face front"><div class="cf"><div class="cf-top"><span class="cf-no"></span><span class="cf-suit"></span></div><div class="art"></div><span class="cf-rev">逆 · 깨어남</span><div class="cf-mid"><div class="cf-hanja"></div><div class="cf-name"></div><div class="cf-nat"></div></div><div class="cf-foot"><span class="cf-el"></span><span class="cf-pos"></span></div></div></div></div></div>
   <p class="spotname"></p>
   <p class="spotmeta"></p>
+  <p class="spottap">패를 다 보았으면 화면을 누르게</p>
 </div>
 
 <script>
@@ -896,7 +933,7 @@ function recordNow(){
   const h=hist().filter(r=>r.id!==S.rec?.id);
   const rec={id:S.rec?.id||("r"+Date.now()), q:S.q, k:normKey(S.q), t:S.rec?.t||Date.now(),
     picks:S.picked.map(p=>[p.idx,p.rev?1:0]), paid:S.paid, free:S.freeTexts, paidTexts:S.paidTexts,
-    confirm:S.confirm&&S.confirm.length?S.confirm.map(p=>[p.idx,p.rev?1:0]):null};
+    confirm:S.confirm&&S.confirm.length?S.confirm.map(p=>[p.idx,p.rev?1:0]):null, tp:S.tp||""};
   S.rec=rec; h.unshift(rec); saveHist(h); refreshHistLink();
 }
 function fmtDate(t){ const d=new Date(t); return `${d.getMonth()+1}월 ${d.getDate()}일`; }
@@ -976,6 +1013,34 @@ $("home").addEventListener("click",()=>{ reset(); try{ if(history.state&&history
 const q=$("q");
 q.addEventListener("focus",()=>{ $("s-ask").classList.add("typing"); $("stage").classList.add("typing"); });
 q.addEventListener("blur",()=>{ $("s-ask").classList.remove("typing"); $("stage").classList.remove("typing"); });
+/* 주제 고르기 — 누르면 본보기 물음을 넣어 주고, 글에 주제 낱말이 없을 때 그 주제로 읽는다 */
+const CHIPS=[
+ {l:"연애",t:"연애",q:["지금 만나는 사람과 끝까지 갈 수 있을까요","그 사람과 잘될 수 있을까요"]},
+ {l:"재회",t:"연애",q:["헤어진 그 사람과 다시 만날 수 있을까요","떠난 사람에게 다시 연락이 올까요"]},
+ {l:"속마음",t:"연애",q:["그 사람은 나를 어떻게 생각할까요","그 사람 속마음이 궁금해요"]},
+ {l:"돈",t:"금전",q:["올해 안에 돈이 들어올까요","돈이 왜 자꾸 새는지 알고 싶어요"]},
+ {l:"사업",t:"금전",q:["지금 사업을 시작해도 될까요","가게를 계속 끌고 가도 될까요"]},
+ {l:"직장",t:"직장",q:["지금 이직해도 될까요","이 회사에 계속 다녀도 될까요"]},
+ {l:"시험",t:"직장",q:["이번 시험에 붙을 수 있을까요","면접에 붙을까요"]},
+ {l:"사람 사이",t:"사람",q:["그 사람과 사이가 풀릴까요","주변 사람들과 왜 자꾸 틀어질까요"]},
+ {l:"가족",t:"사람",q:["가족과의 갈등이 풀릴까요","부모님과 사이가 나아질까요"]},
+ {l:"건강",t:"건강",q:["요즘 몸이 무거운데 괜찮을까요","잠을 못 자는데 언제 나아질까요"]}
+];
+S.tp=""; const chipN={};
+(function(){
+  const box=document.querySelector("#topics .chips");
+  CHIPS.forEach(c=>{
+    const b=document.createElement("button"); b.type="button"; b.textContent=c.l;
+    b.addEventListener("click",()=>{
+      const k=chipN[c.l]=(chipN[c.l]??-1)+1;
+      q.value=c.q[k%c.q.length]; S.tp=c.t;
+      box.querySelectorAll("button").forEach(x=>x.classList.toggle("on",x===b));
+      q.dispatchEvent(new Event("input"));
+      try{ bell(660,.05); }catch(e){}
+    });
+    box.appendChild(b);
+  });
+})();
 function growQ(){ q.style.height="auto"; q.style.height=Math.min(190,Math.max(98,q.scrollHeight+2))+"px"; }
 q.addEventListener("input",()=>{
   growQ();
@@ -994,7 +1059,7 @@ $("go").addEventListener("click",()=>{
     openSheet("same");
     return;
   }
-  S.q=text; S.rec=null; S.freeTexts=null; S.paidTexts=null; S.paid=false; S.replay=false;
+  S.q=text; S.rec=null; S.freeTexts=null; S.paidTexts=null; S.paid=false; S.replay=false; S.pin=false;
   S.order=[];
   while(S.order.length<WHEEL) S.order.push(...DECK.map((_,i)=>i));
   shuffleArr(S.order);
@@ -1207,13 +1272,15 @@ function flyTo(src,slot){
   g.className="flycard";
   const m=new DOMMatrixReadOnly(getComputedStyle(src).transform);
   const deg=Math.round(Math.atan2(m.b,m.a)*180/Math.PI);
-  g.style.cssText=`left:${a.left}px;top:${a.top}px;width:${a.width}px;height:${a.height}px;transform:rotate(${deg}deg)`;
+  /* 크기·위치를 바꾸지 않고 transform만 움직여 휴대폰에서도 끊기지 않게 */
+  g.style.cssText=`left:${a.left}px;top:${a.top}px;width:${a.width}px;height:${a.height}px`;
   document.body.appendChild(g);
-  requestAnimationFrame(()=>{
-    g.style.left=b.left+"px"; g.style.top=b.top+"px";
-    g.style.width=b.width+"px"; g.style.height=b.height+"px";
-    g.style.transform="rotate(0deg)"; g.style.opacity="0";
-  });
+  const sx=b.width/a.width, sy=b.height/a.height, dx=b.left-a.left, dy=b.top-a.top;
+  g.animate([
+    {transform:`rotate(${deg}deg)`,opacity:1},
+    {transform:`translate(${dx*0.55}px,${dy*0.55-26}px) rotate(${deg*0.3}deg) scale(${(1+sx)/2},${(1+sy)/2})`,opacity:1,offset:.55},
+    {transform:`translate(${dx}px,${dy}px) scale(${sx},${sy})`,opacity:.15}
+  ],{duration:600,easing:"cubic-bezier(.33,.8,.32,1)",fill:"forwards"});
   setTimeout(()=>{
     g.remove();
     slot.classList.remove("empty");
@@ -1225,6 +1292,7 @@ function flyTo(src,slot){
 function topicOf(q){
   let best="기타", n=0;
   TOPICS.forEach(t=>{ const c=(q.match(t.re)||[]).length; if(c>n){n=c;best=t.k;} });
+  if(best==="기타"&&S.tp) return S.tp;
   return best;
 }
 function buildReading(){
@@ -1466,8 +1534,8 @@ function findCombos(P){
   const byRank={}; P.forEach((p,i)=>{ const r=rankOf(p.card); (byRank[r]=byRank[r]||[]).push(i); });
   Object.entries(byRank).forEach(([r,pos])=>{
     const kn=KO_NUM[r-1];
-    if(pos.length>=3) add({id:"rank3-"+r,name:`${r}번 삼동`,han:"三同",pos,tone:0,rank:2,line:`서로 다른 갈래에서 같은 ${r}번 패가 셋이나 나왔네. 같은 일이 세 군데서 한꺼번에 울린다는 뜻일세. 하나만 풀면 셋이 함께 풀리네.`});
-    else if(pos.length===2&&pos.includes(0)&&pos.includes(9)) add({id:"rankpair",name:`처음과 끝의 쌍수`,han:"首尾雙數",pos,tone:0,rank:2,line:`처음 자리와 끝자리에 같은 ${r}번 패가 섰네. 이 일은 시작한 그 모양 그대로 끝난다는 뜻일세. 처음 마음을 떠올리게.`});
+    if(pos.length>=3) add({id:"rank3-"+r,name:`${HAN_NUM[r-1]} 삼동`,han:"三同",pos,tone:0,rank:2,line:`서로 다른 갈래에서 같은 수 ${HAN_NUM[r-1]}의 패가 셋이나 나왔네. 같은 일이 세 군데서 한꺼번에 울린다는 뜻일세. 하나만 풀면 셋이 함께 풀리네.`});
+    else if(pos.length===2&&pos.includes(0)&&pos.includes(9)) add({id:"rankpair",name:`처음과 끝의 쌍수`,han:"首尾雙數",pos,tone:0,rank:2,line:`처음 자리와 끝자리에 같은 수 ${HAN_NUM[r-1]}의 패가 섰네. 이 일은 시작한 그 모양 그대로 끝난다는 뜻일세. 처음 마음을 떠올리게.`});
   });
   if(new Set(P.slice(0,5).map(p=>p.card.el)).size===5) add({id:"cycle",name:"오행 순환",han:"五行循環",pos:[0,1,2,3,4],tone:-1,rank:3,
     line:"앞의 다섯 자리에 목·화·토·금·수가 하나씩 다 들었네. 흔치 않은 판일세. 기운이 한 바퀴를 돌았으니 막힌 것이 풀릴 때가 됐네."});
@@ -1489,8 +1557,42 @@ function findCombos(P){
     line:"때의 자리와 끝자리가 함께 뒤집혀 깨어났네. 일이 생각보다 빨리 닥친다는 뜻일세. 채비를 서두르게."});
   for(let i=0;i<7;i++){ if(P[i].rev&&P[i+1].rev&&P[i+2].rev&&P[i+3].rev){ add({id:"wakeline",name:"깨어난 줄",han:"醒列",pos:[i,i+1,i+2,i+3],tone:1,rank:5,
     line:`‘${POS_WORD[i]}’부터 ‘${POS_WORD[i+3]}’까지 네 장이 줄지어 깨어났네. 이 구간의 일은 이미 움직이고 있다는 뜻일세.`}); break; } }
+  /* 자리끼리 맞물리는 조합 */
+  const el=i=>P[i].card.el, su=i=>P[i].card.suit;
+  if(KE[el(8)]===el(7)) add({id:"fuwin",name:"부적이 누르는 판",han:"符壓鬼",pos:[7,8],tone:-1,rank:4,
+    line:`떼는 패의 ${el(8)} 기운이 붙은 귀의 ${el(7)} 기운을 누르네. 처방이 제대로 듣는다는 뜻일세. 부(符)에 적힌 것만 지키면 귀가 물러가네.`});
+  else if(KE[el(7)]===el(8)) add({id:"guiwin",name:"부적을 누르는 귀",han:"鬼勝符",pos:[7,8],tone:1,rank:4,
+    line:`붙은 귀의 ${el(7)} 기운이 떼는 패의 ${el(8)} 기운을 누르네. 처방을 한두 번 해서는 안 듣는다는 말일세. 이레 동안 거르지 말고 하게.`});
+  if(su(3)===su(4)) add({id:"twoedge",name:"양날",han:"兩刃",pos:[3,4],tone:0,rank:4,
+    line:"막는 것과 돕는 것이 같은 갈래에서 나왔네. 자네를 막는 그 일 안에 살 길도 함께 들어 있다는 뜻일세. 피하지 말고 그 안을 들여다보게."});
+  if(su(0)===su(7)) add({id:"rootgui",name:"뿌리에 앉은 귀",han:"根鬼",pos:[0,7],tone:1,rank:4,
+    line:"처음 뿌리와 붙은 귀가 같은 갈래일세. 이 귀는 어제 붙은 게 아니라 일이 시작될 때부터 함께 있었네. 처음 그 일을 정리해야 떨어지네."});
+  if(el(6)===el(9)) add({id:"timeend",name:"때와 끝의 맞물림",han:"時果合",pos:[6,9],tone:-1,rank:4,
+    line:"때의 패와 끝의 패가 같은 기운일세. 때가 오면 끝이 곧바로 따라온다는 말이니, 그 무렵을 놓치지 말게."});
+  if(su(5)===su(9)) add({id:"heartend",name:"속이 정하는 끝",han:"心定果",pos:[5,9],tone:0,rank:4,
+    line:"속의 패와 끝의 패가 같은 갈래일세. 이 일의 끝은 결국 그 속마음이 정한다는 뜻일세. 겉으로 오가는 말보다 속을 보게."});
+  if(P[0].rev&&P[9].rev) add({id:"wake09",name:"처음과 끝의 깨어남",han:"首尾醒",pos:[0,9],tone:1,rank:4,
+    line:"처음 자리와 끝자리가 함께 뒤집혀 깨어났네. 시작부터 끝까지 일이 쉬지 않고 움직인다는 뜻일세. 한숨 돌릴 틈이 없으니 미리 채비하게."});
+  if(P[4].rev&&!P[3].rev) add({id:"shake",name:"흔들리는 기둥",han:"搖柱",pos:[3,4],tone:1,rank:5,
+    line:"막는 패는 버티고 선 채인데 돕는 패만 뒤집혔네. 기댈 곳이 흔들린다는 말일세. 남에게 기대기보다 자네 손으로 먼저 움직이게."});
+  else if(P[3].rev&&!P[4].rev) add({id:"wall",name:"기우는 벽",han:"傾壁",pos:[3,4],tone:-1,rank:5,
+    line:"막는 패는 뒤집혀 흔들리고 돕는 패는 바로 섰네. 벽이 먼저 무너질 판일세. 버티는 쪽이 이기네."});
+  const miss=["목","화","토","금","수"].filter(e=>!P.some(p=>p.card.el===e));
+  if(miss.length===1) add({id:"miss-"+miss[0],name:`빈 ${miss[0]} 기운`,han:"缺"+({목:"木",화:"火",토:"土",금:"金",수:"水"})[miss[0]],pos:[],tone:0,rank:5,
+    line:`열 장에 ${miss[0]} 기운이 한 장도 없네. `+({목:"새로 시작할 힘이 비었다는 뜻일세. 작은 일 하나를 새로 시작해 기운을 채우게.",화:"밀어붙일 불기운이 비었다는 뜻일세. 미루던 말 한마디를 먼저 꺼내게.",토:"버틸 땅이 비었다는 뜻일세. 잠과 끼니부터 바로 하게.",금:"끊고 맺을 쇠기운이 비었다는 뜻일세. 미뤄 둔 결정 하나를 이번 주에 내리게.",수:"쉬어 갈 물기운이 비었다는 뜻일세. 하루는 아무것도 하지 말고 쉬게."})[miss[0]]});
   if(P.every(p=>!p.rev)) add({id:"calm",name:"고요한 판",han:"靜局",pos:[],tone:-1,rank:5,
     line:"열 장 가운데 뒤집힌 패가 한 장도 없네. 귀들이 모두 잠들어 있는 고요한 판일세. 지금 움직이면 막는 것이 없네."});
+  /* 자리끼리 맞물리는 조합(4·5위)은 한 판에 둘까지만 — 너무 잦으면 무게가 없다 */
+  let lim=0;
+  const keep=[]; out.sort((a,b)=>a.rank-b.rank).forEach(o=>{ if(o.rank>=4){ if(lim>=2) return; lim++; } keep.push(o); });
+  out.length=0; keep.forEach(o=>out.push(o));
+  /* 아무것도 걸리지 않은 판은 없다 — 가장 짙은 기운이 줄기를 이룬다 */
+  if(!out.length){
+    const t={}; P.forEach(p=>t[p.card.el]=(t[p.card.el]||0)+1);
+    const e=Object.keys(t).sort((x,y)=>t[y]-t[x])[0], pos=P.map((p,i)=>p.card.el===e?i:-1).filter(i=>i>=0);
+    add({id:"vein-"+e,name:`${e} 기운의 줄기`,han:"一脈",pos,tone:0,rank:6,
+      line:`열 장 사이로 ${e} 기운이 한 줄기로 흐르네. 이 판의 일은 결국 그 기운을 따라 움직인다는 뜻일세. 그 줄기를 거스르지 말게.`});
+  }
   return out.sort((a,b)=>a.rank-b.rank).slice(0,5);
 }
 
@@ -1533,7 +1635,8 @@ function nextTap(label){
 
 /* ── 말하기 ── */
 const readBox=()=>$("read");
-function toBottom(){const r=readBox();r.scrollTop=r.scrollHeight;}
+function toBottom(){const r=readBox(); if(S.pin){ toLedger(); return; } r.scrollTop=r.scrollHeight;}
+function toLedger(){ const r=readBox(), l=r.querySelector(".ledger"); if(!l) return; r.scrollTop=Math.max(0,l.offsetTop-r.offsetTop-8); }
 async function dots(ms){
   if(S.replay){ await wait(60); return; }
   const p=document.createElement("div");
@@ -1597,7 +1700,16 @@ async function spotlightCard(p,label){
   sp.classList.remove("open","out"); sp.hidden=false;
   await wait(80);
   sp.classList.add("open"); bell(p.rev?392:587,.13);
-  await wait(1350);
+  /* 저절로 넘기지 않는다 — 손님이 그림을 다 본 뒤 눌러야 넘어간다 */
+  const T0=RUN;
+  await wait(900);
+  sp.classList.add("ready");
+  await new Promise(res=>{
+    const go=()=>{ clearInterval(iv); sp.removeEventListener("click",go); res(); };
+    const iv=setInterval(()=>{ if(T0!==RUN) go(); },300);
+    sp.addEventListener("click",go);
+  });
+  sp.classList.remove("ready");
   sp.classList.add("out");
   await wait(330);
   sp.hidden=true; sp.classList.remove("open","out");
@@ -1665,7 +1777,7 @@ function setupBoard(){
 }
 function replay(rec){
   enterFlow();
-  S.q=rec.q; S.rec=rec; S.replay=true;
+  S.q=rec.q; S.rec=rec; S.replay=true; S.pin=false; S.tp=rec.tp||"";
   S.picked=rec.picks.map(([i,r])=>({card:DECK[i],idx:i,rev:!!r}));
   S.paid=!!rec.paid; S.freeTexts=rec.free||null; S.paidTexts=rec.paidTexts||null;
   S.confirm=rec.confirm?rec.confirm.map(([i,r])=>({card:DECK[i],idx:i,rev:!!r})):null;
@@ -1861,6 +1973,7 @@ async function showPaid(){
   await dots(); if(!live()) return;
   await line("호연","이 판을 한 장에 적어 두었네. 두고두고 보게.");
   readBox().appendChild(ledger());
+  if(!S.replay){ S.pin=true; requestAnimationFrame(toLedger); }
   setBg("img/seer-smile.webp");
   const tail=document.createElement("p");
   tail.className="tail";
@@ -2083,7 +2196,8 @@ function reset(){
   document.querySelectorAll(".flycard").forEach(g=>g.remove());
   S.mode="main"; S.confirm=null; S.confirmDone=null; S.shown=new Set(); S.skip=false;
   $("boardPick").classList.remove("confirmboard"); $("halt").hidden=true;
-  Object.assign(S,{q:"",order:[],picked:[],brushN:0,pass:0,dir:0,sinceFlip:0,done:false,spin:0,paid:false,E:null,R:null,replay:false,rec:null,freeTexts:null,paidTexts:null,paidJobs:null,cOk:0,price:0,busy:false});
+  Object.assign(S,{q:"",order:[],picked:[],brushN:0,pass:0,dir:0,sinceFlip:0,done:false,spin:0,paid:false,E:null,R:null,replay:false,rec:null,freeTexts:null,paidTexts:null,paidJobs:null,cOk:0,price:0,pin:false,tp:"",busy:false});
+  document.querySelectorAll("#topics .chips button.on").forEach(b=>b.classList.remove("on"));
   ["same","hist","share","cv","terms","risk"].forEach(closeSheet);
   q.value=""; $("count").textContent="0 / 120"; $("go").disabled=true;
   $("dealmsg").style.opacity=""; $("pickmsg").style.opacity="";
