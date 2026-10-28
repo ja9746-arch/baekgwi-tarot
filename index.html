@@ -156,8 +156,8 @@ body{word-break:keep-all;overflow-wrap:anywhere}
 /* 단추 */
 .btn{display:block;width:100%;padding:16px 18px;border:1px solid rgba(201,162,74,.8);position:relative;
   background:linear-gradient(180deg,#5b1711 0%,#3a0d0a 55%,#2a0907 100%);color:#f3e6d6;
-  font-family:var(--serif);font-weight:700;font-size:16px;letter-spacing:.2em;border-radius:1px;
-  text-indent:.2em;transition:.22s;
+  font-family:var(--serif);font-weight:700;font-size:16px;letter-spacing:.1em;border-radius:1px;
+  text-indent:.1em;transition:.22s;
   box-shadow:inset 0 0 0 3px rgba(20,6,6,.85),inset 0 0 0 4px rgba(201,162,74,.38),inset 0 1px 0 4px rgba(255,200,140,.06),0 10px 26px rgba(0,0,0,.6)}
 .btn:not(.ghost)::before,.btn:not(.ghost)::after{content:"";position:absolute;top:50%;width:6px;height:6px;margin-top:-3px;transform:rotate(45deg);
   border:1px solid rgba(232,201,119,.85);background:#2a0907}
@@ -293,6 +293,8 @@ body{word-break:keep-all;overflow-wrap:anywhere}
 .seal{margin:4px 0 16px;padding:20px 16px;border:1px solid var(--line);border-radius:2px;
   background:rgba(8,4,6,.8);text-align:center;animation:rise .6s ease both}
 .seal .why{font-family:var(--serif);font-weight:700;font-size:16px;color:var(--jae);margin:0 0 12px}
+.seal .blurwrap{position:relative}
+.seal .bseal{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%) rotate(-5deg);font-family:var(--serif);font-weight:700;font-size:20px;letter-spacing:.12em;line-height:1;color:#ff5436;border:2px solid #e2392a;border-radius:4px;padding:6px 8px 6px 10px;background:rgba(12,5,6,.55);text-shadow:0 0 10px rgba(255,84,54,.35)}
 .seal .blur{color:var(--jae-dim);font-size:14px;line-height:1.95;filter:blur(5px);user-select:none;margin:0 0 14px}
 .seal .what{margin:0 0 14px;font-size:12.5px;color:#b9aa9c;line-height:1.95;text-align:left}
 .seal .what b{color:var(--geum);font-weight:400}
@@ -537,7 +539,7 @@ body{word-break:keep-all;overflow-wrap:anywhere}
 .minicard.rev{transform:rotate(180deg)}
 #pay.nudge{animation:nudge .45s ease 2}
 @keyframes nudge{0%,100%{transform:none}50%{transform:scale(1.04)}}
-.board.confirmboard{grid-template-columns:repeat(var(--n),46px)!important;justify-content:center}
+.board.confirmboard{grid-template-columns:repeat(var(--n),46px)!important;justify-content:center;width:fit-content;margin-left:auto;margin-right:auto;padding-left:14px;padding-right:14px}
 @media (max-height:680px){.board.confirmboard{grid-template-columns:repeat(var(--n),34px)!important}}
 @media (max-height:600px){#s-pick .deal{bottom:calc(290px + env(safe-area-inset-bottom,0px))}}
 </style>
@@ -2924,7 +2926,7 @@ async function openReading(){
   seal.innerHTML=`
     <p class="why">일곱 장이 아직 덮여 있네.</p>
     ${hidden.length?`<p class="tease">숨은 조합 ${hidden.length}개</p>`:""}
-    <p class="blur">자네를 막는 것은 ○○이고, 때는 ○○ 안에 갈리네. 자네 뒤에 붙은 귀는 ○○이며, 그 귀를 떼는 법은 ○○일세. 끝은 ○○으로 나네.</p>
+    <div class="blurwrap"><p class="blur">자네를 막는 것은 ○○이고, 때는 ○○ 안에 갈리네. 자네 뒤에 붙은 귀는 ○○이며, 그 귀를 떼는 법은 ○○일세. 끝은 ○○으로 나네.</p><span class="bseal">封印</span></div>
     <p class="what">
       <b>敵</b> 자네를 막고 선 것<br>
       <b>助</b> 자네 뒤를 받치는 것<br>
