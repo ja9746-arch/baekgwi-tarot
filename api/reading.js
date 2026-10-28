@@ -155,6 +155,8 @@ function buildPrompt(q, cards, bone, stage) {
 
   const asked = [
     bone.intent ? `- 물음의 뜻: ${bone.intent}` : "",
+    bone.subject === "반려" ? "- 물음의 대상: 손님이 기르는 반려동물(사람이 아니다). 몸 이야기는 '의원' 대신 '수의사'로 하고, 동물에게 사람의 속셈이나 말버릇을 갖다 붙이지 않는다." : "",
+    bone.subject === "자녀" ? "- 물음의 대상: 손님의 자녀. 아이를 탓하지 말고, 부모가 할 수 있는 일로 풀어 준다." : "",
     bone.worry ? `- 손님이 걱정하는 일: ${bone.worry} (좋은 흐름이면 '그 일은 일어나지 않는다', 나쁜 흐름이면 '그 기미가 있다'로 푼다)` : "",
     bone.who ? `- 물음 속 사람: ${bone.who}` : "",
     bone.feel ? `- 물음 속 마음: ${bone.feel}` : "",

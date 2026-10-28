@@ -869,6 +869,20 @@ const TOPIC_SUIT = {연애:"잔(컵)",아이:"잔(컵)",금전:"전(펜타클)",
 
 /* 주제별 덧말 — 자리마다 여러 결. 뽑힌 패 번호로 고르니 같은 패면 같은 말이 나온다 */
 const DETAIL = {
+ 반려:{
+  助:["그 아이는 자네 목소리를 가장 잘 아네. 곁에서 이름을 불러 주는 것이 큰 힘이 되네.","믿을 만한 수의사 한 사람이 길을 열어 주네. 그 말을 따르게."],
+  why:["집 안의 기운이 무거워진 틈에 앉은 것일세. 그 아이는 집안의 근심을 함께 지네.","자네가 지쳐 있던 동안 그 아이도 함께 지쳤네. 둘이 같은 기운을 타고 있네."],
+  隱:["자네가 못 보는 건 그 아이가 아픈 티를 숨기고 있다는 것일세. 작은 변화도 놓치지 말게.","그 아이보다 자네 불안이 먼저 커져 있네. 자네가 차분해야 그 아이도 편해지네."],
+  敵:["막는 건 늦어지는 발견일세. 조금 이상하면 바로 보이게.","막는 건 먹고 자는 자리일세. 그 아이 자리를 한 번 살펴 주게."],
+  心:["그 아이는 자네 곁에 있는 것만으로 버티고 있네.","그 아이는 자네 걱정을 다 느끼고 있네. 웃는 얼굴을 보여 주게."],
+  果:{g:["끝은 다시 꼬리를 흔드는 모양으로 오네.","끝은 조금 더디되 제 기운을 찾는 모양일세."],b:["끝은 자네가 곁을 지켜 주는 것이 가장 큰 약이 되는 모양일세. 마음의 준비도 함께 해 두게.","끝은 오래 돌봐야 하는 모양일세. 서두르지 말고 함께 가게."]}},
+ 자녀:{
+  助:["아이가 믿고 말하는 어른이 하나 있네. 그 사람과 손을 잡게.","아이의 작은 재주 하나가 받침이 되네. 그걸 칭찬해 주게."],
+  why:["어른들의 근심이 아이에게 먼저 번진 것일세. 집 안의 공기부터 바꾸게.","아이에게 바라는 것이 많아진 자리에 앉은 것일세. 기대를 조금 내려놓게."],
+  隱:["자네가 못 보는 건 아이가 말 못 하고 삼킨 이야기일세. 묻지 말고 먼저 들어 주게.","아이는 자네 생각보다 많이 알고 있네. 숨기려 하기보다 솔직하게 말해 주게."],
+  敵:["막는 건 비교일세. 다른 아이와 견주는 말이 아이를 묶네.","막는 건 서두름일세. 아이의 걸음은 어른의 걸음과 다르네."],
+  心:["아이의 속엔 자네에게 인정받고 싶은 마음이 가장 크네.","아이는 겉으로 괜찮다 해도 속은 지쳐 있네. 쉬게 해 주게."],
+  果:{g:["끝은 아이가 제 자리를 찾는 모양으로 오네.","끝은 한 번 흔들린 뒤 더 단단해지는 모양일세."],b:["끝은 아이와 자네 사이의 말길을 다시 트는 데서 갈리네.","끝은 더디게 오네. 결과보다 아이 마음을 먼저 챙기게."]}},
  연애:{
   助:["곁에서 말없이 지켜보는 사람이 하나 있네. 그 사람 말을 한 번은 들어 보게.","자네가 꾸밈없이 보였던 모습 하나가 상대 마음에 남아 있네. 그게 자네 밑천일세."],
   why:["자네가 마음을 비워 둔 자리에 앉은 것일세. 외로움이 문을 열어 준 것이네.","확인하고 또 확인하던 그 버릇이 이 귀를 불렀네. 의심은 귀가 드나드는 문일세."],
@@ -944,6 +958,8 @@ const TOPICS = [
  {k:"아이",re:/임신|난임|시험관|애기|아기|출산|태몽|자식\s*운|아이를\s*가|아이가\s*생/g}
 ];
 const TIE = {
+ 반려:["그 아이와 자네 사이에 이 기운이 가장 세게 도네.","집 안의 기운에 이 기운이 감겨 있네."],
+ 자녀:["아이와 자네 사이에 이 기운이 가장 세게 도네.","아이가 서 있는 자리에 이 기운이 감겨 있네."],
  연애:["사람 사이의 일에서 이 기운이 가장 세게 도네.","둘 사이의 정에 이 기운이 감겨 있네.","마음이 오가는 길목에 이 기운이 버티고 있네."],
  금전:["돈이 오가는 자리에서 이 기운이 가장 세게 도네.","자네 곳간 언저리에 이 기운이 감겨 있네.","셈이 오가는 길목에 이 기운이 버티고 있네."],
  직장:["일과 자리를 두고 이 기운이 가장 세게 도네.","자네가 앉은 자리 밑에 이 기운이 감겨 있네.","윗사람과 자네 사이에 이 기운이 버티고 있네."],
@@ -983,7 +999,7 @@ const TOPIC_LABEL={연애:"사랑",금전:"돈",직장:"일",사람:"사람 사�
 /* 출전 — 전승: 옛이야기·기록에 있는 귀 / 바탕: 옛이야기에서 빚은 귀 / 창작: 백귀야행이 새로 그린 귀 */
 function srcText(c){ return c.kind==="전승"?`${c.src}에 전하는 귀네`:c.kind==="바탕"?`${c.src}에서 빚은 귀네`:"해동 백귀야행에 이름을 올린 귀네"; }
 function srcTag(c){ return c.kind==="전승"?`전승 · ${c.src}`:c.kind==="바탕"?`${c.src}에서`:"해동 백귀야행"; }
-function posLabel(i){ if(i!==5) return POS[i].desc; const R=S.R||readQ(S.q), E=S.E; const who=R.who||(E&&["연애","사람"].includes(E.topic)?"상대":""); return who?`${who}의 속`:"이 일의 속"; }
+function posLabel(i){ if(i!==5) return POS[i].desc; const R=S.R||readQ(S.q), E=S.E; if(E&&E.dkey==="반려") return "그 아이의 속"; if(E&&E.dkey==="자녀") return (R.who&&/아들|딸/.test(R.who)?R.who:"아이")+"의 속"; const who=R.who||(E&&["연애","사람"].includes(E.topic)?"상대":""); return who?`${who}의 속`:"이 일의 속"; }
 const GEN={목:"화",화:"토",토:"금",금:"수",수:"목"};
 const KE={목:"토",토:"수",수:"화",화:"금",금:"목"};
 const QTYPE = [
@@ -1159,7 +1175,19 @@ const BRIDGE={
    아이:"넋의 귀가 나왔네. 조급한 마음이 기운을 막고 있다는 뜻일세. 마음부터 놓게.",
    기타:"넋의 귀가 나왔네. 이 일은 바깥보다 자네 마음속에서 먼저 커졌다는 뜻일세."}
 };
-function bridgeOf(c,topic){ if(TOPIC_SUIT[topic]===c.suit) return ""; return (BRIDGE[c.suit]||{})[topic]||""; }
+const BRIDGE_SUB={
+ 반려:{"전(펜타클)":"돈의 귀가 나왔네. 돌보는 데 드는 셈이 자네 마음을 누르고 있다는 뜻일세. 그 걱정이 그 아이에게도 전해지네.",
+   "잔(컵)":"정의 귀가 나왔네. 그 아이와 자네 사이의 정이 이 일의 한가운데 있다는 뜻일세.",
+   "검(소드)":"말의 귀가 나왔네. 여기저기서 듣는 말에 휘둘리지 말고 믿는 수의사 한 사람의 말을 따르라는 뜻일세.",
+   "대귀":"대귀가 나왔네. 사람 뜻대로 서두를 일이 아니라는 말일세. 곁을 지키며 기다리게.",
+   "지(완드)":"넋의 귀가 나왔네. 자네 불안이 그 아이보다 먼저 커져 있다는 뜻일세."},
+ 자녀:{"전(펜타클)":"돈의 귀가 나왔네. 아이 일에 드는 셈과 형편이 자네 마음을 누르고 있다는 뜻일세.",
+   "잔(컵)":"정의 귀가 나왔네. 아이와 자네 사이의 마음길이 이 일의 열쇠라는 뜻일세.",
+   "검(소드)":"말의 귀가 나왔네. 아이에게 건넨 말, 아이가 들은 말이 이 일을 끌고 간다는 뜻일세.",
+   "대귀":"대귀가 나왔네. 아이 혼자 감당하기 버거운 일이 끼어 있다는 뜻일세. 곁에서 받쳐 주게.",
+   "지(완드)":"넋의 귀가 나왔네. 아이 마음이 지쳐 있다는 뜻일세. 결과보다 마음을 먼저 보게."}
+};
+function bridgeOf(c,topic,dkey){ if(dkey&&BRIDGE_SUB[dkey]) return BRIDGE_SUB[dkey][c.suit]||""; if(TOPIC_SUIT[topic]===c.suit) return ""; return (BRIDGE[c.suit]||{})[topic]||""; }
 
 function readQ(q){
   const t=String(q||"").trim();
@@ -1702,7 +1730,7 @@ function buildReading(){
   if(qtype==="어느"&&R.A&&R.B){ const pickS=esc((grade<=1?R.A:R.B).replace(/[?？!.]+$/,"")); verdict=`패는 ‘${pickS}’ 쪽을 가리키네. `+(grade<=1?"망설일 까닭이 없네.":"쉽지는 않으나 그쪽이 덜 다치는 길일세."); }
   return {topic,qtype,combos,el,elN:tally[el],rev,grade,score,why,leanSuit,leanN:suits[leanSuit],daegui,seed,
     verdict:(S.rec&&S.rec.fx&&S.rec.fx.v)||verdict, when:(S.rec&&S.rec.fx&&S.rec.fx.w)||whenFor(el,S.rec?S.rec.t:Date.now()),
-    tie:pickV(TIE[topic],seed),intent:I?I.k:"",worry:I&&I.worry||""};
+    tie:pickV(TIE[(I&&TIE[I.k])?I.k:topic],seed),intent:I?I.k:"",worry:I&&I.worry||"",dkey:I&&DETAIL[I.k]?I.k:""};
 }
 function bat(w){const m=String(w).match(/[가-힣](?=[^가-힣]*$)/);if(!m)return 0;const c=(m[0].charCodeAt(0)-0xAC00)%28;return c===0?0:(c===8?2:1);}
 function jo(w,t){const b=bat(w);
@@ -1757,11 +1785,11 @@ const SUIT_SHORT={"대귀":"대귀","검(소드)":"말의 갈래","잔(컵)":"�
 
 function frameCore(i,p,E){
   const c=p.card, n=c.nm, nm=`<em>${c.full}</em>`, R=S.R||readQ(S.q), P=S.picked;
-  const D=DETAIL[E.topic], sd=p.idx+i, k=POS[i].k;
+  const D=DETAIL[E.dkey]||DETAIL[E.topic], sd=p.idx+i, k=POS[i].k;
   const open=pickV(OPEN[k],sd);
   const rk=P.slice(0,i).filter(x=>x.rev).length;
   const rv=p.rev?(rk<REV_TALK.length?REV_TALK[rk]:" 이 귀도 깨어 있네."):"";
-  let br=bridgeOf(c,E.topic);
+  let br=bridgeOf(c,E.topic,E.dkey);
   if(br&&P.slice(0,i).some(x=>x.card.suit===c.suit)){ /* 같은 갈래의 빗댐은 처음 한 번만 길게 */
     br=pickV([`이것도 ${SUIT_SHORT[c.suit]}에서 나왔네. 앞서 짚은 그 뜻이 한 번 더 겹치는 걸세.`,`또 ${SUIT_SHORT[c.suit]}일세. 같은 말을 패가 거듭하니 가볍게 넘기지 말게.`,`${c.suit==="대귀"?"대귀가":SUIT_SHORT[c.suit]+"의 귀가"} 다시 나왔네. 그만큼 이 일의 무게가 그쪽에 실려 있다는 말일세.`],sd);
   }
@@ -1796,7 +1824,8 @@ function frameCore(i,p,E){
         `${vs} ${p.rev?"거꾸로 나왔으니 그 눈을 흐리게 하는 일이 한 번 더 올 걸세. ":""}${pickV(D.助,sd)}`+(W?`<br>그 ${W}${jo(W,"을를")} 막아 줄 힘도 이 자리에 있네.`:"");
     }
     case 5: {
-      const who=R.who||(["연애","사람"].includes(E.topic)?"상대":"");
+      const who=E.dkey==="반려"?"그 아이":E.dkey==="자녀"?(R.who&&/아들|딸/.test(R.who)?R.who:"아이"):(R.who||(["연애","사람"].includes(E.topic)?"상대":""));
+      if(E.dkey==="반려"||E.dkey==="자녀") return `${open}<br>${who}의 속에 ${nm}의 그림자가 비치네.<br>${who}${jo(who,"이가")} 그렇다는 말이 아닐세. 그 속을 지금 이 귀의 기운이 누르고 있다는 것이지. ${rv}<br>${pickV(D.心,sd)}`;
       if(!who) return `${open}<br>이 일의 속에 ${nm}${jo(n,"이가")} 비치네. ${actB}${rv}<br>겉으로 드러난 사정과 속사정이 다르다는 말일세. 보이는 것만 믿지 말게.`;
       return `${open}<br>${who}의 속에 ${nm}의 그림자가 비치네.<br>`+
         `${who}${jo(who,"이가")} 그런 사람이라는 말이 아닐세. 그 속에서 이 귀가 하는 짓이 이렇다는 것이지. ${actB}${rv}<br>${pickV(D.心,sd)}`;
@@ -1837,7 +1866,7 @@ function wholeTalk(E){
   let t=`열 장을 한데 펼쳐 놓고 보세.<br>${lean}${jo(lean,"이가")} 유독 많이 앉았네. `;
   t+= TOPIC_SUIT[E.topic]===E.leanSuit ? `자네가 물은 바로 그 일에 귀가 몰려 있으니, 패가 자네 속을 정확히 짚은 것일세. `
     : E.leanSuit==="대귀" ? `사람 힘 밖의 일이 끼어 있다는 말이니, 몸부터 조심하게. `
-    : `자네는 ${TOPIC_LABEL[E.topic]}${jo(TOPIC_LABEL[E.topic],"을를")} 물었는데 패는 자꾸 ${SUIT_SHORT[E.leanSuit]} 이야기를 하네. 겉의 문제와 뿌리가 다르다는 뜻일세. `;
+    : `자네는 ${({반려:"그 아이 몸",자녀:"아이 일"})[E.dkey]||TOPIC_LABEL[E.topic]}${jo(({반려:"그 아이 몸",자녀:"아이 일"})[E.dkey]||TOPIC_LABEL[E.topic],"을를")} 물었는데 패는 자꾸 ${SUIT_SHORT[E.leanSuit]} 이야기를 하네. 겉의 문제와 뿌리가 다르다는 뜻일세. `;
   t+= E.rev>=5 ? `<br>거꾸로 선 귀가 절반이나 되네. 일이 이미 제멋대로 움직이고 있다는 말일세. `
     : E.rev===0 ? `<br>거꾸로 선 귀가 하나도 없네. 아직 잠잠하니, 자네가 먼저 움직이면 막는 것이 없네. `
     : E.rev>=3 ? `<br>거꾸로 선 귀가 셋 넘게 보이네. 생각보다 일이 빨리 돌고 있어. ` : "<br>";
@@ -2140,16 +2169,16 @@ async function askSeer(E,from,to,stage){
     const p=S.picked[i], c=p.card;
     cards.push({pos:POS[i].k, posDesc:posLabel(i), rev:p.rev,
       nm:c.full, src:c.src, suit:c.suit, no:c.no, el:c.el,
-      nature:c.nature, act:c.act, warn:c.warn, fix:c.fix, kind:c.kind, lore:c.lore, bridge:bridgeOf(c,E.topic),
+      nature:c.nature, act:c.act, warn:c.warn, fix:c.fix, kind:c.kind, lore:c.lore, bridge:bridgeOf(c,E.topic,E.dkey),
       base: frame(i,p,E).replace(/<br>/g," ").replace(/<\/?(em|strong)>/g,"")});
   }
   const opened=Array.from({length:from},(_,i)=>({pos:POS[i].k, nm:S.picked[i].card.full}));
   const R=S.R||readQ(S.q);
   const bone = stage==="free"
-    ? {stage, topic:E.topic, qtype:E.qtype, who:R.who, feel:R.feel, whenWord:R.when, intent:E.intent, worry:E.worry}   /* 무료 단계엔 덮인 패의 답을 보내지 않는다 */
+    ? {stage, topic:E.topic, qtype:E.qtype, who:R.who, feel:R.feel, whenWord:R.when, intent:E.intent, worry:E.worry, subject:E.dkey||""}   /* 무료 단계엔 덮인 패의 답을 보내지 않는다 */
     : {stage, opened, combos:(E.combos||[]).map(c=>c.name), grade:E.grade, why:E.why, topic:E.topic, qtype:E.qtype, el:E.el, elN:E.elN, rev:E.rev,
        leanSuit:E.leanSuit, leanN:E.leanN, daegui:E.daegui, when:E.when, verdict:E.verdict,
-       who:R.who, feel:R.feel, whenWord:R.when, intent:E.intent, worry:E.worry};
+       who:R.who, feel:R.feel, whenWord:R.when, intent:E.intent, worry:E.worry, subject:E.dkey||""};
   const ctrl=new AbortController();
   const bail=setTimeout(()=>ctrl.abort(), 45000);
   try{
