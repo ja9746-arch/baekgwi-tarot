@@ -98,6 +98,34 @@ async function callModel(req, system, prompt, maxTok = 3200) {
 const MAX_Q = 200;
 const RISK = /살\s*이유(가)?\s*(없|있을까|모르)|사는\s*(게|의미가)\s*(의미|무슨\s*의미|없)|(다|전부|모든\s*걸)\s*포기하고\s*싶(어|다|네|어요|습니다)?\s*[.!?…ㅠㅜ ]*$|안\s*깨어났으면|눈\s*뜨지\s*않았으면|없어지는\s*게\s*나을|태어나지\s*말|죽고\s*싶|자살|목숨을?\s*끊|(?<!(혼자|같이|따로|서울|지방|시골|여기|거기|시댁|본가|이\s*집|그\s*집|한국)\s*)살기\s*싫|살고\s*싶지\s*않|사라지고\s*싶|뛰어내[리릴려]|극단적인?\s*선택|자해|손목\s*(을|를)?\s*긋|목\s*(을|를)?\s*매|번개탄|(?<![가-힣])유서|약을?\s*(다|한꺼번에|몽땅|많이|잔뜩)\s*(먹|삼키)|죽어\s*버릴|죽이고\s*싶|죽여\s*버리|죽일까|해치고\s*싶|복수하고\s*싶/;
 
+/* 귀 이름 뒤 괄호 한자는 화면 카드에 이미 있다 — 풀이 글에서는 뺀다 */
+function noHanja(t) {
+  return String(t || "").replace(/\s*\([\u3400-\u9fff]+\)/g, "");
+}
+/* 모델이 가끔 하게체 사이에 해라체(~다.)나 틀린 꼴(~을세)을 섞는다 — 문장 끝만 하게체로 고친다 */
+const JONG_N = 4;
+function dropN(ch) {
+  const c = ch.charCodeAt(0) - 0xac00;
+  if (c < 0 || c > 11171 || c % 28 !== JONG_N) return null;
+  return String.fromCharCode(ch.charCodeAt(0) - JONG_N);
+}
+function hage(t) {
+  let s = String(t || "");
+  s = s.replace(/(될|할|갈|올|볼|줄|날|일어날)\s*테일세/g, "$1 걸세").replace(/테일세/g, "터일세");
+  s = s.replace(/([가-힣])을세(?=[.!,…]|\s|<|$)/g, "$1을 걸세");
+  s = s.replace(/([가-힣])(갈|올|될|할|볼|줄)세(?=[.!…]|<|$)/g, "$1$2 걸세");
+  /* 문장 끝의 '~다' (따옴표 안은 건드리지 않는다: 바로 뒤가 마침표·느낌표·<br>·끝일 때만) */
+  s = s.replace(/([가-힣]{1,8})다(?=\s*(?:[.!]|<br>|<\/strong>|<\/em>|$))/g, (m, w) => {
+    if (/(것이|거|게|터)$/.test(w)) return w.replace(/(것이|거|게|터)$/, (x) => (x === "것이" ? "것일세" : x === "터" ? "터일세" : "걸세"));
+    if (/는$/.test(w)) return w.slice(0, -1) + "네";
+    if (w === "이" || (/[^아]이$/.test(w) && w.length >= 2)) return w.slice(0, -1) + "일세";
+    const last = w.slice(-1), d = dropN(last);
+    if (d && !/^(않는|있는|없는)$/.test(w)) return w.slice(0, -1) + d + "네";
+    return w + "네";
+  });
+  return s;
+}
+
 /* 아주 단순한 주소별 횟수 제한 (한 대에 한정) */
 const hits = new Map();
 function tooMany(ip) {
@@ -142,6 +170,11 @@ F. 짧게. 한 자리에 두세 문장(符는 네 문장까지). 한 문장은 �
 10. 자신이나 남의 목숨·몸을 해치는 일을 부추기거나 "되네"로 답하지 않는다.
 11. 보고서처럼 쓰지 않는다. 손님 앞에서 패를 뒤집으며 말하는 술사의 입말로 쓴다. 다만 여는 말은 반 문장이면 족하다.
 12. 패 번호, 숫자 셈, 항목 나열(·, -)을 쓰지 않는다.
+13. 손님이 말하지 않은 사정을 사실처럼 지어내지 않는다. 돈 걱정·병원비·투자·빚·제삼자·다른 사람의 속셈·병 이름 같은 것을 base에 없는데 끌어오지 않는다.
+14. 무엇을 하라는 처방은 base에 적힌 것만 쓴다. base에 없는 의식(물 마시기, 동전 놓기, 주문 읊기, 목 돌리기, 햇빛 쬐기 따위)을 새로 지어내지 않는다.
+15. 손님을 탓하거나 겁주는 몸 표현(목을 조인다, 짓누른다, 헛것을 본다, 한 맺힌 넋, 피, 죽음)을 쓰지 않는다. 특히 몸·마음·가족의 병을 물을 때는 더 부드럽게 쓴다.
+16. 하게체 어미만 쓴다. 문장 끝은 '~네', '~일세', '~게', '~지', '~가', '~세(함께 하자는 뜻)'로 맺는다. '~다.'로 끝나는 해라체(예: 괜찮다, 끝이다, 온다)와 '~을세', '~ㄹ 게다', '~테일세' 같은 틀린 꼴은 쓰지 않는다. 바른 예: 있을 걸세, 오네, 끝일세, 괜찮네.
+17. 귀 이름 뒤에 한자를 괄호로 붙이지 않는다.
 
 형식
 - 결과는 JSON 배열 하나만 내놓는다. 설명이나 머리말, 코드 울타리를 붙이지 않는다.
@@ -180,11 +213,8 @@ function buildPrompt(q, cards, bone, stage) {
     .map(
       (c, i) =>
         `${i + 1}) 자리 ${c.pos} (${c.posDesc})
-   패: ${c.nm} · ${c.rev ? "뒤집힘(더 빨리, 세게 옴)" : "바로 놓임"}
-   이 귀가 하는 짓: ${c.act}${c.bridge ? `
-   물음에 빗대면: ${c.bridge}` : ""}
-   푸는 법: ${c.fix}
-   base(이 자리의 답): ${c.base || ""}`
+   패: ${noHanja(c.nm)} · ${c.rev ? "뒤집힘(더 빨리, 세게 옴)" : "바로 놓임"}
+   base(이 자리의 답 — 이 뜻 그대로, 더 쉽고 또렷하게): ${noHanja(c.base || "")}`
     )
     .join("\n");
 
@@ -218,7 +248,8 @@ ${asked}`;
 지금은 열 장 가운데 앞의 세 장만 무료로 먼저 여는 때다.
 - 앞의 세 장은 이 일의 뿌리(因), 지금 얽힌 것(緣), 자네가 못 보는 것(隱)이다. 이번에 풀 것은 아래 적힌 자리뿐이다.
 - 때(시기)와 확답, 붙은 귀, 떼는 법은 덮인 일곱 장에 있으니 절대 말하지 마라.
-- 아래에 隱 자리가 있으면, 그 끝에서 "이 너머에 무엇이 있는지"를 궁금하게 만드는 한 문장으로 맺어라. 돈이나 결제 이야기는 하지 마라.
+- 아래에 隱 자리가 있으면, 그 끝을 '그 너머는 덮인 일곱 장이 말해 주네.'처럼 짧고 바른 한 문장으로 맺어라. 돈이나 결제 이야기는 하지 마라.
+- 因 자리의 첫 문장은 손님의 물음을 그대로 받아 '자네가 ~하게 된 뿌리는 ~일세' 꼴로 시작하라.
 - 물음 속 사람·마음·사정을 직접 집어 말하라. 질문자가 '이 술사가 내 사정을 안다'고 느껴야 한다.
 
 열린 패 (이 순서대로 풀어라)
@@ -333,41 +364,48 @@ export default async function handler(req, res) {
 
   try {
     const t0 = Date.now();
-    const raw = await callModel(req, SYSTEM, buildPrompt(q, cards, bone, stage), Math.min(2400, 300 + cards.length * 330));
-    console.log("reading", stage, raw ? "ok" : "fail", Date.now() - t0 + "ms");
-    if (!raw) {
+    const prompt = buildPrompt(q, cards, bone, stage);
+    const maxTok = Math.min(2400, 300 + cards.length * 330);
+    /* 모델 글에서 자리별 풀이를 뽑는다 — 배열 뒤에 군말이 붙어도 개수가 맞는 첫 배열을 쓴다 */
+    const extract = (raw) => {
+      if (!raw) return null;
+      const start = raw.indexOf("[");
+      if (start < 0 || raw.indexOf("]", start) < 0) return null;
+      let got = null;
+      for (let end = raw.indexOf("]", start); end >= 0 && !got; end = raw.indexOf("]", end + 1)) {
+        const g = parseSections(raw.slice(start, end + 1));
+        if (Array.isArray(g) && g.length === cards.length) got = g;
+      }
+      if (!got) got = parseSections(raw.slice(start, raw.lastIndexOf("]") + 1));
+      return Array.isArray(got) && got.length ? got : null;
+    };
+    let sections = extract(await callModel(req, SYSTEM, prompt, maxTok));
+    /* 한 번 어긋나면 한 번만 더 부른다(시간이 남을 때만) */
+    if ((!sections || sections.length < cards.length) && Date.now() - t0 < 30000) {
+      const again = extract(await callModel(req, SYSTEM, prompt, maxTok));
+      if (again && (!sections || again.length > sections.length)) sections = again;
+    }
+    console.log("reading", stage, sections ? sections.length + "/" + cards.length : "fail", Date.now() - t0 + "ms");
+    if (!sections) {
       res.status(502).json({ error: "패를 읽다 끊겼다" });
       return;
     }
 
-    const start = raw.indexOf("[");
-    if (start < 0 || raw.indexOf("]", start) < 0) {
-      res.status(502).json({ error: "풀이를 못 알아보겠다" });
-      return;
-    }
-    /* 배열 뒤에 군말이나 다른 괄호가 붙어도, 앞에서부터 닫는 괄호마다 맞춰 보고 개수가 맞는 첫 배열을 쓴다 */
-    let sections = null;
-    for (let end = raw.indexOf("]", start); end >= 0 && !sections; end = raw.indexOf("]", end + 1)) {
-      const got = parseSections(raw.slice(start, end + 1));
-      if (Array.isArray(got) && got.length === cards.length) sections = got;
-    }
-    if (!sections) sections = parseSections(raw.slice(start, raw.lastIndexOf("]") + 1));
-    if (!Array.isArray(sections) || sections.length !== cards.length) {
-      res.status(502).json({ error: "풀이 수가 맞지 않는다" });
-      return;
-    }
-
-    /* 모델이 자리 순서를 바꿔 내놓아도 자리 이름으로 다시 맞춘다 */
+    /* 자리 이름으로 다시 맞추고, 빠진 자리는 화면이 준 뼈대 글(base)로 채운다 — 손님에게 오류를 보이지 않는다 */
     const byPos = new Map(sections.map((x) => [String(x?.pos || "").trim(), x]));
-    const ordered = cards.map((c, i) => byPos.get(c.pos) || sections[i]);
-    if (ordered.some((x) => !x || !String(x.text || "").trim())) {
-      res.status(502).json({ error: "빈 풀이가 섞였다" });
+    const ordered = cards.map((c, i) => {
+      const x = byPos.get(c.pos) || (sections.length === cards.length ? sections[i] : null);
+      const t = x && String(x.text || "").trim();
+      return { pos: c.pos, text: t || noHanja(c.base || ""), filled: !t };
+    });
+    if (ordered.every((x) => x.filled)) {
+      res.status(502).json({ error: "풀이를 못 알아보겠다" });
       return;
     }
     const clean = ordered.map((s) => ({
       pos: String(s.pos || ""),
       /* 모든 꺾쇠를 막고 속성 없는 <br><em><strong>만 살린다 */
-      text: String(s.text || "")
+      text: hage(noHanja(String(s.text || "")))
         .replace(/<(?!\/?(br|em|strong)\s*\/?>)\/?[a-z!][^<>]*>/gi, "")
         .replace(/<(?!\/?(br|em|strong)\s*\/?>)/gi, "〈")
         .replace(/>/g, (m, i, str) => (/<\/?(br|em|strong)\s*\/?$/i.test(str.slice(Math.max(0, i - 9), i)) ? ">" : "〉"))
