@@ -85,6 +85,7 @@ button{font-family:inherit;color:inherit;cursor:pointer}
 #s-ask .ask{-webkit-mask-image:linear-gradient(#000 calc(100% - 34px),transparent);mask-image:linear-gradient(#000 calc(100% - 34px),transparent)}
 @media (max-height:700px){#s-ask .ask .hint:last-child{display:none}#s-ask .rule{margin-top:10px}}
 body{word-break:keep-all;overflow-wrap:anywhere}
+.lg-lk span,.lg-lq,.verdict,.spot h2{text-wrap:balance}
 @media (max-width:340px){#s-ask .ask h2{font-size:15.5px;line-height:1.75;letter-spacing:-.03em}.brand .mark img{width:min(60vw,220px)}}
 @media (max-height:680px){#s-ask .brand{padding-top:10px}#s-ask .visit{margin-top:4px}#s-ask .visit b{display:inline;margin-left:4px}
   #s-ask .ask{padding-top:8px;gap:12px}#s-ask .ask h2{line-height:1.6}.field textarea{min-height:76px}#s-ask .ask .hint{display:none}}
@@ -2634,7 +2635,7 @@ async function openReading(){
       <b>敵</b> 자네를 막고 선 것<br>
       <b>助</b> 자네 뒤를 받치는 것<br>
       <b>心</b> ${esc(posLabel(5))}<br>
-      <b>時</b> 갈리는 때 — 달까지 짚네<br>
+      <b>時</b> 갈리는 때 — 언제인지 못 박네<br>
       <b>鬼</b> 자네 뒤에 붙은 귀와 그 까닭<br>
       <b>符</b> 그 귀를 떼는 법<br>
       <b>果</b> 끝과 확답<br>
@@ -3007,8 +3008,10 @@ async function makeShare0(T){
       else cover(x,arts[i],cx+14,cy+46,aw,ah);
       x.strokeStyle="rgba(201,162,74,.45)"; x.lineWidth=1.5; x.strokeRect(cx+14,cy+46,aw,ah);
       const hj=/[가-힣]/.test(c.hanja)||!c.hanja?"":c.hanja;
-      if(hj){ x.fillStyle="#e2463a"; x.font='700 30px "Gowun Batang", serif'; x.fillText(hj,cx+cw/2,cy+ch-62); }
-      x.fillStyle="#ece0d2"; x.font='700 25px "Gowun Batang", serif'; x.fillText(c.nm,cx+cw/2,cy+ch-26);
+      if(hj){ x.fillStyle="#e2463a"; x.font='700 30px "Gowun Batang", serif'; x.fillText(hj,cx+cw/2,cy+ch-62);
+        x.fillStyle="#ece0d2"; x.font='700 25px "Gowun Batang", serif'; x.fillText(c.nm,cx+cw/2,cy+ch-26); }
+      else { /* 한자 이름이 없는 귀는 우리말 이름을 붉은 자리에 크게 — 칸이 비어 보이지 않게 */
+        x.fillStyle="#e2463a"; x.font=`700 ${c.nm.length>4?26:30}px "Gowun Batang", serif`; x.fillText(c.nm,cx+cw/2,cy+ch-44); }
     } else {
       cover(x,backI,cx,cy,cw,ch); x.fillStyle="rgba(6,3,4,.55)"; x.fillRect(cx,cy,cw,ch);
       x.fillStyle="#ff5436"; x.font='700 70px "Gowun Batang", serif'; x.fillText("封",cx+cw/2,cy+ch/2+24);
