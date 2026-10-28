@@ -215,6 +215,8 @@ ${list}
 - 묻는 꼴이 '언제'면 時와 果에서 때를 한 번 더 못 박고, '왜'면 鬼에서 까닭을, '어떻게'면 符에서 방법을, '누구'나 '속'이면 心에서 그 사람의 속을, '어느'면 果에서 고른 쪽을 가장 두껍게 써라.`;
 }
 
+export const config = { maxDuration: 60 };
+
 export default async function handler(req, res) {
   if (req.method === "GET") {
     const r = route(req);
@@ -293,7 +295,14 @@ export default async function handler(req, res) {
       return;
     }
 
-    const clean = sections.map((s) => ({
+    /* 모델이 자리 순서를 바꿔 내놓아도 자리 이름으로 다시 맞춘다 */
+    const byPos = new Map(sections.map((x) => [String(x?.pos || "").trim(), x]));
+    const ordered = cards.map((c, i) => byPos.get(c.pos) || sections[i]);
+    if (ordered.some((x) => !x || !String(x.text || "").trim())) {
+      res.status(502).json({ error: "빈 풀이가 섞였다" });
+      return;
+    }
+    const clean = ordered.map((s) => ({
       pos: String(s.pos || ""),
       /* 모든 꺾쇠를 막고 속성 없는 <br><em><strong>만 살린다 */
       text: String(s.text || "")
