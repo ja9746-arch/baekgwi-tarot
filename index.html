@@ -981,7 +981,7 @@ const DETAIL = {
   助:["몸이 먼저 신호를 보내고 있네. 그 신호를 무시하지 않는 것이 자네 편일세.","자네를 챙기는 사람의 잔소리가 받침일세. 귀찮아도 들어 두게."],
   why:["쉬지 않고 버틴 몸에 앉은 것일세. 지친 자리에 귀가 드네.","밤에 잠들지 못하고 뒤척인 자리에 앉은 것일세. 잠이 문이었네."],
   隱:["자네가 못 보는 건 아픈 자리가 아니라 그 아픔을 만든 습관일세.","몸보다 마음이 먼저 상했네. 몸은 그걸 받아 적고 있을 뿐일세.","자네가 괜찮다고 넘긴 작은 증상 하나가 있네. 그게 실마리일세."],
-  敵:["막는 건 병이 아니라 미루는 버릇일세.","막고 선 건 혼자 버티려는 마음일세. 도움을 받아도 되네.","막는 건 자는 자리일세. 그 자리의 기운이 자네를 갉고 있네."],
+  敵:["막는 건 병이 아니라 미루는 버릇일세.","막고 선 건 혼자 버티려는 마음일세. 도움을 받아도 되네.","막는 건 잠자리일세. 잠자리가 편치 않으니 몸이 제대로 쉬지 못하네."],
   心:["주변에서 걱정하는 말이 잔소리로만 들릴 것이네. 그게 문제일세.","자네 곁 사람들은 자네가 생각하는 것보다 많이 걱정하고 있네.","자네가 말을 안 하니 곁에서도 모르네. 한 번은 털어놓게."],
   果:{g:["끝은 사는 방식을 바꾸는 모양으로 나네. 약보다 버릇일세.","끝은 몸이 보내는 신호를 받아들인 뒤에 오네."],b:["끝은 낫느냐가 아니라 다시 도지느냐로 갈리네.","끝은 미룬 만큼 길어지네. 의원 앞에 서는 날이 빠를수록 짧아지네."]}},
  아이:{
@@ -1179,7 +1179,9 @@ function opWhen(I,R,topic){ if(R.when) return null; if(!(topic==="건강"||/^(�
   const m=S.q.match(/수술|시술|항암|입원|검사|결과/); if(!m) return null;
   if(/검사|결과/.test(m[0])&&!/수술|시술/.test(S.q)) return {t:"검사 결과가 나오는 날", d:""};
   return {t:`${/시술/.test(S.q)&&!/수술/.test(S.q)?"시술":"수술"}을 마치고 보름 안`, d:""}; }
-function examWhen(I,R){ if(!I||I.k!=="시험"||R.when) return null; if(!/이번|다가오는|곧\s*있을/.test(S.q)) return null; return {t:"결과가 나오는 날", d:""}; }
+/* 몸·가족·반려·아이의 아픔을 물을 때 '내년'은 너무 멀다 — 두 달 안으로 당긴다 */
+function healthClamp(w,I,topic){ if(!w||!/^내년/.test(w.t)) return w; if(!(topic==="건강"||/^(가족건강|반려|자녀)/.test(I&&I.k||""))) return w; return whenFor("토",S.rec?S.rec.t:Date.now()); }
+function examWhen(I,R){ if(!I||I.k!=="시험"||R.when) return null; return {t:"결과가 나오는 날", d:""}; }
 /* '올해'를 물었는데 좋은 흐름이면 올해 안으로 잡는다(좋다면서 내년이라 하면 앞뒤가 안 맞는다) */
 function yearClamp(w,R,grade){ if(!w||!R||!/올해|연내|올\s*해/.test(R.when||"")||!/^내년/.test(w.t)||grade>1) return w; return {t:"올해가 가기 전, 12월 안", d:w.d}; }
 /* 가족의 병을 물으면 '그 사람' 대신 그분을 부른다 */
@@ -1423,7 +1425,7 @@ const BRIDGE_SUB={
    "검(소드)":"말의 귀가 나왔네. 함께 사는 사람들과 먼저 말을 맞추라는 뜻일세.",
    "대귀":"대귀가 나왔네. 이 인연은 우연이 아니라는 말일세. 다만 서두르지는 말게.",
    "지(완드)":"넋의 귀가 나왔네. 자네 마음이 들떠 있다는 뜻일세. 한 김 식힌 뒤 정하게."},
- 자녀:{"전(펜타클)":"돈의 귀가 나왔네. 아이 일에 드는 셈과 형편이 자네 마음을 누르고 있다는 뜻일세.",
+ 자녀:{"전(펜타클)":"살림의 귀가 나왔네. 아이 일로 챙길 것이 많아 자네 마음이 무겁다는 뜻일세.",
    "잔(컵)":"정의 귀가 나왔네. 아이와 자네 사이의 마음길이 이 일의 열쇠라는 뜻일세.",
    "검(소드)":"말의 귀가 나왔네. 아이에게 건넨 말, 아이가 들은 말이 이 일을 끌고 간다는 뜻일세.",
    "대귀":"대귀가 나왔네. 아이 혼자 감당하기 버거운 일이 끼어 있다는 뜻일세. 곁에서 받쳐 주게.",
@@ -2014,7 +2016,7 @@ function buildReading(){
     else if(c.tone>0&&grade<=1) c.line+=" 다만 흐름이 자네 편이니, 미리 조심하면 그냥 지나가네."; });
   if(qtype==="어느"&&R.A&&R.B){ const pickS=esc((grade<=1?R.A:R.B).replace(/[?？!.]+$/,"")); verdict=`패는 ‘${pickS}’ 쪽을 가리키네. `+(grade<=1?"망설일 까닭이 없네.":"쉽지는 않으나 그쪽이 덜 다치는 길일세."); }
   return {topic,qtype,combos,el,elN:tally[el],rev,grade,score,why,leanSuit,leanN:suits[leanSuit],daegui,seed,
-    verdict:(S.rec&&S.rec.fx&&S.rec.fx.v)||honorWho(verdict,I&&I.k,R), when:(S.rec&&S.rec.fx&&S.rec.fx.w)||nearWhen(R.when)||examWhen(I,R)||opWhen(I,R,topicOf(S.q))||yearClamp(whenFor(el,S.rec?S.rec.t:Date.now()),R,grade),
+    verdict:(S.rec&&S.rec.fx&&S.rec.fx.v)||honorWho(verdict,I&&I.k,R), when:(S.rec&&S.rec.fx&&S.rec.fx.w)||nearWhen(R.when)||examWhen(I,R)||opWhen(I,R,topicOf(S.q))||healthClamp(yearClamp(whenFor(el,S.rec?S.rec.t:Date.now()),R,grade),I,topicOf(S.q)),
     tie:pickV(TIE[(I&&TIE[I.k])?I.k:topic],seed),intent:I?I.k:"",worry:I&&I.worry||"",
     dkey:(I&&I.k==="시험"&&/(^|[^가-힣])(우리\s*)?(아이|아들|딸|자녀|애)(가|는|이|의|\s)/.test(S.q))?"자녀":(I&&DETAIL[I.k]?I.k:"")};
 }
@@ -2168,7 +2170,7 @@ function frameCore(i,p,E){
       return `${open}<br>자네 뒤에 붙은 건 ${nm}일세.${rv} 이 귀는 ${GD}<br>왜 붙었느냐. ${pickV(D.why,sd)}`; }
     case 8: {
       const g=P[7].card;
-      return `${open}<br>${nm}${jo(n,"이가")} 떼는 법을 쥐고 왔네. 둘만 하게.<br>하나, 붙은 ${g.nm}${jo(g.nm,"을를")} 떼는 법. <strong>${guiFix(E,g)}</strong><br>둘, 자네 물음에 바로 쓰는 것. <strong>${actLine(E,sd)}</strong><br>${nearWhen(R.when)?"이 둘은 오늘 안에 해 두게.":/전|안$|안,|그때|날$/.test(E.when.t)?"이 둘은 그때까지 해 두게.":`이 둘만 <strong>${E.when.t}</strong> 전에 해 두게.`}`;
+      return `${open}<br>${nm}${jo(n,"이가")} 떼는 법을 쥐고 왔네. 둘만 하게.<br>하나, 붙은 ${g.nm}${jo(g.nm,"을를")} 떼는 법. <strong>${guiFix(E,g)}</strong><br>둘, 자네 물음에 바로 쓰는 것. <strong>${actLine(E,sd)}</strong><br>${nearWhen(R.when)?"이 둘은 오늘 안에 해 두게.":/전|안$|안,|그때|날$/.test(E.when.t)?"이 둘은 그때까지 해 두게.":`이 둘은 이번 주부터 시작해 그 무렵까지 이어 가게.`}`;
     }
     case 9: return `${open}<br>${nm}${jo(n,"으로")} 끝이 닫혔네.${rv}<br>${pickV(good?D.果.g:D.果.b,sd)}`+
       (W?(good?`<br>자네가 걱정하던 그 ${W}${jo(W,"은는")} 끝내 오지 않네.`:`<br>자네가 걱정하던 그 ${W}, 이 끝자리가 그 기미를 보여 주네.`):"")+
