@@ -10,9 +10,12 @@ const MODEL = process.env.BAEKGWI_MODEL || "anthropic/claude-haiku-4.5";
 const GATEWAY = "https://ai-gateway.vercel.sh/v1/chat/completions";
 const DIRECT = "https://api.anthropic.com/v1/messages";
 
-function route() {
+/* 베르셀 함수 안에서는 OIDC 열쇠가 요청 머리(x-vercel-oidc-token)로 들어온다. */
+function route(req) {
+  const hdr = req?.headers?.["x-vercel-oidc-token"];
   if (process.env.AI_GATEWAY_API_KEY)
     return { how: "gateway", token: process.env.AI_GATEWAY_API_KEY };
+  if (hdr) return { how: "gateway", token: hdr };
   if (process.env.VERCEL_OIDC_TOKEN)
     return { how: "gateway", token: process.env.VERCEL_OIDC_TOKEN };
   if (process.env.ANTHROPIC_API_KEY)
@@ -20,8 +23,8 @@ function route() {
   return null;
 }
 
-async function callModel(system, prompt) {
-  const r = route();
+async function callModel(req, system, prompt) {
+  const r = route(req);
   if (!r) return null;
 
   if (r.how === "gateway") {
@@ -110,6 +113,10 @@ const SYSTEM = `너는 '백귀술사 호연(狐煙)'이다. 여우의 연기라�
 10. 자신이나 남의 목숨·몸을 해치는 일을 부추기거나 "되네"로 답하지 않는다. 그런 물음이 섞여 있으면 그 부분은 풀지 않고 다른 자리의 풀이에 집중한다.
 11. 건강에 관한 풀이는 병원·진료를 미루라는 말로 읽히지 않게 쓴다.
 12. 한 자리당 네 문장에서 여섯 문장. 휴대폰에서 읽기 좋게 문장을 짧게 쓴다.
+13. 보고서처럼 쓰지 마라. 손님 앞에서 패를 한 장씩 뒤집으며 말하는 술사의 입말로 쓴다. "첫 장, 뿌리부터 보세." "이 장이 중요하네." 처럼 패를 여는 말로 시작해도 좋다.
+14. 패 번호, 갈래 이름 나열, "몇 장 중 몇 장" 같은 숫자 셈, 항목 나열(·, -)을 쓰지 않는다. 귀의 이름과 그 귀가 하는 짓으로만 말한다.
+15. 앞 자리 패와 이어서 말한다. 예: 막는 패와 돕는 패를 견주고, 때의 패와 끝의 패를 잇는다. 각 자리가 따로 노는 글이 되지 않게 한다.
+16. 설화 문장을 그대로 베끼지 말고 '~하지', '~이네' 입말로 바꿔 말한다.
 
 형식
 - 결과는 JSON 배열 하나만 내놓는다. 설명이나 머리말, 코드 울타리를 붙이지 않는다.
@@ -203,11 +210,18 @@ ${list}
 }
 
 export default async function handler(req, res) {
+  if (req.method === "GET") {
+    const r = route(req);
+    res.setHeader("cache-control", "no-store");
+    res.status(200).json({ ok: !!r, how: r ? r.how : null, model: MODEL });
+    return;
+  }
   if (req.method !== "POST") {
     res.status(405).json({ error: "POST만 받는다" });
     return;
   }
-  if (!route()) {
+  if (!route(req)) {
+    console.error("reading: no route (OIDC 머리·환경변수 모두 없음)");
     res.status(503).json({ error: "통로가 없다" });
     return;
   }
@@ -242,7 +256,9 @@ export default async function handler(req, res) {
   }
 
   try {
-    const raw = await callModel(SYSTEM, buildPrompt(q, cards, bone, stage));
+    const t0 = Date.now();
+    const raw = await callModel(req, SYSTEM, buildPrompt(q, cards, bone, stage));
+    console.log("reading", stage, raw ? "ok" : "fail", Date.now() - t0 + "ms");
     if (!raw) {
       res.status(502).json({ error: "패를 읽다 끊겼다" });
       return;

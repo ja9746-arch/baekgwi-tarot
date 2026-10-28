@@ -1215,55 +1215,122 @@ function jo(w,t){const b=bat(w);
   if(t==="으로")return b===1?"으로":"로"; return "";}
 
 function frame(i,p,E){
-  const extra=(PS[POS[i].k]||{})[suitKey(p.card.suit)];
+  const extra=["隱","敵","心"].includes(POS[i].k)?"":(PS[POS[i].k]||{})[suitKey(p.card.suit)];
   const core=frameCore(i,p,E);
-  return extra?core+"<br>"+extra:core;
+  if(!extra) return core;
+  const CON=["하나 더 보이네. ","그리고 이것도 알아 두게. ",`${SUIT_SHORT[p.card.suit]}에서 나온 패라 덧붙이자면, `,"","이 패가 하는 말이 하나 더 있네. "];
+  return core+"<br>"+CON[(p.idx+i)%CON.length]+extra;
 }
+/* ── 설화 문장을 술사의 말로 — '~한다' → '~하지' ── */
+const HAJI_SPECIAL={"만든다":"만들지","이끈다":"이끌지","준다":"줄지","안다":"알지","기운다":"기울지","시든다":"시들지","판다":"파지","운다":"울지","든다":"들지"};
+function hajiSentence(t){
+  t=t.trim(); if(!t) return t;
+  t=t.replace(/^붙은 자는/,"이 귀가 붙은 사람은").replace(/^홀린 자는/,"이 귀에 홀린 사람은");
+  const m=t.match(/^(.*?)(\S+)\.$/); if(!m) return t;
+  const head=m[1], w=m[2];
+  if(HAJI_SPECIAL[w]) return head+HAJI_SPECIAL[w]+".";
+  if(/는다$/.test(w)) return head+w.replace(/는다$/,"지")+".";
+  if(/다$/.test(w)){
+    const pre=w.slice(0,-1), last=pre.slice(-1), code=last.charCodeAt(0)-0xAC00;
+    if(code>=0&&code<11172&&code%28===4){ /* ㄴ 받침 — 부른다 → 부르지 */
+      return head+pre.slice(0,-1)+String.fromCharCode(last.charCodeAt(0)-4)+"지.";
+    }
+    return head+pre+"지.";
+  }
+  return head+w+"일세."; /* 이름으로 끝난 토막 */
+}
+function haji(text){ return String(text||"").split(/(?<=[.!?])\s+/).map(hajiSentence).join(" "); }
+
+/* 자리마다 여는 말 */
+const OPEN={
+ 因:["첫 장, 뿌리부터 보세.","먼저 이 일이 어디서 시작됐는지 보지.","첫 장을 뒤집어 보세. 뿌리일세."],
+ 緣:["두 번째 장은 지금 자네 둘레일세.","이제 지금 자네 곁에 무엇이 얽혀 있는지 보세.","두 번째 장… 지금의 자리일세."],
+ 隱:["세 번째 장, 자네 눈에 안 보이던 것일세. 잘 보게.","이 장이 중요하네. 자네가 못 보고 있는 것일세.","세 번째 장을 뒤집겠네. 숨어 있던 것일세."],
+ 敵:["이제 덮여 있던 장일세. 자네를 막고 선 것부터 보지.","자네 앞을 막는 것이 무엇인지 보세.","막는 것부터 보겠네."],
+ 助:["막는 것이 있으면 받치는 것도 있는 법일세.","이번엔 자네 편을 보세.","자네를 받쳐 줄 것이 있는지 보지."],
+ 心:["이제 속을 들여다보세.","마음속을 보는 장일세.","이 장은 속내를 보여 주네."],
+ 時:["때를 보지.","언제냐… 이 장이 말해 주네.","때의 장일세."],
+ 鬼:["이제 가장 무거운 장일세. 자네 뒤에 붙은 것.","숨을 한 번 고르게. 붙은 귀를 볼 차례일세.","이 장은 자네 등 뒤를 보여 주네."],
+ 符:["붙은 걸 봤으니 떼는 법을 봐야지.","이제 푸는 법일세.","떼는 법을 일러 주겠네."],
+ 果:["마지막 장, 끝일세.","이제 끝을 보세.","마지막 장을 뒤집겠네."]
+};
+const REV_TALK=[" 그런데 거꾸로 나왔군… 이 귀가 지금 깨어 있다는 뜻일세. 같은 일이 더 빨리, 더 세게 오네."," 이것도 거꾸로 섰네. 잠든 귀가 아니라 지금 움직이는 귀일세."," 거꾸로일세. 이 일은 벌써 시작됐다고 보게."];
+const SUIT_TALK={"대귀":"사람 힘 밖의 대귀","검(소드)":"말과 시비의 귀","잔(컵)":"정과 인연의 귀","전(펜타클)":"돈과 셈의 귀","지(완드)":"넋과 기운의 귀"};
+const SUIT_SHORT={"대귀":"대귀","검(소드)":"말의 갈래","잔(컵)":"정의 갈래","전(펜타클)":"돈의 갈래","지(완드)":"넋의 갈래"};
+
 function frameCore(i,p,E){
-  const c=p.card, nm=`<em>${c.full}</em>`, n=c.nm, R=S.R||readQ(S.q);
-  const seen=S.picked.slice(0,i).some(x=>x.card.suit===c.suit);
-  const gal=seen?`${c.no} ${c.suit}`:`${c.no} ${c.suit} — ${SUIT_MEAN[c.suit]}`;
-  const D=DETAIL[E.topic], sd=p.idx+i;
-  const rk=S.picked.slice(0,i).filter(x=>x.rev).length;
-  const rv=p.rev?(rk<REV_LINES.length?REV_LINES[rk]:" 이 귀도 깨어 있네."):"";
+  const c=p.card, n=c.nm, nm=`<em>${c.full}</em>`, R=S.R||readQ(S.q), P=S.picked;
+  const D=DETAIL[E.topic], sd=p.idx+i, k=POS[i].k;
+  const open=pickV(OPEN[k],sd);
+  const rk=P.slice(0,i).filter(x=>x.rev).length;
+  const rv=p.rev?(rk<REV_TALK.length?REV_TALK[rk]:" 이 귀도 깨어 있네."):"";
+  const tale=haji(c.act)+" "+haji(c.warn);
   const q1=`‘${esc(R.first)}’`, q2=`‘${esc(R.last)}’`;
+  const same=(a,b)=>P[a].card.suit===P[b].card.suit;
   switch(i){
-    case 0: return `${gal}.<br>이 일의 뿌리는 ${nm}일세. ${c.nature}.<br>${c.act} ${c.warn}${rv}<br>`+
-      (R.when&&/자꾸|계속|오래/.test(R.when) ? `자네가 ‘${R.when}’ 그렇다 한 그 되풀이, 거기에 뿌리가 있네. 어제오늘 생긴 일이 아니네.`
-       : R.when ? `자네는 ‘${R.when}’${jo(R.when,"이라")} 했지만, 뿌리는 그보다 한참 앞일세. 어제오늘 생긴 일이 아니네.`
-       : R.short ? `자네 물음은 짧지만, 그 뿌리는 어제 생긴 것이 아닐세.`
-       : R.many ? `자네가 ${q1} 하고 꺼낸 그 사정, 그게 시작이 아닐세. 끝자락일 뿐이네.`
-       : `자네가 들고 온 ${q2}, 그 물음은 어제 생긴 것이 아닐세. 뿌리가 한참 전에 내렸네.`);
-    case 1: return `${gal}.<br>지금 자네 둘레에 ${nm}${jo(n,"이가")} 앉았네. ${c.nature}.<br>${c.act}${rv}<br>`+
-      (R.who ? `이 기운은 ${R.who} 쪽으로 가장 세게 도네. ${R.who}${jo(R.who,"과와")} 자네 사이에 이 귀가 앉아 있네.` : E.tie);
-    case 2: return `${gal}.<br>자네가 못 보고 있는 것이 여기 있네. ${nm}, ${c.nature}.<br>${c.act} ${c.warn}${rv}<br>`+
-      (R.short ? `자네는 되느냐만 묻지만, 정작 물어야 할 것은 그게 아닐세. ` : `자네는 ${q2} 하고 묻지만, 정작 물어야 할 것은 그게 아닐세. `)+pickV(D.隱,sd)+
-      (R.feel ? `<br>자네 속의 그 ${R.feel}, 그것도 이 귀가 키운 것일세.` : "");
-    case 3: return `${gal}.<br>자네를 막고 선 것은 ${nm}일세. ${c.nature}.<br>${c.act} ${c.warn}${rv}<br>${pickV(D.敵,sd)}`;
-    case 4: return `${gal}.<br>그래도 자네 편에 설 것이 하나 있네. ${nm}, ${c.nature}.<br>`+
-      `귀가 자네를 돕는다는 말이 아닐세. 이 귀가 무엇을 노리는지 먼저 알아본 그 눈이 자네를 돕네. ${c.warn} 이걸 알았으니 같은 덫에는 덜 걸리네.<br>`+
-      `${p.rev?"다만 뒤집혀 나왔으니 그 눈을 흐리게 하는 일이 한 번 더 오네. 그때 이 말을 떠올리게.":"바로 놓였으니 그 눈이 지금 맑네. 믿고 가게."} ${pickV(D.助,sd)}`;
+    case 0: return `${open}<br>${nm}${jo(n,"이가")} 나왔군. ${c.nature}… ${tale}${rv}<br>`+
+      (R.when&&/자꾸|계속|오래/.test(R.when) ? `자네가 ‘${R.when}’ 그렇다 했지. 그 되풀이가 바로 이 귀의 짓일세. 어제오늘 생긴 일이 아니네.`
+       : R.when ? `자네는 ‘${R.when}’${jo(R.when,"이라")} 했지만, 이 귀가 자리를 잡은 건 그보다 한참 앞일세.`
+       : R.short ? `물음은 짧아도 뿌리는 깊네. 이 귀가 앉은 지 꽤 됐어.`
+       : R.many ? `자네가 ${q1} 하고 꺼낸 그 사정… 그게 시작이 아닐세. 이 귀가 먼저 와 있었네.`
+       : `자네가 들고 온 그 물음, 어제 생긴 게 아닐세. 이 귀가 먼저 와 있었네.`);
+    case 1: return `${open}<br>${nm}… ${c.nature}. ${haji(c.act)}${rv}<br>`+
+      (same(0,1) ? `앞서 나온 ${P[0].card.nm}${jo(P[0].card.nm,"과와")} 같은 갈래일세. 뿌리의 일이 지금도 그대로 이어지고 있다는 말이지. `
+                 : `앞서 나온 ${P[0].card.nm}${jo(P[0].card.nm,"과와")} 갈래가 다르네. 처음 문제와 지금 문제가 달라졌다는 뜻일세. `)+
+      (R.who ? `그리고 이 기운은 ${R.who} 쪽으로 가장 세게 돌고 있네.` : E.tie);
+    case 2: return `${open}<br>${nm}${jo(n,"이가")} 숨어 있었군. ${c.nature}. ${tale}${rv}<br>`+
+      (R.short ? `자네는 되느냐만 묻지만, 정작 봐야 할 건 그게 아닐세. ` : `자네는 ${q2} 하고 묻지만, 정작 봐야 할 건 그게 아닐세. `)+pickV(D.隱,sd)+
+      (R.feel ? `<br>자네 속의 그 ${R.feel}… 그것도 이 귀가 키운 것일세.` : "");
+    case 3: return `${open}<br>${nm}${jo(n,"이가")} 버티고 섰네. ${c.nature}. ${tale}${rv}<br>${pickV(D.敵,sd)}`;
+    case 4: {
+      const e3=P[3].card.el, e4=c.el;
+      const vs = KE[e4]===e3 ? `막고 선 ${P[3].card.nm}보다 이 패의 기운이 세네. 버틸 만하다는 말일세.`
+               : KE[e3]===e4 ? `다만 막고 선 ${P[3].card.nm}의 기운이 이 패를 누르고 있네. 쉽게 버티지는 못할 걸세.`
+               : `막는 것과 받치는 것의 힘이 엇비슷하네. 결국 자네가 어느 쪽에 힘을 싣느냐일세.`;
+      return `${open}<br>${nm}${jo(n,"이가")} 나왔군. ${c.nature}.<br>${haji(c.act)}<br>이 귀가 자네를 돕는다는 말은 아닐세. 이 귀가 무슨 수를 쓰는지 먼저 알아본 자네 눈이 자네를 돕는 것이지. 알고 나면 같은 덫에 덜 걸리네.<br>`+
+        `${vs} ${p.rev?"거꾸로 나왔으니 그 눈을 흐리게 하는 일이 한 번 더 올 걸세.":""} ${pickV(D.助,sd)}`;
+    }
     case 5: {
       const who=R.who||(["연애","사람"].includes(E.topic)?"상대":"");
-      if(!who) return `${gal}.<br>이 일의 속을 들여다보면 ${nm}${jo(n,"이가")} 비치네. ${c.nature}.<br>${c.act}${rv}<br>겉으로 드러난 사정과 속사정이 다르다는 뜻일세. 보이는 것만 믿지 말게.`;
-      return `${gal}.<br>${who}의 속에 ${nm}의 그림자가 비치네. ${c.nature}.<br>`+
-        `${who}${jo(who,"이가")} 그런 사람이라는 말이 아닐세. 그 속에서 이 귀가 하는 짓이 이렇다는 것이네. ${c.act}${rv}<br>${pickV(D.心,sd)}`;
+      if(!who) return `${open}<br>이 일의 속에 ${nm}${jo(n,"이가")} 비치네. ${c.nature}. ${haji(c.act)}${rv}<br>겉으로 드러난 사정과 속사정이 다르다는 말일세. 보이는 것만 믿지 말게.`;
+      return `${open}<br>${who}의 속에 ${nm}의 그림자가 비치네. ${c.nature}.<br>`+
+        `${who}${jo(who,"이가")} 그런 사람이라는 말이 아닐세. 그 속에서 이 귀가 하는 짓이 이렇다는 것이지. ${haji(c.act)}${rv}<br>${pickV(D.心,sd)}`;
     }
-    case 6: return `${gal}.<br>때를 끌고 오는 것은 ${nm}일세. ${c.nature}.<br>`+
-      `열 장에 <em>${E.el}</em> 기운이 ${E.elN}장 몰렸으니 때는 그 기운이 정하네. ${E.when.d}.<br>`+
-      `갈리는 때는 <strong>${E.when.t}</strong>일세. 그 안에 반드시 한 번 움직이네. `+
-      `${p.rev?"뒤집혀 나왔으니 그보다 더 이르게 올 수도 있네.":"그 때가 오기 전까지는 서두르지 말게. 밀어도 안 움직이네."}`;
-    case 7: return `${gal}.<br>자네 뒤에 붙은 것은 ${nm}일세. ${srcText(c.src)}. ${c.nature}.<br>${c.act} ${c.warn}${rv}<br>`+
-      `왜 하필 이 귀가 붙었는가. ${pickV(D.why,sd)}`;
+    case 6: return `${open}<br>${nm}${jo(n,"이가")} 때를 쥐고 있네. ${c.nature}.<br>`+
+      `열 장을 통틀어 <em>${E.el}</em> 기운이 가장 짙으니, ${E.when.d}.<br>갈리는 때는 <strong>${E.when.t}</strong>… 그 언저리에 반드시 한 번 움직이네. `+
+      `${p.rev?"게다가 거꾸로 나왔으니 그보다 이르게 올 수도 있네.":"그 전에는 아무리 밀어도 안 움직이니 서두르지 말게."}`;
+    case 7: return `${open}<br>${nm}일세. ${srcText(c.src)}. ${c.nature}… ${tale}${rv}<br>`+
+      `왜 하필 이 귀가 자네한테 붙었느냐. ${pickV(D.why,sd)}`;
     case 8: {
-      const g=S.picked[7].card;
-      return `${gal}.<br>떼는 법은 ${nm}${jo(n,"이가")} 일러주네.<br>`+
-      `먼저 붙은 ${g.nm}부터 떼어야 하네. <strong>${g.fix}</strong><br>`+
-      `그리고 ${n}${jo(n,"이가")} 곁들이라 하는 것이 있네. ${c.fix}<br>`+
-      `거창한 걸 벌이지 말고 이 둘만 하게. 그 때가 오기 전에 해야 효험이 있네.`;
+      const g=P[7].card;
+      return `${open}<br>${nm}${jo(n,"이가")} 일러 주는 게 있네.<br>`+
+        `먼저 붙은 ${g.nm}부터 떼게. <strong>${g.fix}</strong><br>`+
+        `그리고 하나 더. ${c.fix}<br>`+
+        (same(7,8) ? `붙은 귀와 떼는 패가 같은 갈래라, 자네 손으로 충분히 풀 수 있는 매듭일세. ` : "")+
+        `거창한 걸 벌일 것 없네. 이 둘만, 그 때가 오기 전에 하게.`;
     }
-    case 9: return `${gal}.<br>이 일의 끝은 ${nm}${jo(n,"으로")} 닫혔네. ${c.nature}.<br>${c.act}${rv}<br>${pickV(E.grade<=1?D.果.g:D.果.b,sd)}`;
+    case 9: return `${open}<br>${nm}${jo(n,"으로")} 닫혔군. ${c.nature}. ${haji(c.act)}${rv}<br>`+
+      `앞서 때의 자리에 ${P[6].card.nm}${jo(P[6].card.nm,"이가")} 앉았으니, 이 끝은 그 무렵에 오네. `+
+      (same(0,9) ? `처음 장과 같은 갈래로 닫혔으니, 시작한 그 자리로 돌아와 끝난다는 말일세. ` : "")+
+      pickV(E.grade<=1?D.果.g:D.果.b,sd);
   }
+}
+
+/* 열 장을 한데 놓고 보는 말 */
+function wholeTalk(E){
+  const P=S.picked, lean=SUIT_TALK[E.leanSuit], fv=P[9];
+  let t=`열 장을 한데 펼쳐 놓고 보세.<br>${lean}${jo(lean,"이가")} 유독 많이 앉았네. `;
+  t+= TOPIC_SUIT[E.topic]===E.leanSuit ? `자네가 물은 바로 그 일에 귀가 몰려 있으니, 패가 자네 속을 정확히 짚은 것일세. `
+    : E.leanSuit==="대귀" ? `사람 힘 밖의 일이 끼어 있다는 말이니, 몸부터 조심하게. `
+    : `자네는 ${TOPIC_LABEL[E.topic]}${jo(TOPIC_LABEL[E.topic],"을를")} 물었는데 패는 자꾸 ${SUIT_SHORT[E.leanSuit]} 이야기를 하네. 겉의 문제와 뿌리가 다르다는 뜻일세. `;
+  t+= E.rev>=5 ? `<br>거꾸로 선 귀가 절반이나 되네. 일이 이미 제멋대로 움직이고 있다는 말일세. `
+    : E.rev===0 ? `<br>거꾸로 선 귀가 하나도 없네. 아직 잠잠하니, 자네가 먼저 움직이면 막는 것이 없네. `
+    : E.rev>=3 ? `<br>거꾸로 선 귀가 셋 넘게 보이네. 생각보다 일이 빨리 돌고 있어. ` : "<br>";
+  if(E.daegui>=3) t+=`대귀가 여럿 들었으니, 사람 힘만으로는 안 되는 대목이 하나 있을 걸세. `;
+  t+= fv.rev ? `무엇보다 끝자리 ${fv.card.nm}${jo(fv.card.nm,"이가")} 거꾸로 선 게 마음에 걸리네. `
+             : `끝자리 ${fv.card.nm}${jo(fv.card.nm,"이가")} 바로 서 있는 건 다행일세. `;
+  t+= P[4].rev ? `받쳐 줄 자리마저 흔들리고 있고. ` : `받쳐 주는 자리는 굳건하네. `;
+  return t;
 }
 
 
@@ -1640,7 +1707,7 @@ async function showPaid(){
     await line(POS[i].ko+" · "+posLabel(i), body); if(!live()) return;
     $("fl"+i).parentElement.classList.remove("cur");
     for(const c of E.combos.filter(c=>!S.shown.has(c.id)&&c.pos.length&&Math.max(...c.pos)===i)){ S.shown.add(c.id); if(!(await comboEvent(c,T))) return; }
-    await nextTap(i<9?"다음 패 열기":"확답 듣기"); if(!live()) return;
+    await nextTap(i<9?"다음 패 열기":"열 장 모아 보기"); if(!live()) return;
   }
   for(const c of E.combos.filter(c=>!S.shown.has(c.id))){ S.shown.add(c.id); if(!(await comboEvent(c,T))) return; }
   S.paidTexts=used;
@@ -1652,23 +1719,11 @@ async function showPaid(){
            : E.qtype==="어떻게" ? `자네가 물은 것은 방법이었네. 부(符)에 적힌 그 둘이면 되네. 더 벌이지 말게.`
            : E.qtype==="누구" ? `자네가 물은 것은 사람이었네. 심(心)에 나온 그 모습이 그 사람의 속일세.`
            : E.qtype==="어느"&&R.A&&R.B ? `자네는 ‘${esc(R.A)}’ 쪽과 ‘${esc(R.B)}’ 쪽 사이에서 물었네. 패가 한쪽을 골랐네.`
-           : `자네가 물은 것은 되느냐 안 되느냐였네.`;
-  await line("확답",`${qt}<br><strong>${E.verdict}</strong>`); if(!live()) return;
+           : R.short ? `자네가 물은 것은 되느냐 안 되느냐였지.` : `자네는 ‘${esc(R.last)}’ 하고 물었지.`;
+  await line("열 장을 한데", wholeTalk(E)); if(!live()) return;
+  await nextTap("확답 듣기"); if(!live()) return;
   await dots(); if(!live()) return;
-  await line("확답의 근거",
-    `패가 이렇게 답한 까닭은 이렇네.<br>`+E.why.slice(0,6).map(w=>`· ${w}`).join("<br>")+
-    `<br>${E.grade<=1?"바로 선 패가 더 무겁네. 그래서 흐름이 자네 쪽일세.":"깨어난 패가 더 무겁네. 그래서 그냥 두면 자네 쪽이 아닐세."}`); if(!live()) return;
-  await nextTap("계속"); if(!live()) return;
-  await line("패의 모양",
-    `열 장에 <em>${E.el}</em> 기운이 ${E.elN}장 몰렸네. 갈래로는 <em>${E.leanSuit}</em>${jo(E.leanSuit,"이가")} ${E.leanN}장으로 가장 많네. 대귀는 ${E.daegui}장, 뒤집힌 패는 ${E.rev}장일세.<br>`+
-    (E.daegui>=4?"대귀가 네 장 넘게 든 패는 흔치 않네. 자네 일이 자네 손만의 일이 아니라는 뜻일세. "
-     :E.rev>=6?"절반 넘게 뒤집혔네. 지금 자네 자리가 통째로 흔들리고 있다는 뜻일세. "
-     :E.rev===0?"하나도 뒤집히지 않았네. 흐름이 자네 편일세. ":"")+
-    (TOPIC_SUIT[E.topic]===E.leanSuit
-      ? `자네 물음이 걸린 바로 그 갈래에 패가 몰렸네. 패가 자네 속을 정확히 짚은 것일세. `
-      : E.leanSuit==="대귀" ? `대귀가 가장 많다는 건 자네 일이 사람 손을 떠나 있다는 뜻일세. 몸부터 조심하게. `
-      : `자네는 ${TOPIC_LABEL[E.topic]}${jo(TOPIC_LABEL[E.topic],"을를")} 물었는데 패는 <em>${E.leanSuit}</em>${jo(E.leanSuit,"을를")} 가리키네. 겉으로 보이는 문제와 진짜 뿌리가 다르다는 뜻일세. `)+
-    `그 갈래만 손보면 나머지는 따라오네.`); if(!live()) return;
+  await line("확답",`그래서 내 답은 이렇네.<br>${qt}<br><strong>${E.verdict}</strong>`); if(!live()) return;
   recordNow();
 
   await confirmStage(T); if(!live()) return;
@@ -1717,19 +1772,24 @@ async function confirmStage(T){
     const rel = (dc.suit===key.suit||dc.el===key.el||GEN[dc.el]===key.el) ? "確" : (KE[dc.el]===key.el||KE[key.el]===dc.el) ? "轉" : "靜";
     if(rel==="確") ok++;
     const mini=`<span class="minicard${d.rev?" rev":""}" style="background-image:url('${dc.art}')"></span>`;
+    const why = dc.suit===key.suit ? `${key.nm}${jo(key.nm,"과와")} 같은 갈래에서 나왔군`
+              : dc.el===key.el ? `${key.nm}${jo(key.nm,"과와")} 같은 ${dc.el} 기운이로군`
+              : `${dc.el} 기운이 ${key.nm}의 ${key.el} 기운을 살려 주는군`;
     const txt = rel==="確"
-      ? `<em>${dc.full}</em>${jo(dc.nm,"이가")} 나왔네. <strong>패가 다시 짚었네.</strong> ‘${c.name}’${jo(c.name,"은는")} 참일세. `+
-        (c.tone<0?"좋은 쪽으로 더 단단해졌네. 믿고 가게.":c.tone>0?"경고가 더 무거워졌네. 흘려듣지 말게.":"이 흐름은 그대로 가네.")
+      ? `<em>${dc.full}</em>${jo(dc.nm,"이가")} 나왔네. ${why}… 패가 같은 말을 두 번 하는 걸세. <strong>‘${c.name}’, 이건 틀림없네.</strong> `+
+        (c.tone<0?"좋은 쪽으로 더 단단해졌으니 믿고 가게.":c.tone>0?"그러니 이 경고는 절대 흘려듣지 말게.":"이 흐름은 그대로 가네.")
       : rel==="轉"
-      ? `<em>${dc.full}</em>… <strong>패가 한 번 비틀었네.</strong> ‘${c.name}’의 기운이 ${suitKey(dc.suit)} 갈래 쪽으로 꺾여 들어가네. ${(PS.隱||{})[suitKey(dc.suit)]||""}`
-      : `<em>${dc.full}</em>, ${dc.nature}. 이 패는 ‘${c.name}’에 대해 말을 아끼네. 조합은 그대로 두되 서두르지 말라는 뜻이네.`;
+      ? `<em>${dc.full}</em>… 이건 좀 다르군. 이 패의 ${dc.el} 기운이 ${key.nm}의 ${key.el} 기운과 부딪히네. <strong>‘${c.name}’의 흐름이 ${SUIT_SHORT[dc.suit]} 쪽으로 꺾여 든다는 말일세.</strong> ${(PS.隱||{})[suitKey(dc.suit)]||""}`
+      : `<em>${dc.full}</em>… ${dc.nature}. 이 패는 ‘${c.name}’에 대해선 입을 다무네. 좋다 나쁘다 하지 않으니, 서두르지 말고 지켜보라는 뜻일세.`;
     const revN=S.confirm.slice(0,k).filter(x=>x.rev).length;
     const revTxt=d.rev?(revN===0?"<br>확인의 패마저 뒤집혀 나왔네. 이 일은 생각보다 빠르게 움직이네.":revN===1?"<br>이 패도 깨어 있네. 서두르는 기운이 겹치고 있네.":""):"";
     await line(`확인 ${k+1} · ${c.name} ${c.han}`, mini+txt+revTxt); if(!live()) return;
     await nextTap(k<n-1?"다음 확인의 패":"마무리 듣기"); if(!live()) return;
   }
-  await line("확인의 결", `확인의 패 ${n}장 가운데 <strong>${ok}장</strong>이 다시 짚었네.<br>`+
-    (ok*2>=n?"패의 말이 단단하네. 앞의 확답을 믿고 가게.":"패가 흔들리고 있네. 확답은 그대로이되, 때와 처방을 더 꼭 지키게."));
+  const NUM=["","한","두","세","네","다섯"];
+  await line("확인의 결", (n===1 ? (ok ? `한 번 더 물었는데 패가 같은 말을 했네.<br>` : `한 번 더 물었더니 패가 다른 말을 했네.<br>`)
+      : `${NUM[n]} 번을 다시 물었네. 그중 <strong>${NUM[ok]||"한 번도"}${ok?" 번":""}</strong> 패가 같은 말을 했군.<br>`)+
+    (ok*2>=n?"패의 말이 흔들리지 않네. 앞서 내린 답을 믿고 가게.":"패가 아직 망설이고 있네. 답은 그대로 두되, 때와 푸는 법은 더 꼭 지키게."));
 }
 function toConfirmPick(n,done){
   S.mode="confirm"; S.cNeed=n; S.confirm=[]; S.confirmDone=done; S.spin=0;
