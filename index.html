@@ -278,14 +278,21 @@ button{font-family:inherit;color:inherit;cursor:pointer}
 .spotcard .face{border-radius:6px;border:1px solid var(--geum);box-shadow:0 18px 60px rgba(0,0,0,.8),0 0 40px rgba(255,84,54,.35)}
 .spotcard .front{background:#0d0607}
 .cf{position:absolute;inset:6px;border:1px solid rgba(201,162,74,.55);border-radius:3px;display:flex;flex-direction:column;align-items:center;
-  padding:9px 9px 11px;gap:7px;background:radial-gradient(120% 70% at 50% 0%,rgba(192,54,42,.18),transparent 60%),#0d0607}
+  padding:10px 10px 9px;gap:8px;background:radial-gradient(120% 70% at 50% 0%,rgba(192,54,42,.18),transparent 60%),#0d0607}
 .cf::before{content:"";position:absolute;inset:3px;border:1px solid rgba(201,162,74,.18);border-radius:2px;pointer-events:none}
-.cf-top{display:flex;justify-content:space-between;width:100%;font-family:var(--serif);font-size:11px;color:var(--geum);letter-spacing:.06em}
+.cf-top,.cf-foot{display:flex;justify-content:space-between;align-items:center;width:100%;font-family:var(--serif);font-size:11.5px;color:var(--geum);letter-spacing:.04em;flex:none}
+.cf-foot{border-top:1px solid rgba(201,162,74,.25);padding-top:6px;font-size:11px;color:#a8925a}
 .cf .art{width:100%;aspect-ratio:5/3;background:#150c0d center/cover no-repeat;border:1px solid rgba(201,162,74,.45);flex:none}
-.cf-hanja{margin-top:auto;font-family:var(--serif);font-weight:700;font-size:23px;line-height:1.1;color:#e2463a;letter-spacing:.06em;text-shadow:0 0 14px rgba(255,84,54,.45)}
-.cf-name{font-family:var(--serif);font-weight:700;font-size:15px;color:var(--jae)}
-.cf-nat{font-size:10.5px;line-height:1.5;color:#a39486;text-align:center;min-height:3em}
-.spotcard .front.rev .cf{transform:rotate(180deg)}
+.cf-mid{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-align:center;min-height:0}
+.cf-hanja{font-family:var(--serif);font-weight:700;font-size:25px;line-height:1.1;color:#e2463a;letter-spacing:.06em;text-shadow:0 0 14px rgba(255,84,54,.45)}
+.cf-hanja:empty{display:none}
+.cf-name{font-family:var(--serif);font-weight:700;font-size:17px;color:var(--jae)}
+.cf-nat{font-size:11px;line-height:1.5;color:#b3a393}
+.cf-rev{display:none;position:absolute;top:34px;left:50%;transform:translateX(-50%);z-index:2;font-family:var(--serif);font-weight:700;font-size:11.5px;
+  letter-spacing:.06em;color:#fff;background:rgba(192,54,42,.95);border:1px solid rgba(255,140,110,.9);padding:2px 9px;border-radius:2px;white-space:nowrap}
+.spotcard .front.rev .art{transform:rotate(180deg)}
+.spotcard .front.rev .cf-rev{display:block}
+.spotcard .front.rev .cf{border-color:#ff5436}
 .spotpos{margin:0;font-family:var(--serif);font-size:14px;letter-spacing:.08em;color:var(--geum)}
 .spotname{margin:6px 0 0;font-family:var(--serif);font-weight:700;font-size:21px;color:#fff;opacity:0;transition:opacity .4s .45s;text-shadow:0 2px 14px #000}
 .spotmeta{margin:0;font-size:12.5px;color:#c9b9aa;opacity:0;transition:opacity .4s .55s;max-width:80vw;text-align:center}
@@ -518,7 +525,7 @@ button{font-family:inherit;color:inherit;cursor:pointer}
 
 <div class="spot" id="spot" hidden>
   <p class="spotpos"></p>
-  <div class="spotcard"><div class="inner"><div class="face back"></div><div class="face front"><div class="cf"><div class="cf-top"><span class="cf-no"></span><span class="cf-suit"></span></div><div class="art"></div><div class="cf-hanja"></div><div class="cf-name"></div><div class="cf-nat"></div></div></div></div></div>
+  <div class="spotcard"><div class="inner"><div class="face back"></div><div class="face front"><div class="cf"><div class="cf-top"><span class="cf-no"></span><span class="cf-suit"></span></div><div class="art"></div><span class="cf-rev">逆 · 깨어남</span><div class="cf-mid"><div class="cf-hanja"></div><div class="cf-name"></div><div class="cf-nat"></div></div><div class="cf-foot"><span class="cf-el"></span><span class="cf-pos"></span></div></div></div></div></div>
   <p class="spotname"></p>
   <p class="spotmeta"></p>
 </div>
@@ -1437,9 +1444,11 @@ async function spotlightCard(p,label){
   sp.querySelector(".cf-hanja").textContent=/[가-힣]/.test(c.hanja)||!c.hanja?"":c.hanja;
   sp.querySelector(".cf-name").textContent=c.nm;
   sp.querySelector(".cf-nat").textContent=c.nature;
+  sp.querySelector(".cf-el").textContent=`오행 ${c.el}`;
+  sp.querySelector(".cf-pos").textContent=/^확인/.test(label)?"確 확인의 패":((String(label).match(/[因緣隱敵助心時鬼符果]/)||[""])[0]+" 자리");
   sp.querySelector(".spotpos").textContent=label;
   sp.querySelector(".spotname").innerHTML=`${esc(c.full)}${p.rev?' <span class="rv">깨어남</span>':""}`;
-  sp.querySelector(".spotmeta").textContent=`오행 ${c.el} · ${c.src}`;
+  sp.querySelector(".spotmeta").textContent=srcText(c.src).replace(/네$/,"").replace(/귀$/,"귀")+"";
   sp.classList.remove("open","out"); sp.hidden=false;
   await wait(80);
   sp.classList.add("open"); bell(p.rev?392:587,.13);
@@ -1758,8 +1767,15 @@ function footButtons(done){
 function loadImg(src){ return new Promise(r=>{ const im=new Image(); im.onload=()=>r(im); im.onerror=()=>r(null); im.src=src; }); }
 function cover(ctx,im,x,y,w,h){ if(!im) return; const s=Math.max(w/im.width,h/im.height), sw=w/s, sh=h/s; ctx.drawImage(im,(im.width-sw)/2,(im.height-sh)/2,sw,sh,x,y,w,h); }
 function wrapText(ctx,t,x,y,maxW,lh,maxLines){
-  const words=[...t]; let lineStr="", lines=[];
-  for(const ch of words){ const test=lineStr+ch; if(ctx.measureText(test).width>maxW&&lineStr){ lines.push(lineStr); lineStr=ch; } else lineStr=test; }
+  /* 띄어쓰기 단위로 줄을 바꾸고, 한 낱말이 너무 길 때만 글자 단위로 자른다 */
+  let lineStr="", lines=[];
+  for(const w of String(t).split(" ")){
+    const test=lineStr?lineStr+" "+w:w;
+    if(ctx.measureText(test).width<=maxW){ lineStr=test; continue; }
+    if(lineStr) lines.push(lineStr);
+    if(ctx.measureText(w).width<=maxW){ lineStr=w; continue; }
+    lineStr=""; for(const ch of w){ const t2=lineStr+ch; if(ctx.measureText(t2).width>maxW&&lineStr){ lines.push(lineStr); lineStr=ch; } else lineStr=t2; }
+  }
   if(lineStr) lines.push(lineStr);
   if(lines.length>maxLines){ lines=lines.slice(0,maxLines); lines[maxLines-1]=lines[maxLines-1].slice(0,-1)+"…"; }
   lines.forEach((l,i)=>ctx.fillText(l,x,y+i*lh)); return lines.length;
@@ -1787,14 +1803,15 @@ async function makeShare(){
     const open=S.paid||i<3, c=p.card;
     x.fillStyle="#8a6f33"; x.font='700 30px "Gowun Batang", serif'; x.fillText(POS[i].k,cx+cw/2,cy-16);
     x.save();
-    if(open&&p.rev){ x.translate(cx+cw/2,cy+ch/2); x.rotate(Math.PI); x.translate(-(cx+cw/2),-(cy+ch/2)); }
     x.fillStyle="#0d0607"; x.fillRect(cx,cy,cw,ch);
     if(open){
       x.strokeStyle="rgba(201,162,74,.55)"; x.lineWidth=2; x.strokeRect(cx+7,cy+7,cw-14,ch-14);
       x.fillStyle="#c9a24a"; x.font='400 17px "Gowun Batang", serif';
       x.textAlign="left"; x.fillText(c.no,cx+16,cy+34); x.textAlign="right"; x.fillText(c.suit.replace(/\(.*\)/,""),cx+cw-16,cy+34); x.textAlign="center";
       const aw=cw-28, ah=Math.round(aw*0.6);
-      cover(x,arts[i],cx+14,cy+46,aw,ah);
+      if(p.rev){ x.save(); x.translate(cx+14+aw/2,cy+46+ah/2); x.rotate(Math.PI); cover(x,arts[i],-aw/2,-ah/2,aw,ah); x.restore();
+        x.fillStyle="rgba(192,54,42,.95)"; x.fillRect(cx+cw/2-44,cy+46+ah-14,88,28); x.fillStyle="#fff"; x.font='700 18px "Gowun Batang", serif'; x.fillText("逆 깨어남",cx+cw/2,cy+46+ah+6); }
+      else cover(x,arts[i],cx+14,cy+46,aw,ah);
       x.strokeStyle="rgba(201,162,74,.45)"; x.lineWidth=1.5; x.strokeRect(cx+14,cy+46,aw,ah);
       const hj=/[가-힣]/.test(c.hanja)||!c.hanja?"":c.hanja;
       if(hj){ x.fillStyle="#e2463a"; x.font='700 30px "Gowun Batang", serif'; x.fillText(hj,cx+cw/2,cy+ch-62); }
@@ -1805,7 +1822,7 @@ async function makeShare(){
     }
     x.restore();
     x.strokeStyle=p.rev&&open?"#ff5436":"#c9a24a"; x.lineWidth=3; x.strokeRect(cx+1.5,cy+1.5,cw-3,ch-3);
-    if(open&&p.rev){ x.fillStyle="#ff5436"; x.font='500 26px "Noto Sans KR", sans-serif'; x.fillText("깨어남",cx+cw/2,cy+ch+34); }
+
   });
   const ty=sy+2*(ch+92)+40, E=S.E;
   x.fillStyle="rgba(201,162,74,.5)"; x.fillRect(W/2-60,ty-20,120,2);
