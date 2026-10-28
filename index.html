@@ -217,8 +217,52 @@ button{font-family:inherit;color:inherit;cursor:pointer}
 .seal .what b{color:var(--geum);font-weight:400}
 .seal .price{font-family:var(--serif);font-weight:700;font-size:15px;color:var(--jae);margin:0 0 4px}
 .seal .price span{color:var(--jusa-hot)}
+.seal .orig{margin:0 0 2px;font-size:12.5px;color:#8d7f73}
+.seal .orig s{color:#a39486}
+.seal .orig b{margin-left:6px;font-weight:700;color:#fff;background:var(--jusa);padding:1px 6px;border-radius:1px;font-size:11.5px}
+.seal .price.big{font-size:22px;margin:2px 0 6px}
+.seal .timer{margin:0 auto 10px;display:inline-block;padding:5px 12px;border:1px solid rgba(255,84,54,.55);background:rgba(192,54,42,.14);
+  font-size:12.5px;color:#ffb39c;letter-spacing:.02em}
+.seal .timer b{font-family:var(--serif);font-size:16px;color:#fff;margin-left:4px;font-variant-numeric:tabular-nums}
+.seal .timer.over{border-color:var(--line);background:none;color:var(--jae-dim)}
+.visit{margin:8px 0 0;text-align:center;font-size:12px;line-height:1.6;color:rgba(236,224,210,.5);transition:opacity 1.6s ease;opacity:0}
+.visit b{display:block;font-family:var(--serif);font-weight:400;font-size:14px;letter-spacing:.08em;color:rgba(201,162,74,.85)}
+.visit.on{opacity:1}
 .seal .small{margin:0 0 14px;font-size:11px;color:#8d7f73}
 .tail{margin:12px 0 0;font-size:12px;color:var(--jae-dim);text-align:center;line-height:1.9}
+/* 종합장 */
+.ledger{margin:22px 0 6px;padding:20px 14px 16px;border:1px solid var(--geum-dim);border-radius:2px;position:relative;
+  background:linear-gradient(180deg,rgba(26,12,10,.92),rgba(10,5,7,.94));box-shadow:inset 0 0 0 4px rgba(10,5,7,.9),inset 0 0 0 5px rgba(201,162,74,.28);animation:rise .6s ease both}
+.ledger h3{margin:0;text-align:center;font-family:var(--serif);font-weight:700;font-size:19px;color:var(--geum);letter-spacing:.18em}
+.ledger h3 small{display:block;margin-top:2px;font-size:11px;letter-spacing:.08em;color:var(--jae-dim);font-weight:400}
+.ledger .lg-lq{margin:12px 0 14px;text-align:center;font-family:var(--serif);font-size:14px;line-height:1.7;color:var(--jae)}
+.ledger .lg-lk{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 14px}
+.ledger .lg-lk div{border:1px solid var(--line);padding:9px 8px;text-align:center;background:rgba(8,4,6,.6)}
+.ledger .lg-lk div.wide{grid-column:1/-1}
+.ledger .lg-lk b{display:block;font-family:var(--serif);font-weight:400;font-size:11px;letter-spacing:.12em;color:var(--geum-dim);margin-bottom:3px}
+.ledger .lg-lk span{font-family:var(--serif);font-weight:700;font-size:14.5px;line-height:1.6;color:var(--jae)}
+.ledger .lg-lk .hot{color:#ff8a6b}
+.ledger .lg-lt{margin:16px 0 8px;font-family:var(--serif);font-size:12px;letter-spacing:.14em;color:var(--geum);display:flex;align-items:center;gap:8px}
+.ledger .lg-lt::after{content:"";flex:1;height:1px;background:var(--line)}
+.ledger ol{list-style:none;margin:0;padding:0}
+.ledger li{display:grid;grid-template-columns:40px 34px 1fr;align-items:center;gap:8px;padding:6px 0;border-bottom:1px dashed rgba(201,162,74,.16);cursor:pointer}
+.ledger li:last-child{border-bottom:0}
+.ledger .lg-th{width:40px;aspect-ratio:2/3;background:#150c0d center/cover no-repeat;border:1px solid var(--geum-dim);border-radius:2px}
+.ledger .lg-th.rev{transform:rotate(180deg);border-color:var(--jusa-hot)}
+.ledger .lg-ps{font-family:var(--serif);font-weight:700;font-size:16px;color:var(--jusa-hot);text-align:center;line-height:1.1}
+.ledger .lg-ps small{display:block;font-size:9.5px;font-weight:400;color:var(--jae-dim);letter-spacing:0;margin-top:2px}
+.ledger .lg-nm{font-size:13px;line-height:1.55;color:#cdbfb1}
+.ledger .lg-nm em{font-style:normal;font-family:var(--serif);font-weight:700;font-size:14px;color:#e8c977;margin-right:4px}
+.ledger .lg-nm i{font-style:normal;font-size:10px;color:#fff;background:rgba(192,54,42,.92);padding:0 4px;margin-left:4px;border-radius:1px;vertical-align:1px}
+.ledger .lg-fx{margin:0;padding:0;list-style:none}
+.ledger .lg-fx p{margin:0 0 6px;padding-left:16px;position:relative;font-size:13.5px;line-height:1.8;color:var(--jae)}
+.ledger .lg-fx p::before{content:"符";position:absolute;left:0;top:1px;font-family:var(--serif);font-size:11px;color:var(--jusa-hot)}
+.ledger .lg-chips{display:flex;flex-wrap:wrap;gap:6px}
+.ledger .lg-chips span{font-family:var(--serif);font-size:12px;padding:3px 8px;border:1px solid var(--line);color:var(--jae);background:rgba(8,4,6,.6)}
+.ledger .lg-chips span small{color:var(--geum-dim);margin-left:4px;font-size:10.5px}
+.ledger .lg-cf{font-size:13px;color:#cdbfb1;line-height:1.8;margin:0}
+.ledger .lg-seal2{margin:16px auto 0;width:58px;height:58px;border:2px solid var(--jusa);color:var(--jusa-hot);display:grid;place-items:center;
+  font-family:var(--serif);font-weight:700;font-size:15px;line-height:1.1;text-align:center;transform:rotate(-8deg);opacity:.85}
 .tail b{color:var(--geum);font-weight:400}
 
 /* 약관 */
@@ -359,6 +403,7 @@ button{font-family:inherit;color:inherit;cursor:pointer}
     <div class="brand">
       <h1 class="mark"><img src="img/title.webp" alt="백귀타로"></h1>
       <div class="rule"></div>
+      <p class="visit" id="visit" aria-hidden="true"></p>
     </div>
     <div class="ask">
       <p class="seer-name">백귀술사 <b>호연</b> <span>狐煙</span></p>
@@ -423,9 +468,10 @@ button{font-family:inherit;color:inherit;cursor:pointer}
       <li>만 19세 미만은 보호자의 동의를 받은 뒤 이용하십시오.</li>
     </ul>
 
-    <h4>결제</h4>
+    <h4>복비(결제)</h4>
     <ul>
-      <li>봉인 해제(덮인 일곱 장 전체 풀이) 1회 3,990원 · 부가세 포함. 앞의 세 장은 무료입니다.</li>
+      <li>봉인 해제(덮인 일곱 장 전체 풀이)의 복비는 정가 15,000원(부가세 포함)입니다. 앞의 세 장은 무료입니다.</li>
+      <li>무료 세 장을 처음 연 때부터 10분 안에 봉인을 풀면 할인가 3,990원이 적용됩니다. 10분이 지나면 정가가 적용됩니다.</li>
       <li>단건 결제이며 자동 갱신이나 정기 결제는 없습니다.</li>
       <li>결제는 결제대행사를 통해 처리되며, 본 서비스는 카드번호 등 결제수단 정보를 보관하지 않습니다.</li>
     </ul>
@@ -755,7 +801,7 @@ function whenFor(el,base){
   }
 }
 const REV_LINES=[" 게다가 이 귀는 뒤집혀 나왔네. <strong>깨어 있다는 뜻일세.</strong> 같은 일이 더 빠르고 더 세게 오네."," 이 귀도 뒤집혀 나왔네. 잠든 귀가 아니라 지금 움직이는 귀일세."," 뒤집힌 채 나왔으니, 이 일은 벌써 시작됐다고 보게."];
-const TOPIC_LABEL={연애:"정",금전:"돈",직장:"일",사람:"사람 일",건강:"몸",아이:"아이 일",기타:"그 일"};
+const TOPIC_LABEL={연애:"사랑",금전:"돈",직장:"일",사람:"사람 사이",건강:"몸",아이:"아이 일",기타:"그 일"};
 function srcText(s){ const m=String(s||"").match(/《[^》]+》|「[^」]+」/); if(m) return `${m[0]}에 전하는 귀네`; if(/민간|전래|무속/.test(s||"")) return "민간에서 입으로 전해 오는 귀네"; return `${String(s).split("·")[0]}에 전하는 귀네`; }
 function posLabel(i){ if(i!==5) return POS[i].desc; const R=S.R||readQ(S.q), E=S.E; const who=R.who||(E&&["연애","사람"].includes(E.topic)?"상대":""); return who?`${who}의 속`:"이 일의 속"; }
 const GEN={목:"화",화:"토",토:"금",금:"수",수:"목"};
@@ -764,6 +810,7 @@ const QTYPE = [
  {k:"어느",re:/아니면|둘\s*중|어느\s*쪽|중에\s*뭐|중에\s*어느|vs/i},
  {k:"언제",re:/언제|시기|며칠|몇\s*월|몇\s*년|얼마나\s*걸|얼마만|올해\s*안|연내|빨리/},
  {k:"왜",re:/왜|이유|어째서|무슨\s*일|때문/},
+ {k:"속",re:/속마음|속내|진심|마음이\s*(뭘|뭔|어떨|어때)|무슨\s*생각|나를\s*어떻게\s*생각|날\s*어떻게\s*생각/},
  {k:"어떻게",re:/어떻게|방법|어쩌|어찌|뭘\s*해야|무엇을\s*해야|하면\s*좋/},
  {k:"누구",re:/누구|어떤\s*사람|누가/}
 ];
@@ -803,6 +850,14 @@ let toastT=null;
 function toast(msg){ const t=$("toast"); t.textContent=msg; t.hidden=false; clearTimeout(toastT); toastT=setTimeout(()=>t.hidden=true,2200); }
 function esc(t){return String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
 function wait(ms){return new Promise(r=>setTimeout(r,ms));}
+/* 오늘 판 앞에 앉은 인연 — 백귀사주와 같은 방식(한 번 방문하는 동안 같은 수) */
+(function(){
+  const K="baekgwi_entrance_no", MIN=173, MAX=218; let n=0;
+  try{ n=parseInt(sessionStorage.getItem(K),10); }catch(e){}
+  if(!(n>=MIN&&n<=MAX)){ n=MIN+Math.floor(Math.random()*(MAX-MIN+1)); try{ sessionStorage.setItem(K,String(n)); }catch(e){} }
+  const el=document.getElementById("visit");
+  if(el){ el.innerHTML=`오늘 호연의 판 앞에 앉은<b>${n}번째 인연</b>`; setTimeout(()=>el.classList.add("on"),900); }
+})();
 function store(k,v){try{ if(v===undefined) return JSON.parse(localStorage.getItem(k)||"null"); localStorage.setItem(k,JSON.stringify(v)); }catch(e){ return null; }}
 const IN_KAKAO=/KAKAOTALK/i.test(navigator.userAgent||"");
 
@@ -1203,6 +1258,9 @@ function buildReading(){
 
   const seed=P.reduce((a,p,i)=>a+(p.idx+1)*(i+3),0);
   let verdict=VERDICT[topic][grade];
+  if(/시험|합격|붙을|붙겠|수능|입시|면접|자격증|불합격|떨어질/.test(S.q)) verdict=["붙네. 자리가 이미 나 있네.","붙네. 한 번 미끄러진 뒤에 붙네.","지금 하는 식으로는 어렵네. 준비하는 방식을 바꿔야 붙네.","이번 판은 어렵네. 다음을 보고 지금부터 다시 채비하게."][grade];
+  else if(/소송|재판|고소|송사|법원|합의금/.test(S.q)) verdict=["이기네. 서류가 자네 편일세.","이기네. 다만 한 번 뒤집혔다가 이기네.","지금 이대로는 어렵네. 서류와 증거를 다시 다지게. 법의 일은 전문가와 꼭 함께 보게.","지금 흐름으론 불리하네. 끝까지 맞서기보다 물러설 길도 함께 보게. 법의 일은 전문가와 상의하게."][grade];
+  if(qtype==="될까"&&/(해야|할까|말까|좋을까|괜찮을까|될까요?\s*말까)/.test(S.q)&&grade<=1) verdict=verdict.replace(/^(되네|들어오네|풀리네|오네)\.\s*/,"그리 하게. 패는 자네 편일세. ");
   if(qtype==="어느"&&R.A&&R.B){ const pickS=(grade<=1?R.A:R.B).replace(/[?？!.]+$/,""); verdict=`패는 ‘${pickS}’ 쪽을 가리키네. `+(grade<=1?"망설일 까닭이 없네.":"쉽지는 않으나 그쪽이 덜 다치는 길일세."); }
   return {topic,qtype,combos,el,elN:tally[el],rev,grade,score,why,leanSuit,leanN:suits[leanSuit],daegui,seed,
     verdict,when:whenFor(el,S.rec?S.rec.t:Date.now()),tie:pickV(TIE[topic],seed)};
@@ -1216,7 +1274,7 @@ function jo(w,t){const b=bat(w);
 
 function frame(i,p,E){
   const extra=["隱","敵","心"].includes(POS[i].k)?"":(PS[POS[i].k]||{})[suitKey(p.card.suit)];
-  const core=frameCore(i,p,E);
+  const core=frameCore(i,p,E).replace(/ {2,}/g," ").replace(/ <br>/g,"<br>");
   if(!extra) return core;
   const CON=["하나 더 보이네. ","그리고 이것도 알아 두게. ",`${SUIT_SHORT[p.card.suit]}에서 나온 패라 덧붙이자면, `,"","이 패가 하는 말이 하나 더 있네. "];
   return core+"<br>"+CON[(p.idx+i)%CON.length]+extra;
@@ -1268,38 +1326,40 @@ function frameCore(i,p,E){
   const q1=`‘${esc(R.first)}’`, q2=`‘${esc(R.last)}’`;
   const same=(a,b)=>P[a].card.suit===P[b].card.suit;
   switch(i){
-    case 0: return `${open}<br>${nm}${jo(n,"이가")} 나왔군. ${c.nature}… ${tale}${rv}<br>`+
+    case 0: return `${open}<br>${nm}${jo(n,"이가")} 나왔군. ${tale}${rv}<br>`+
       (R.when&&/자꾸|계속|오래/.test(R.when) ? `자네가 ‘${R.when}’ 그렇다 했지. 그 되풀이가 바로 이 귀의 짓일세. 어제오늘 생긴 일이 아니네.`
        : R.when ? `자네는 ‘${R.when}’${jo(R.when,"이라")} 했지만, 이 귀가 자리를 잡은 건 그보다 한참 앞일세.`
        : R.short ? `물음은 짧아도 뿌리는 깊네. 이 귀가 앉은 지 꽤 됐어.`
        : R.many ? `자네가 ${q1} 하고 꺼낸 그 사정… 그게 시작이 아닐세. 이 귀가 먼저 와 있었네.`
        : `자네가 들고 온 그 물음, 어제 생긴 게 아닐세. 이 귀가 먼저 와 있었네.`);
-    case 1: return `${open}<br>${nm}… ${c.nature}. ${haji(c.act)}${rv}<br>`+
+    case 1: return `${open}<br>${nm}… ${haji(c.act)}${rv}<br>`+
       (same(0,1) ? `앞서 나온 ${P[0].card.nm}${jo(P[0].card.nm,"과와")} 같은 갈래일세. 뿌리의 일이 지금도 그대로 이어지고 있다는 말이지. `
                  : `앞서 나온 ${P[0].card.nm}${jo(P[0].card.nm,"과와")} 갈래가 다르네. 처음 문제와 지금 문제가 달라졌다는 뜻일세. `)+
       (R.who ? `그리고 이 기운은 ${R.who} 쪽으로 가장 세게 돌고 있네.` : E.tie);
-    case 2: return `${open}<br>${nm}${jo(n,"이가")} 숨어 있었군. ${c.nature}. ${tale}${rv}<br>`+
-      (R.short ? `자네는 되느냐만 묻지만, 정작 봐야 할 건 그게 아닐세. ` : `자네는 ${q2} 하고 묻지만, 정작 봐야 할 건 그게 아닐세. `)+pickV(D.隱,sd)+
+    case 2: return `${open}<br>${nm}${jo(n,"이가")} 숨어 있었군. ${tale}${rv}<br>`+
+      (R.short ? `자네는 되느냐만 묻지만` : E.qtype==="왜" ? `자네는 왜냐고 묻지만` : E.qtype==="언제" ? `자네는 언제냐고 묻지만` : E.qtype==="어떻게" ? `자네는 어찌하면 되느냐고 묻지만` : E.qtype==="누구" ? `자네는 누구냐고 묻지만` : E.qtype==="속" ? `자네는 그 속을 묻지만` : R.last.length<6 ? `자네는 답을 묻지만` : `자네는 ${q2} 하고 묻지만`)+`, 정작 봐야 할 건 그게 아닐세. `+pickV(D.隱,sd)+
       (R.feel ? `<br>자네 속의 그 ${R.feel}… 그것도 이 귀가 키운 것일세.` : "");
-    case 3: return `${open}<br>${nm}${jo(n,"이가")} 버티고 섰네. ${c.nature}. ${tale}${rv}<br>${pickV(D.敵,sd)}`;
+    case 3: return `${open}<br>${nm}${jo(n,"이가")} 버티고 섰네. ${tale}${rv}<br>${pickV(D.敵,sd)}`;
     case 4: {
       const e3=P[3].card.el, e4=c.el;
       const vs = KE[e4]===e3 ? `막고 선 ${P[3].card.nm}보다 이 패의 기운이 세네. 버틸 만하다는 말일세.`
                : KE[e3]===e4 ? `다만 막고 선 ${P[3].card.nm}의 기운이 이 패를 누르고 있네. 쉽게 버티지는 못할 걸세.`
-               : `막는 것과 받치는 것의 힘이 엇비슷하네. 결국 자네가 어느 쪽에 힘을 싣느냐일세.`;
-      return `${open}<br>${nm}${jo(n,"이가")} 나왔군. ${c.nature}.<br>${haji(c.act)}<br>이 귀가 자네를 돕는다는 말은 아닐세. 이 귀가 무슨 수를 쓰는지 먼저 알아본 자네 눈이 자네를 돕는 것이지. 알고 나면 같은 덫에 덜 걸리네.<br>`+
-        `${vs} ${p.rev?"거꾸로 나왔으니 그 눈을 흐리게 하는 일이 한 번 더 올 걸세.":""} ${pickV(D.助,sd)}`;
+               : GEN[e4]===e3 ? `그런데 이 패의 기운이 막고 선 ${P[3].card.nm}${jo(P[3].card.nm,"을를")} 오히려 키우네. 도움을 받되 기대지는 말게.`
+               : GEN[e3]===e4 ? `막고 선 ${P[3].card.nm}의 기운이 오히려 이 패를 살려 주네. 막히는 그 자리에서 도움이 나온다는 말일세.`
+               : `막는 것과 받치는 것이 같은 기운이라 힘이 엇비슷하네. 결국 자네가 어느 쪽에 힘을 싣느냐일세.`;
+      return `${open}<br>${nm}${jo(n,"이가")} 나왔군. ${haji(c.act)}<br>이 귀가 자네를 돕는다는 말은 아닐세. 이 귀가 무슨 수를 쓰는지 먼저 알아본 자네 눈이 자네를 돕는 것이지. 알고 나면 같은 덫에 덜 걸리네.<br>`+
+        `${vs} ${p.rev?"거꾸로 나왔으니 그 눈을 흐리게 하는 일이 한 번 더 올 걸세. ":""}${pickV(D.助,sd)}`;
     }
     case 5: {
       const who=R.who||(["연애","사람"].includes(E.topic)?"상대":"");
-      if(!who) return `${open}<br>이 일의 속에 ${nm}${jo(n,"이가")} 비치네. ${c.nature}. ${haji(c.act)}${rv}<br>겉으로 드러난 사정과 속사정이 다르다는 말일세. 보이는 것만 믿지 말게.`;
-      return `${open}<br>${who}의 속에 ${nm}의 그림자가 비치네. ${c.nature}.<br>`+
+      if(!who) return `${open}<br>이 일의 속에 ${nm}${jo(n,"이가")} 비치네. ${haji(c.act)}${rv}<br>겉으로 드러난 사정과 속사정이 다르다는 말일세. 보이는 것만 믿지 말게.`;
+      return `${open}<br>${who}의 속에 ${nm}의 그림자가 비치네.<br>`+
         `${who}${jo(who,"이가")} 그런 사람이라는 말이 아닐세. 그 속에서 이 귀가 하는 짓이 이렇다는 것이지. ${haji(c.act)}${rv}<br>${pickV(D.心,sd)}`;
     }
     case 6: return `${open}<br>${nm}${jo(n,"이가")} 때를 쥐고 있네. ${c.nature}.<br>`+
-      `열 장을 통틀어 <em>${E.el}</em> 기운이 가장 짙으니, ${E.when.d}.<br>갈리는 때는 <strong>${E.when.t}</strong>… 그 언저리에 반드시 한 번 움직이네. `+
+      `열 장을 통틀어 <em>${E.el}</em> 기운이 가장 짙으니, ${E.when.d}.<br>`+whenTalk(R,E)+`갈리는 때는 <strong>${E.when.t}</strong>… 그 언저리에 반드시 한 번 움직이네. `+
       `${p.rev?"게다가 거꾸로 나왔으니 그보다 이르게 올 수도 있네.":"그 전에는 아무리 밀어도 안 움직이니 서두르지 말게."}`;
-    case 7: return `${open}<br>${nm}일세. ${srcText(c.src)}. ${c.nature}… ${tale}${rv}<br>`+
+    case 7: return `${open}<br>${nm}일세. ${srcText(c.src)}. ${tale}${rv}<br>`+
       `왜 하필 이 귀가 자네한테 붙었느냐. ${pickV(D.why,sd)}`;
     case 8: {
       const g=P[7].card;
@@ -1309,13 +1369,22 @@ function frameCore(i,p,E){
         (same(7,8) ? `붙은 귀와 떼는 패가 같은 갈래라, 자네 손으로 충분히 풀 수 있는 매듭일세. ` : "")+
         `거창한 걸 벌일 것 없네. 이 둘만, 그 때가 오기 전에 하게.`;
     }
-    case 9: return `${open}<br>${nm}${jo(n,"으로")} 닫혔군. ${c.nature}. ${haji(c.act)}${rv}<br>`+
+    case 9: return `${open}<br>${nm}${jo(n,"으로")} 닫혔군. ${haji(c.act)}${rv}<br>`+
       `앞서 때의 자리에 ${P[6].card.nm}${jo(P[6].card.nm,"이가")} 앉았으니, 이 끝은 그 무렵에 오네. `+
       (same(0,9) ? `처음 장과 같은 갈래로 닫혔으니, 시작한 그 자리로 돌아와 끝난다는 말일세. ` : "")+
       pickV(E.grade<=1?D.果.g:D.果.b,sd);
   }
 }
 
+const POS_WORD=["뿌리","지금","숨은 것","막는 것","돕는 것","속","때","붙은 귀","푸는 법","끝"];
+const SUIT_PLACE={"대귀":"몸과 운","검(소드)":"말과 시비","잔(컵)":"정과 인연","전(펜타클)":"돈과 셈","지(완드)":"넋과 마음"};
+function whenTalk(R,E){
+  const w=R.when; if(!w||/자꾸|계속|오래|요즘|맨날|항상/.test(w)) return "";
+  const soon=/이번|이달|곧|당장|오늘|내일|이번 주|금방/.test(w);
+  if(soon&&E.el==="금") return `자네가 말한 ‘${w}’… 패도 그 안을 가리키네. `;
+  if(soon) return `자네는 ‘${w}’${jo(w,"을를")} 물었지만, 패는 그보다 뒤를 가리키네. `;
+  return `자네가 말한 ‘${w}’… 패가 보는 때는 이렇네. `;
+}
 /* 열 장을 한데 놓고 보는 말 */
 function wholeTalk(E){
   const P=S.picked, lean=SUIT_TALK[E.leanSuit], fv=P[9];
@@ -1326,11 +1395,14 @@ function wholeTalk(E){
   t+= E.rev>=5 ? `<br>거꾸로 선 귀가 절반이나 되네. 일이 이미 제멋대로 움직이고 있다는 말일세. `
     : E.rev===0 ? `<br>거꾸로 선 귀가 하나도 없네. 아직 잠잠하니, 자네가 먼저 움직이면 막는 것이 없네. `
     : E.rev>=3 ? `<br>거꾸로 선 귀가 셋 넘게 보이네. 생각보다 일이 빨리 돌고 있어. ` : "<br>";
-  if(E.daegui>=3) t+=`대귀가 여럿 들었으니, 사람 힘만으로는 안 되는 대목이 하나 있을 걸세. `;
+  if(E.daegui>=3&&E.leanSuit!=="대귀") t+=`대귀가 여럿 들었으니, 사람 힘만으로는 안 되는 대목이 하나 있을 걸세. `;
   t+= fv.rev ? `무엇보다 끝자리 ${fv.card.nm}${jo(fv.card.nm,"이가")} 거꾸로 선 게 마음에 걸리네. `
              : `끝자리 ${fv.card.nm}${jo(fv.card.nm,"이가")} 바로 서 있는 건 다행일세. `;
-  t+= P[4].rev ? `받쳐 줄 자리마저 흔들리고 있고. ` : `받쳐 주는 자리는 굳건하네. `;
-  return t;
+  t+= fv.rev&&P[4].rev ? `받쳐 줄 자리마저 흔들리고 있고. `
+    : fv.rev ? `그래도 받쳐 주는 자리는 굳건하네. `
+    : P[4].rev ? `다만 받쳐 줄 자리가 흔들리고 있네. ` : `받쳐 주는 자리도 굳건하네. `;
+  t+= `<br>이제 내 답을 말하지.`;
+  return t.replace(/ {2,}/g," ").replace(/ <br>/g,"<br>");
 }
 
 
@@ -1342,7 +1414,7 @@ const PS = {
  敵:{대귀:"막는 것이 사람이 아니니 싸울 상대가 없네. 피해 가는 것이 이기는 것일세.",검:"막는 건 누군가의 입일세. 말로 맞서면 지네. 글로 남기게.",잔:"막는 건 정일세. 미운 사람이 아니라 끊지 못하는 사람이 자네를 막네.",전:"막는 건 돈줄일세. 쥔 쪽이 따로 있으니, 그 사람의 사정을 먼저 알아보게.",지:"막는 건 자네 안의 겁일세. 해 보기도 전에 안 될 이유를 먼저 세고 있네."},
  助:{대귀:"큰 흐름이 한 번은 자네 쪽으로 부네. 그 바람이 불 때 망설이지 말게.",검:"바른말 해 주는 사람이 하나 있네. 듣기 싫어도 그 말이 자네를 살리네.",잔:"자네를 아끼는 마음 하나가 곁에 있네. 혼자 버티지 말고 기대게.",전:"작은 돈줄 하나가 살아 있네. 크게 벌이지 말고 그것부터 지키게.",지:"자네의 첫 느낌이 맞을 때가 많네. 머리보다 그 느낌을 한 번 믿어 보게."},
  心:{대귀:"그 속은 그 사람도 어쩌지 못하는 사정에 묶여 있네. 탓하기 전에 사정을 보게.",검:"그 속엔 하지 못한 말이 쌓여 있네. 말을 꺼낼 틈을 먼저 주게.",잔:"그 속엔 아직 정이 남아 있네. 다만 그걸 드러낼 마음이 없을 뿐일세.",전:"그 속엔 셈이 먼저 서 있네. 마음보다 손익을 먼저 따지고 있네.",지:"그 속은 지금 어지럽네. 그 사람도 자기 마음을 다 모르네."},
- 時:{대귀:"때가 오면 갑자기 오네. 준비할 틈이 짧으니 미리 채비해 두게.",검:"때는 한마디 말과 함께 오네. 그 무렵 들어오는 연락을 놓치지 말게.",잔:"때는 마음이 먼저 알아채네. 문득 그 사람이 떠오르는 날이 그 언저리일세.",전:"때는 서류나 돈이 오가는 날에 맞물려 있네. 그 무렵 날짜를 잘 보게.",지:"때는 자네가 지쳐 손을 놓은 뒤에 오네. 너무 붙잡고 기다리지 말게."},
+ 時:{대귀:"때가 오면 갑자기 오네. 준비할 틈이 짧으니 미리 채비해 두게.",검:"때는 한마디 말과 함께 오네. 그 무렵 들어오는 연락을 놓치지 말게.",잔:"때는 마음이 먼저 알아채네. 문득 마음이 먼저 움직이는 날이 그 언저리일세.",전:"때는 서류나 돈이 오가는 날에 맞물려 있네. 그 무렵 날짜를 잘 보게.",지:"때는 자네가 지쳐 손을 놓은 뒤에 오네. 너무 붙잡고 기다리지 말게."},
  鬼:{대귀:"이 귀는 사람의 마음이 아니라 운의 틈에 붙었네. 몸가짐부터 단속하게.",검:"이 귀는 말에 붙어 다니네. 입을 다무는 것만으로도 절반은 떨어지네.",잔:"이 귀는 정에 붙어 다니네. 끊지 못하는 마음이 이 귀의 집일세.",전:"이 귀는 돈에 붙어 다니네. 지갑과 통장을 정리하는 것부터가 떼는 일일세.",지:"이 귀는 넋에 붙어 다니네. 잠과 끼니를 바로 하면 힘을 잃네."},
  符:{대귀:"이 처방은 몸으로 하는 것일세. 머리로 이해하려 들지 말고 그냥 하게.",검:"이 처방은 입을 다스리는 것일세. 사흘만 지켜도 달라지네.",잔:"이 처방은 마음을 정하는 것일세. 정했으면 뒤돌아보지 말게.",전:"이 처방은 셈을 바로 하는 것일세. 작은 것부터 바로 세우게.",지:"이 처방은 넋을 쉬게 하는 것일세. 하루 한 번이면 족하네."},
  果:{대귀:"끝은 사람 손을 떠나 정해지네. 다만 그 끝을 맞는 자세는 자네가 고르네.",검:"끝은 말로 맺어지네. 마지막 한마디를 곱게 하게.",잔:"끝은 마음으로 맺어지네. 미련을 남기지 않는 쪽이 이기네.",전:"끝은 숫자로 드러나네. 그때 가서 놀라지 않도록 지금 셈을 해 두게.",지:"끝은 자네 마음이 먼저 알 것일세. 그 느낌을 무시하지 말게."}
@@ -1382,15 +1454,15 @@ function findCombos(P){
   const bySuit={}; P.forEach((p,i)=>(bySuit[p.card.suit]=bySuit[p.card.suit]||[]).push(i));
   Object.entries(bySuit).forEach(([s,pos])=>{
     if(pos.length>=5) add({id:"suit-"+s,name:`${suitKey(s)} ${pos.length>=6?"육합":"오합"}`,han:pos.length>=6?"六合":"五合",pos,tone:s==="대귀"?1:0,rank:2,
-      line:`${s} 갈래가 ${pos.length}장이나 모였네. ${SUIT_MEAN[s]}에 일이 몰려 있다는 뜻일세. 다른 데 힘 빼지 말고 그 한 곳을 다스리게.`});
+      line:`${SUIT_TALK[s]}${jo(SUIT_TALK[s],"이가")} ${pos.length}장이나 모였네. 이 일의 무게가 온통 ${SUIT_PLACE[s]}에 쏠려 있다는 뜻일세. 다른 데 힘 빼지 말고 그 한 곳을 다스리게.`});
   });
   if((bySuit["대귀"]||[]).length===3&&(bySuit["대귀"]).some(i=>P[i].rev)) add({id:"daegui3",name:"대귀 삼진",han:"三陣",pos:bySuit["대귀"],tone:1,rank:2,
     line:"대귀 셋이 진을 쳤네. 사람 힘 밖의 일이 세 갈래로 다가오고 있네. 이번 일은 이기려 들지 말고 다치지 않는 것을 먼저 보게."});
   const byRank={}; P.forEach((p,i)=>{ const r=rankOf(p.card); (byRank[r]=byRank[r]||[]).push(i); });
   Object.entries(byRank).forEach(([r,pos])=>{
     const kn=KO_NUM[r-1];
-    if(pos.length>=3) add({id:"rank3-"+r,name:`${kn}의 삼동`,han:"三同",pos,tone:0,rank:2,line:`서로 다른 갈래에서 같은 수 ${kn}${jo(kn,"이가")} 셋이나 나왔네. 같은 일이 세 군데서 한꺼번에 울린다는 뜻일세. 하나만 풀면 셋이 함께 풀리네.`});
-    else if(pos.length===2&&pos.includes(0)&&pos.includes(9)) add({id:"rankpair",name:`처음과 끝의 쌍수`,han:"首尾雙數",pos,tone:0,rank:2,line:`처음 자리와 끝자리에 같은 수 ${kn}${jo(kn,"이가")} 섰네. 이 일은 시작한 그 모양 그대로 끝난다는 뜻일세. 처음 마음을 떠올리게.`});
+    if(pos.length>=3) add({id:"rank3-"+r,name:`${r}번 삼동`,han:"三同",pos,tone:0,rank:2,line:`서로 다른 갈래에서 같은 ${r}번 패가 셋이나 나왔네. 같은 일이 세 군데서 한꺼번에 울린다는 뜻일세. 하나만 풀면 셋이 함께 풀리네.`});
+    else if(pos.length===2&&pos.includes(0)&&pos.includes(9)) add({id:"rankpair",name:`처음과 끝의 쌍수`,han:"首尾雙數",pos,tone:0,rank:2,line:`처음 자리와 끝자리에 같은 ${r}번 패가 섰네. 이 일은 시작한 그 모양 그대로 끝난다는 뜻일세. 처음 마음을 떠올리게.`});
   });
   if(new Set(P.slice(0,5).map(p=>p.card.el)).size===5) add({id:"cycle",name:"오행 순환",han:"五行循環",pos:[0,1,2,3,4],tone:-1,rank:3,
     line:"앞의 다섯 자리에 목·화·토·금·수가 하나씩 다 들었네. 흔치 않은 판일세. 기운이 한 바퀴를 돌았으니 막힌 것이 풀릴 때가 됐네."});
@@ -1400,7 +1472,7 @@ function findCombos(P){
   for(let i=0;i<8;i++){
     const a=P[i].card.el,b=P[i+1].card.el,c=P[i+2].card.el;
     if(GEN[a]===b&&GEN[b]===c&&(i>=3||!P[i].rev)){ add({id:"chain",name:"상생의 줄",han:"相生連",pos:[i,i+1,i+2],tone:-1,rank:3,
-      line:`${POS[i].k}·${POS[i+1].k}·${POS[i+2].k} 세 자리가 ${a}→${b}→${c}로 서로를 살리며 이어졌네. 한 가지가 풀리면 다음이 저절로 풀리는 줄일세.`}); break; }
+      line:`‘${POS_WORD[i]}’·‘${POS_WORD[i+1]}’·‘${POS_WORD[i+2]}’ 세 자리가 이어졌네. ${a} 기운이 ${b}${jo(b,"을를")} 낳고, ${b}${jo(b,"이가")} 다시 ${c}${jo(c,"을를")} 낳네. 한 가지가 풀리면 다음이 저절로 풀리는 줄일세.`}); break; }
   }
   if(P[0].card.suit===P[9].card.suit) add({id:"loop",name:"수미상관",han:"首尾相關",pos:[0,9],tone:0,rank:4,
     line:"처음 자리와 끝자리가 같은 갈래로 닫혔네. 시작한 곳으로 돌아와 끝난다는 뜻일세. 처음 그 일을 다시 들여다보게."});
@@ -1411,15 +1483,16 @@ function findCombos(P){
   if(P[6].rev&&P[9].rev) add({id:"wake2",name:"때와 끝의 깨어남",han:"時果俱醒",pos:[6,9],tone:1,rank:4,
     line:"때의 자리와 끝자리가 함께 뒤집혀 깨어났네. 일이 생각보다 빨리 닥친다는 뜻일세. 채비를 서두르게."});
   for(let i=0;i<7;i++){ if(P[i].rev&&P[i+1].rev&&P[i+2].rev&&P[i+3].rev){ add({id:"wakeline",name:"깨어난 줄",han:"醒列",pos:[i,i+1,i+2,i+3],tone:1,rank:5,
-    line:`${POS[i].k}부터 ${POS[i+3].k}까지 네 장이 줄지어 깨어났네. 이 구간의 일은 이미 움직이고 있다는 뜻일세.`}); break; } }
+    line:`‘${POS_WORD[i]}’부터 ‘${POS_WORD[i+3]}’까지 네 장이 줄지어 깨어났네. 이 구간의 일은 이미 움직이고 있다는 뜻일세.`}); break; } }
   if(P.every(p=>!p.rev)) add({id:"calm",name:"고요한 판",han:"靜局",pos:[],tone:-1,rank:5,
     line:"열 장 가운데 뒤집힌 패가 한 장도 없네. 귀들이 모두 잠들어 있는 고요한 판일세. 지금 움직이면 막는 것이 없네."});
   return out.sort((a,b)=>a.rank-b.rank).slice(0,5);
 }
 
 /* ── 잠깐! ── */
-async function halt(c){
+async function halt(c,sub){
   const h=$("halt");
+  h.querySelector(".hsub").textContent=sub||"이 패들이 함께 나왔다고?";
   h.querySelector(".hname").textContent=c.name;
   h.querySelector(".hhan").textContent=c.han;
   h.hidden=false; h.classList.remove("out");
@@ -1636,9 +1709,14 @@ async function openReading(){
     if(!S.replay){ bell(698,.1); $("stage").classList.add("shake"); setTimeout(()=>$("stage").classList.remove("shake"),620); }
     if(link){ const li=link.pos.find(i=>i<3); $("fl"+li).parentElement.classList.add("combo"); }
     const ln=link?S.picked[link.pos.find(i=>i<3)].card.nm:"";
+    if(!S.replay){ await halt({name:`숨은 조합 ${hidden.length}개`,han:"合",pos:link?[link.pos.find(i=>i<3)]:[]},"덮인 패 속에 조합이 숨어 있다고?"); if(!live()) return; }
+    const nC=Math.max(1,Math.min(E.combos.length,5));
     await line("잠깐",(link?`방금 연 <em>${ln}</em>${jo(ln,"이가")} 덮인 패 하나와 이어져 있네. 짝이 숨어 있다는 뜻일세.<br>`:"")+
-      `덮인 일곱 장 속에 <strong>조합 ${hidden.length}개</strong>가 숨어 있네. 이런 판은 흔치 않네.`);
+      `덮인 일곱 장 속에 <strong>조합 ${hidden.length}개</strong>가 숨어 있네. 이런 판은 흔치 않네.<br>`+
+      `복비를 내고 봉인을 풀면, 조합 하나에 한 장씩 <strong>확인의 패 ${nC}장</strong>을 더 뽑게 해 주지. 패에게 한 번 더 묻는 걸세.`);
     if(!live()) return;
+  } else if(E.combos.length){
+    await line("",`앞서 나온 조합 덕에, 복비를 내고 봉인을 풀면 <strong>확인의 패 ${Math.min(E.combos.length,5)}장</strong>을 더 뽑게 되네.`); if(!live()) return;
   }
   await dots(); if(!live()) return;
   await line("",`세 장을 열었네. 여기까지는 자네도 어렴풋이 짐작하던 것일 테지.<br>나머지 일곱 장이… 자네가 끝내 모르던 쪽이네.`); if(!live()) return;
@@ -1662,17 +1740,47 @@ async function openReading(){
       <b>合</b> ${hidden.length?`숨은 조합 ${hidden.length}개의 풀이`:"조합 풀이"}<br>
       <b>確</b> 확인의 패 ${nConf}장 — 패에게 한 번 더 묻기
     </p>
-    <p class="price">일곱 장 전부 <span>3,990원</span></p>
-    <p class="small">한 번 결제로 끝. 자동결제 없음. 풀이는 생성형 AI가 함께 씁니다.</p>
-    <button class="btn" id="pay">봉인을 풀다</button>
+    <p class="orig">정가 <s>15,000원</s><b>73% 할인</b></p>
+    <p class="price big" id="price">복비 <span>3,990원</span></p>
+    <p class="timer" id="offer">할인이 끝나기까지<b id="offerT">10:00</b></p>
+    <p class="small">복비는 한 번만 받네. 자동으로 다시 나가는 일은 없네.<br>풀이는 생성형 AI가 함께 씁니다.</p>
+    <button class="btn" id="pay">복비 내고 봉인 풀기</button>
     <p class="legal" style="margin-top:12px"><button id="t2">이용안내 · 환불규정</button></p>`;
   readBox().appendChild(seal); if(!S.replay) toBottom();
+  offerTimer(T);
   $("pay").addEventListener("click",unseal,{once:true});
   $("t2").addEventListener("click",()=>openSheet("terms"));
   footButtons(false);
 }
 
 /* ── 봉인이 깨진다 ── */
+/* 할인 10분 — 무료 풀이를 처음 본 때부터 센다. 새로고침해도 다시 늘지 않는다. */
+const OFFER_MS=10*60*1000;
+function offerStart(){
+  const k="baekgwi.offer."+normKey(S.q);
+  let t=store(k); if(!t){ t=Date.now(); store(k,t); }
+  return t;
+}
+function offerTimer(T){
+  const t0=offerStart();
+  const tick=()=>{
+    if(T!==RUN||!$("offer")) return false;
+    const left=OFFER_MS-(Date.now()-t0);
+    if(left<=0){
+      S.price=15000;
+      $("offer").classList.add("over"); $("offer").innerHTML="할인 시간이 지났네. 정가로 받네.";
+      $("price").innerHTML="복비 <span>15,000원</span>";
+      document.querySelector(".seal .orig")?.remove();
+      return false;
+    }
+    S.price=3990;
+    const m=Math.floor(left/60000), s2=Math.floor(left%60000/1000);
+    $("offerT").textContent=`${String(m).padStart(2,"0")}:${String(s2).padStart(2,"0")}`;
+    return true;
+  };
+  if(!tick()) return;
+  const iv=setInterval(()=>{ if(!tick()) clearInterval(iv); },1000);
+}
 async function unseal(){
   if(S.busy) return; S.busy=true;
   const T=RUN, live=()=>T===RUN;
@@ -1718,12 +1826,13 @@ async function showPaid(){
            : E.qtype==="왜" ? `자네가 물은 것은 까닭이었네. 까닭은 ${S.picked[0].card.nm}에 있네. 자네 탓이 반, 붙은 것이 반일세.`
            : E.qtype==="어떻게" ? `자네가 물은 것은 방법이었네. 부(符)에 적힌 그 둘이면 되네. 더 벌이지 말게.`
            : E.qtype==="누구" ? `자네가 물은 것은 사람이었네. 심(心)에 나온 그 모습이 그 사람의 속일세.`
+           : E.qtype==="속" ? `자네가 물은 것은 그 속이었네. 속은 심(心) 자리에서 이미 말했네. ${S.picked[5].card.nm}의 그림자, 그게 지금 그 속일세.`
            : E.qtype==="어느"&&R.A&&R.B ? `자네는 ‘${esc(R.A)}’ 쪽과 ‘${esc(R.B)}’ 쪽 사이에서 물었네. 패가 한쪽을 골랐네.`
            : R.short ? `자네가 물은 것은 되느냐 안 되느냐였지.` : `자네는 ‘${esc(R.last)}’ 하고 물었지.`;
   await line("열 장을 한데", wholeTalk(E)); if(!live()) return;
   await nextTap("확답 듣기"); if(!live()) return;
   await dots(); if(!live()) return;
-  await line("확답",`그래서 내 답은 이렇네.<br>${qt}<br><strong>${E.verdict}</strong>`); if(!live()) return;
+  await line("확답",`그래서 내 답은 이렇네.<br>${qt}<br>${(["왜","어떻게","누구","언제","속"].includes(E.qtype))?"그리고 끝을 묻는다면… ":""}<strong>${E.verdict}</strong>`); if(!live()) return;
   recordNow();
 
   await confirmStage(T); if(!live()) return;
@@ -1734,6 +1843,9 @@ async function showPaid(){
     `다만 패는 끝을 이미 정해 뒀네… <strong>${E.when.t}</strong>, 그때 자네가 어느 손을 쓰느냐만 남았네.<br>`+
     `부(符)에 적힌 것부터 하게. 그게 첫 매듭일세.`); if(!live()) return;
 
+  await dots(); if(!live()) return;
+  await line("호연","이 판을 한 장에 적어 두었네. 두고두고 보게.");
+  readBox().appendChild(ledger());
   setBg("img/seer-smile.webp");
   const tail=document.createElement("p");
   tail.className="tail";
@@ -1764,13 +1876,14 @@ async function confirmStage(T){
     });
     if(!live()) return;
   }
-  const P=S.picked; let ok=0;
+  const P=S.picked; let ok=0; S.cOk=0; S.cTargets=targets;
   for(let k=0;k<n;k++){
     const d=S.confirm[k], c=targets[k], key=P[(c.pos&&c.pos.length?c.pos[0]:9)].card;
     if(!S.replay){ await spotlightCard(d,`확인의 패 ${k+1} · ${c.name}`); if(!live()) return; }
     const dc=d.card;
     const rel = (dc.suit===key.suit||dc.el===key.el||GEN[dc.el]===key.el) ? "確" : (KE[dc.el]===key.el||KE[key.el]===dc.el) ? "轉" : "靜";
     if(rel==="確") ok++;
+    S.cOk=ok;
     const mini=`<span class="minicard${d.rev?" rev":""}" style="background-image:url('${dc.art}')"></span>`;
     const why = dc.suit===key.suit ? `${key.nm}${jo(key.nm,"과와")} 같은 갈래에서 나왔군`
               : dc.el===key.el ? `${key.nm}${jo(key.nm,"과와")} 같은 ${dc.el} 기운이로군`
@@ -1821,6 +1934,29 @@ function footButtons(done){
   $("againBtn").addEventListener("click",()=>{ reset(); try{ if(history.state&&history.state.bg) history.back(); }catch(e){} });
   if(done) $("shareBtn").addEventListener("click",makeShare);
   requestAnimationFrame(()=>{ if(!S.replay) toBottom(); });
+}
+
+/* ── 종합장 — 열 장을 한 장에 ── */
+function ledger(){
+  const E=S.E, P=S.picked, R=S.R||readQ(S.q), g=P[7].card, f=P[8].card;
+  const rows=P.map((p,i)=>`<li data-v="${i}"><span class="lg-th${p.rev?" rev":""}" style="background-image:url('${p.card.art}')"></span>`+
+    `<span class="lg-ps">${POS[i].k}<small>${POS_WORD[i]}</small></span>`+
+    `<span class="lg-nm"><em>${p.card.nm}</em>${p.rev?"<i>逆</i>":""}<br>${p.card.nature}</span></li>`).join("");
+  const combos=E.combos.length?`<div class="lg-lt">조합</div><div class="lg-chips">${E.combos.map(c=>`<span>${c.name}<small>${c.han}</small></span>`).join("")}</div>`:"";
+  const n=(S.confirm||[]).length, ok=S.cOk||0;
+  const NW=["","한","두","세","네","다섯"];
+  const conf=n?`<div class="lg-lt">확인의 패</div><p class="lg-cf">${NW[n]} 번 다시 물어 `+(ok?`<b style="color:var(--geum);font-weight:400">${NW[ok]} 번</b> 같은 말이 나왔네. `:`한 번도 같은 말이 나오지 않았네. `)+`${ok*2>=n?"패의 말이 흔들리지 않네.":"패가 아직 망설이고 있네."}</p>`:"";
+  const box=document.createElement("div"); box.className="ledger";
+  box.innerHTML=`<h3>종합장<small>總合帳 · ${fmtDate(S.rec?S.rec.t:Date.now())}의 패</small></h3>`+
+    `<p class="lg-lq">“${esc(S.q)}”</p>`+
+    `<div class="lg-lk"><div class="wide"><b>확답</b><span class="hot">${E.verdict}</span></div>`+
+    `<div><b>갈리는 때</b><span>${E.when.t}</span></div><div><b>붙은 귀</b><span>${g.nm}${P[7].rev?" (깨어 있음)":""}</span></div></div>`+
+    `<div class="lg-lt">열 장</div><ol>${rows}</ol>`+
+    `<div class="lg-lt">푸는 법</div><div class="lg-fx"><p>${g.fix}</p><p>${f.fix}</p></div>`+
+    combos+conf+
+    `<div class="lg-seal2">狐煙<br>之印</div>`;
+  box.querySelectorAll("li").forEach(li=>li.addEventListener("click",()=>viewCard(+li.dataset.v)));
+  return box;
 }
 
 /* ── 결과 한 장 ── */
