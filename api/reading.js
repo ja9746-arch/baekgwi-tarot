@@ -23,7 +23,7 @@ function route(req) {
   return null;
 }
 
-async function callModel(req, system, prompt) {
+async function callModel(req, system, prompt, maxTok = 3200) {
   const r = route(req);
   if (!r) return null;
 
@@ -36,7 +36,7 @@ async function callModel(req, system, prompt) {
       },
       body: JSON.stringify({
         model: MODEL,
-        max_tokens: 3200,
+        max_tokens: maxTok,
         temperature: 1,
         messages: [
           { role: "system", content: system },
@@ -61,7 +61,7 @@ async function callModel(req, system, prompt) {
     },
     body: JSON.stringify({
       model: MODEL.replace(/^anthropic\//, ""),
-      max_tokens: 3200,
+      max_tokens: maxTok,
       temperature: 1,
       system,
       messages: [{ role: "user", content: prompt }],
@@ -173,9 +173,9 @@ ${asked}`;
     return `${head}
 
 지금은 열 장 가운데 앞의 세 장만 무료로 먼저 여는 때다.
-- 이 세 장은 이 일의 뿌리(因), 지금 얽힌 것(緣), 자네가 못 보는 것(隱)이다.
+- 앞의 세 장은 이 일의 뿌리(因), 지금 얽힌 것(緣), 자네가 못 보는 것(隱)이다. 이번에 풀 것은 아래 적힌 자리뿐이다.
 - 때(시기)와 확답, 붙은 귀, 떼는 법은 덮인 일곱 장에 있으니 절대 말하지 마라.
-- 대신 隱 자리 끝에서 "이 너머에 무엇이 있는지"를 궁금하게 만드는 한 문장으로 맺어라. 돈이나 결제 이야기는 하지 마라.
+- 아래에 隱 자리가 있으면, 그 끝에서 "이 너머에 무엇이 있는지"를 궁금하게 만드는 한 문장으로 맺어라. 돈이나 결제 이야기는 하지 마라.
 - 물음 속 사람·마음·사정을 직접 집어 말하라. 질문자가 '이 술사가 내 사정을 안다'고 느껴야 한다.
 
 열린 패 (이 순서대로 풀어라)
@@ -183,7 +183,7 @@ ${list}
 
 지시
 - 위 패 순서대로 정확히 ${cards.length}개의 풀이를 쓴다.
-- 질문에 나온 말을 세 자리 모두에서 직접 되짚어라.`;
+- 질문에 나온 말을 자리마다 직접 되짚어라. 한 자리당 서너 문장으로 짧게 쓴다.`;
   }
 
   return `${head}
@@ -274,7 +274,7 @@ export default async function handler(req, res) {
 
   try {
     const t0 = Date.now();
-    const raw = await callModel(req, SYSTEM, buildPrompt(q, cards, bone, stage));
+    const raw = await callModel(req, SYSTEM, buildPrompt(q, cards, bone, stage), Math.min(3200, 300 + cards.length * 520));
     console.log("reading", stage, raw ? "ok" : "fail", Date.now() - t0 + "ms");
     if (!raw) {
       res.status(502).json({ error: "패를 읽다 끊겼다" });

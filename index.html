@@ -407,6 +407,7 @@ body{word-break:keep-all;overflow-wrap:anywhere}
 .spot.out{opacity:0}
 .spotcard{width:min(66vw,270px,37vh);aspect-ratio:2/3;perspective:1000px}
 .spottap{margin:14px 0 0;font-size:12.5px;letter-spacing:.06em;color:#e8c977;opacity:0;transition:opacity .5s;text-shadow:0 2px 10px #000}
+.spothome{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));left:max(12px,calc(50% - 248px))}
 .spot.ready .spottap{opacity:1;animation:tapPulse 1.8s ease-in-out infinite}
 .spot.ready{cursor:pointer}
 @keyframes tapPulse{0%,100%{opacity:.55}50%{opacity:1}}
@@ -674,6 +675,7 @@ body{word-break:keep-all;overflow-wrap:anywhere}
 </div>
 
 <div class="spot" id="spot" hidden>
+  <button class="home spothome" id="spotHome" type="button">처음으로</button>
   <p class="spotpos"></p>
   <div class="spotcard"><div class="inner"><div class="face back"></div><div class="face front"><div class="cf"><div class="cf-top"><span class="cf-no"></span><span class="cf-suit"></span></div><div class="art"></div><span class="cf-rev">逆 · 깨어남</span><div class="cf-mid"><div class="cf-hanja"></div><div class="cf-name"></div><div class="cf-nat"></div></div><div class="cf-foot"><span class="cf-el"></span><span class="cf-pos"></span></div></div></div></div></div>
   <p class="spotname"></p>
@@ -987,10 +989,10 @@ const INTENTS=[
 ];
 /* 여러 가지를 한꺼번에 물으면 맨 앞에 꺼낸 것을 본 물음으로 친다 */
 function intentOf(q){
-  let best=null, at=1e9; INTENTS.forEach((x,k)=>{ const m=q.match(x.re); if(m&&m.index<at){ at=m.index; best=x; } });
-  /* 물음 자체의 주제와 어긋나는 '무른' 뜻은 버린다 — 예: 팀장님 속마음은 연애가 아님 */
-  const SOFT={새인연:["연애"],돈:["금전"],운세:["기타"]};
-  if(best&&SOFT[best.k]){ const tp=topicOf(q); if(tp!=="기타"&&!SOFT[best.k].includes(tp)) return null; }
+  /* 물음 자체의 주제와 어긋나는 '무른' 뜻은 건너뛰고, 남은 것 가운데 맨 앞에 나온 것을 쓴다 */
+  const SOFT={새인연:["연애"],돈:["금전"],운세:["기타"]}, tp=topicOf(q);
+  let best=null, at=1e9;
+  INTENTS.forEach(x=>{ if(SOFT[x.k]&&tp!=="기타"&&!SOFT[x.k].includes(tp)) return; const m=q.match(x.re); if(m&&m.index<at){ at=m.index; best=x; } });
   return best;
 }
 
@@ -1191,6 +1193,7 @@ document.querySelectorAll(".sheet").forEach(sh=>sh.addEventListener("click",e=>{
 document.querySelectorAll("[data-close]").forEach(b=>b.addEventListener("click",()=>closeSheet(b.dataset.close)));
 $("openTerms").addEventListener("click",()=>openSheet("terms"));
 $("read").addEventListener("click",e=>{ if(!e.target.closest("button")) S.skip=true; });
+$("spotHome").addEventListener("click",e=>{ e.stopPropagation(); $("home").click(); });
 $("home").addEventListener("click",()=>{ reset(); try{ if(history.state&&history.state.bg) history.back(); }catch(e){} });
 
 /* ── 1. 질문 ── */
@@ -1199,16 +1202,16 @@ q.addEventListener("focus",()=>{ $("s-ask").classList.add("typing"); $("stage").
 q.addEventListener("blur",()=>{ $("s-ask").classList.remove("typing"); $("stage").classList.remove("typing"); });
 /* 주제 고르기 — 누르면 본보기 물음을 넣어 주고, 글에 주제 낱말이 없을 때 그 주제로 읽는다 */
 const CHIPS=[
- {l:"연애",t:"연애",q:["지금 만나는 사람과 끝까지 갈 수 있을까요","그 사람과 잘될 수 있을까요"]},
- {l:"재회",t:"연애",q:["헤어진 그 사람과 다시 만날 수 있을까요","떠난 사람에게 다시 연락이 올까요"]},
- {l:"속마음",t:"연애",q:["그 사람은 나를 어떻게 생각할까요","그 사람 속마음이 궁금해요"]},
- {l:"돈",t:"금전",q:["올해 안에 돈이 들어올까요","돈이 왜 자꾸 새는지 알고 싶어요"]},
- {l:"사업",t:"금전",q:["지금 사업을 시작해도 될까요","가게를 계속 끌고 가도 될까요"]},
- {l:"직장",t:"직장",q:["지금 이직해도 될까요","이 회사에 계속 다녀도 될까요"]},
- {l:"시험",t:"직장",q:["이번 시험에 붙을 수 있을까요","면접에 붙을까요"]},
- {l:"사람 사이",t:"사람",q:["그 사람과 사이가 풀릴까요","주변 사람들과 왜 자꾸 틀어질까요"]},
- {l:"가족",t:"사람",q:["가족과의 갈등이 풀릴까요","부모님과 사이가 나아질까요"]},
- {l:"건강",t:"건강",q:["요즘 몸이 무거운데 괜찮을까요","잠을 못 자는데 언제 나아질까요"]}
+ {l:"연애",t:"연애",q:["지금 만나는 사람과 끝까지 갈 수 있을까요","남자친구가 바람필까 걱정돼요","여자친구가 헤어지자고 할까 봐 불안해요","이 사람과 결혼까지 갈 수 있을까요","요즘 연인과 자꾸 싸우는데 괜찮을까요","언제쯤 좋은 인연이 생길까요","썸 타는 사람과 사귈 수 있을까요","이 사람과 헤어져야 할까요"]},
+ {l:"재회",t:"연애",q:["헤어진 그 사람과 다시 만날 수 있을까요","떠난 사람에게 다시 연락이 올까요","전 애인에게 먼저 연락해도 될까요","그 사람도 아직 나를 생각할까요","재회하면 이번엔 잘될까요","헤어진 지 오래됐는데 다시 이어질 수 있을까요"]},
+ {l:"속마음",t:"연애",q:["그 사람은 나를 어떻게 생각할까요","그 사람이 나를 좋아할까요","연락이 뜸해진 그 사람 속마음이 궁금해요","그 사람 진심이 뭘까요","그 사람이 나에게 관심이 있을까요","고백하면 받아줄까요"]},
+ {l:"돈",t:"금전",q:["올해 안에 돈이 들어올까요","돈이 왜 자꾸 새는지 알고 싶어요","빌려준 돈을 돌려받을 수 있을까요","대출을 다 갚을 수 있을까요","지금 주식을 사도 될까요","이번 투자 괜찮을까요","사기를 당하는 건 아닐까요","올해 재물운이 어떨까요"]},
+ {l:"사업",t:"금전",q:["지금 사업을 시작해도 될까요","가게를 계속 끌고 가도 될까요","동업해도 괜찮을까요","매출이 언제쯤 오를까요","가게를 정리해야 할까요","새로운 일을 벌여도 될까요"]},
+ {l:"직장",t:"직장",q:["지금 이직해도 될까요","이 회사에 계속 다녀도 될까요","취업은 언제쯤 될까요","이번에 승진할 수 있을까요","회사에서 잘릴까 봐 걱정돼요","퇴사하고 다른 길을 가도 될까요","직장 상사와의 관계가 나아질까요"]},
+ {l:"시험",t:"직장",q:["이번 시험에 붙을 수 있을까요","면접에 붙을까요","자격증 시험에 합격할까요","원하는 대학에 붙을 수 있을까요","공무원 시험 붙을 수 있을까요","서류에서 떨어질까 걱정돼요"]},
+ {l:"사람 사이",t:"사람",q:["그 사람과 사이가 풀릴까요","주변 사람들과 왜 자꾸 틀어질까요","친구가 나를 배신할까요","이 사람을 믿어도 될까요","멀어진 친구와 화해할 수 있을까요","소송에서 이길 수 있을까요"]},
+ {l:"가족",t:"사람",q:["가족과의 갈등이 풀릴까요","부모님과 사이가 나아질까요","시댁과의 관계가 좋아질까요","형제와 다툰 일이 풀릴까요","아이와의 사이가 나아질까요","이사해도 괜찮을까요"]},
+ {l:"건강",t:"건강",q:["요즘 몸이 무거운데 괜찮을까요","잠을 못 자는데 언제 나아질까요","수술이 잘 될까요","부모님 건강이 괜찮을까요","요즘 마음이 지쳤는데 언제 나아질까요","올해 사고 날 일은 없을까요"]}
 ];
 S.tp=""; const chipN={};
 (function(){
@@ -1460,7 +1463,7 @@ function pick(el){
   if(arr.length===need){
     bell(440,.12);
     setTimeout(()=>{$("pickmsg").style.opacity="0";},600);
-    const T=RUN; setTimeout(()=>{ if(T===RUN){ confirm?finishConfirm():openReading(); } },1300);
+    const T=RUN; setTimeout(()=>{ if(T===RUN){ confirm?finishConfirm():openReading(); } },confirm?1300:800);
   }
 }
 function flyTo(src,slot){
@@ -1487,6 +1490,7 @@ function flyTo(src,slot){
 
 /* ── 풀이 엔진 ── */
 function topicOf(q){
+  if(/건강|수술|병원|아프|아픈|입원|통증|검사\s*결과/.test(q)&&!/임신|난임|시험관/.test(q)) return "건강";
   let best="기타", n=0;
   TOPICS.forEach(t=>{ const c=(q.match(t.re)||[]).length; if(c>n){n=c;best=t.k;} });
   if(best==="기타"&&S.tp) return S.tp;
@@ -2013,29 +2017,28 @@ async function openReading(){
   setBg("img/seer-card.webp");
   show("s-read");
   $("read").innerHTML=""; $("readfoot").innerHTML="";
-  const job = S.replay ? null : askSeer(E,0,3,"free");
+  /* 첫 장은 혼자 따로 불러 빨리 받고, 둘째·셋째는 첫 장을 읽는 사이에 받는다 */
+  const jobs = S.replay ? null : [askSeer(E,0,1,"free"), askSeer(E,1,3,"free")];
+  const freeText=(i)=>{ if(!jobs) return Promise.resolve(null);
+    const pr=i===0?jobs[0].then(a=>a?a[0]:null):jobs[1].then(a=>a?a[i-1]:null);
+    return Promise.race([pr, wait(i===0?6000:9000).then(()=>null)]); };
 
   if(S.replay){
     await line("호연",`자네가 <b>${fmtDate(S.rec.t)}</b>에 들고 온 물음일세.<br><em>“${esc(S.q)}”</em><br>그때 나온 패를 그대로 펼쳐 두었네. 패는 같은 물음에 두 번 답하지 않네.`);
     if(!live()) return;
   } else {
-    await dots(); if(!live()) return;
-    await line("호연",`자네가 품고 온 것은 <em>“${esc(S.q)}”</em> 이것이로군.`); if(!live()) return;
-    await dots(); if(!live()) return;
-    await line("",`열 장이 깔렸네. 뿌리와 얽힘, 그리고 자네가 못 보던 것까지… 세 장은 그냥 열어 주지.`); if(!live()) return;
+    await line("호연",`<em>“${esc(S.q)}”</em>… 이것이로군.<br>열 장이 깔렸네. 앞의 세 장은 그냥 열어 주지.`); if(!live()) return;
   }
-  let written = S.replay ? S.freeTexts : null;
-  if(!S.replay){
-    let fin=false; const race=Promise.race([job, wait(12000).then(()=>null)]).then(v=>{ written=v; fin=true; });
-    while(!fin){ await dots(700); if(!live()) return; }
-    await race;
-  }
+  const written = S.replay ? S.freeTexts : null;
   if(!live()) return;
   const used=[];
   for(let i=0;i<3;i++){
-    await dots(); if(!live()) return;
+    const pend=written?Promise.resolve(written[i]):freeText(i);
+    if(i>0){ await dots(); if(!live()) return; }
     await reveal(i); if(!live()) return;
-    const body=(written&&written[i])?written[i]:frame(i,S.picked[i],E);
+    let got=null, fin=false; pend.then(v=>{ got=v; fin=true; });
+    while(!fin){ await dots(600); if(!live()) return; }
+    const body=got||frame(i,S.picked[i],E);
     used.push(body);
     await line(POS[i].ko+" · "+posLabel(i), body); if(!live()) return;
     $("fl"+i).parentElement.classList.remove("cur");
