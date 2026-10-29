@@ -181,6 +181,7 @@ body{word-break:keep-all;overflow-wrap:anywhere}
 #s-ask .ask>*{flex-shrink:0}
 .biz a{color:inherit}
 .line.verdict{position:relative}
+.line.verdict::after{content:"";display:block;clear:both}
 .line.verdict .vh{display:block;font-size:1.22em;line-height:1.45;margin:2px 0 4px;color:var(--jusa-pale)}
 .line.verdict .vr{display:block}
 .lean{display:flex;flex-direction:column;align-items:flex-start;gap:5px;margin-top:8px}
@@ -197,7 +198,7 @@ body{word-break:keep-all;overflow-wrap:anywhere}
 .ledger .lg-lk .lean-bar{flex-direction:row!important}
 .ledger .lg-lk .lg-wake,.ledger .lg-lk .lg-ww{display:block}
 .ledger .lg-ww{display:block;margin-top:5px;font-size:12px;line-height:1.5;color:#b9a99a;font-weight:400;letter-spacing:0}
-.stamp{float:right;margin:2px -2px 6px 12px;width:52px;height:52px;display:flex;align-items:center;justify-content:center;shape-outside:margin-box;
+.stamp{float:right;margin:0 -2px 4px 12px;width:52px;height:52px;display:flex;align-items:center;justify-content:center;shape-outside:margin-box;
   font-family:var(--serif);font-weight:700;font-size:17px;line-height:1.05;color:var(--jusa-ink);border:2.5px solid var(--jusa-ink);border-radius:4px;
   transform:rotate(-12deg);opacity:.9;box-shadow:inset 0 0 0 2px rgba(226,57,42,.25);text-shadow:0 0 6px rgba(255,60,40,.4);
   animation:stampIn .5s cubic-bezier(.2,1.6,.4,1) both}
@@ -4258,7 +4259,7 @@ async function showPaid(){
   await dots(); if(!live()) return;
   const vl=await line("확답",`그래서 내 답은 이렇네.<br>${qt}<br>${E.qtype==="언제"?"그리고 끝을 묻는다면… ":""}${verdictHTML(E)}`); if(!live()) return;
   /* 확답에 붉은 도장을 찍는다 */
-  if(vl){ vl.classList.add("verdict"); const st=document.createElement("span"); st.className="stamp"+(S.replay?" still":""); st.innerHTML="確<br>答"; vl.appendChild(st);
+  if(vl){ vl.classList.add("verdict"); const st=document.createElement("span"); st.className="stamp"+(S.replay?" still":""); st.innerHTML="確<br>答"; vl.insertBefore(st, vl.firstChild);
     if(!S.replay){ await wait(380); try{ boom(); bgmSwell(.85,2400); }catch(e){} $("stage").classList.add("shake"); setTimeout(()=>$("stage").classList.remove("shake"),420); await wait(500); } }
   recordNow();
 
@@ -4451,10 +4452,10 @@ async function makeShare0(T){
       else cover(x,arts[i],cx+14,ay,aw,ah);
       x.strokeStyle="rgba(201,162,74,.45)"; x.lineWidth=1.5; x.strokeRect(cx+14,ay,aw,ah);
       const hj=/[가-힣]/.test(c.hanja)||!c.hanja?"":c.hanja;
-      if(hj){ x.fillStyle="var(--jusa-ink)"; x.font=`400 ${hj.length>3?30:36}px "Song Myung", serif`; x.fillText(hj,cx+cw/2,cy+ch-66);
+      if(hj){ x.fillStyle="#e2423a"; x.font=`400 ${hj.length>3?30:36}px "Song Myung", serif`; x.fillText(hj,cx+cw/2,cy+ch-66);
         x.fillStyle="#ece0d2"; x.font=`400 ${c.nm.length>4?27:31}px "Song Myung", serif`; x.fillText(c.nm,cx+cw/2,cy+ch-24); }
       else { /* 한자 이름이 없는 귀는 우리말 이름을 붉은 자리에 크게 — 칸이 비어 보이지 않게 */
-        x.fillStyle="var(--jusa-ink)"; x.font=`400 ${c.nm.length>4?30:36}px "Song Myung", serif`; x.fillText(c.nm,cx+cw/2,cy+ch-44); }
+        x.fillStyle="#e2423a"; x.font=`400 ${c.nm.length>4?30:36}px "Song Myung", serif`; x.fillText(c.nm,cx+cw/2,cy+ch-44); }
     } else {
       cover(x,backI,cx,cy,cw,ch); x.fillStyle="rgba(6,3,4,.55)"; x.fillRect(cx,cy,cw,ch);
       x.fillStyle="#ff5436"; x.font='400 70px "Song Myung", serif'; x.fillText("封",cx+cw/2,cy+ch/2+24);
@@ -4468,7 +4469,7 @@ async function makeShare0(T){
   if(S.paid){
     if(whenNeedOf(E)){
       x.fillStyle="#c9a24a"; x.font='400 32px "Song Myung", serif'; x.fillText("때",W/2,ty+40);
-      x.fillStyle="var(--jusa-soft)"; x.font='400 52px "Song Myung", serif'; x.fillText(E.when.t,W/2,ty+100);
+      x.fillStyle="#ff9b84"; x.font='400 52px "Song Myung", serif'; x.fillText(E.when.t,W/2,ty+100);
       x.fillStyle="#a39486"; x.font='400 28px "Noto Sans KR", sans-serif'; wrapText(x,whenWW(E),W/2,ty+140,860,36,1);
     } else {
       x.fillStyle="#c9a24a"; x.font='400 32px "Song Myung", serif'; x.fillText("패의 기울기",W/2,ty+40);
@@ -4479,7 +4480,7 @@ async function makeShare0(T){
 
     x.fillStyle="#c9a24a"; x.font='400 32px "Song Myung", serif'; x.fillText(whenNeedOf(E)?`확답 · 바라는 쪽으로 열에 ${NUMW[E.lean||5]}`:"확답",W/2,ty+190);
     { const vt=String(E.verdict).replace(/<[^>]+>/g,""), m=vt.match(/^(.*?[.!?])\s+(.+)$/), head=m?m[1]:vt, rest=m?m[2]:"", ymax=H-150;
-      x.fillStyle="var(--jusa-pale)"; x.font='400 54px "Song Myung", serif'; let hl=countLines(x,head,900); if(hl>2){ x.font='400 46px "Song Myung", serif'; hl=Math.min(3,countLines(x,head,900)); }
+      x.fillStyle="#ffd9cf"; x.font='400 54px "Song Myung", serif'; let hl=countLines(x,head,900); if(hl>2){ x.font='400 46px "Song Myung", serif'; hl=Math.min(3,countLines(x,head,900)); }
       const hlh=hl>2?58:66; wrapText(x,head,W/2,ty+252,900,hlh,3); let y=ty+252+hl*hlh-14;
       if(rest){ const left=Math.max(0,Math.floor((ymax+30-y)/42)); if(left>0){ x.fillStyle="#d8cabd"; x.font='400 31px "Noto Sans KR", sans-serif'; y+=wrapText(x,rest,W/2,y+8,880,42,Math.min(4,left))*42+8; } }
       }
