@@ -489,11 +489,9 @@ body{word-break:keep-all;overflow-wrap:anywhere}
 .board .slot.cur .flipper{box-shadow:0 0 0 1px var(--jusa-hot),0 0 14px rgba(255,84,54,.7)}
 #s-read .board{margin-top:6px;transition:padding .35s ease,gap .35s ease}
 #s-read.slim .board{padding:4px 5px 3px;gap:2px!important;border-color:rgba(201,162,74,.14);background:rgba(6,3,4,.5)}
-#s-read.slim .board .slot .pos{font-size:8.5px!important;margin-bottom:0!important;opacity:.62;line-height:1.3}
-#s-read.slim .board .flipper{transform:scale(.72);transform-origin:top center}
-#s-read.slim .board .slot{height:calc(var(--sh,46px) * .74)}
-#s-read.slim .board::after{content:"패를 누르면 다시 볼 수 있네";display:block;grid-column:1/-1;margin-top:1px;
-  font-family:var(--serif);font-size:9.5px;letter-spacing:.04em;color:var(--jae-dim);opacity:.55;text-align:center}
+#s-read.slim .board .slot .pos{font-size:9px!important;margin-bottom:1px!important;opacity:.6;line-height:1.25}
+#s-read.slim .board .flipper{aspect-ratio:3/4}
+#s-read.slim .board .flipper .face{border-radius:2px}
 /* 크게 뒤집기 */
 .spot{position:fixed;inset:0;z-index:400;display:flex;overflow-y:auto;padding:16px 0;flex-direction:column;align-items:center;justify-content:center;justify-content:safe center;
   gap:10px;background:rgba(5,2,3,.97);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);transition:opacity .3s}
@@ -2370,6 +2368,9 @@ function buildReading(){
   /* 신앙 — 떠나는 물음이 아니라 들이는 물음일 때 */
   if(I&&I.k==="신앙"&&/따라갈까|다녀도|나가도|시작해도|믿어도|가\s*볼까|가볼까|배워도|다녀\s*볼까|나가\s*볼까/.test(S.q||"")&&!/옮길|옮기|그만|떠날|끊을|안\s*나가|나오려/.test(S.q||""))
     verdict=["다녀 보게. 마음 둘 자리가 하나 생기면 자네 하루가 한결 가벼워지네.","다녀 보게. 다만 처음부터 깊이 들어가지는 말고, 한 철 발만 담그고 보게.","서두르지 말게. 사람 때문에 가는 것인지 마음 때문에 가는 것인지 한 번 가려 보게.","지금은 들이지 말게. 마음이 허할 때 들어가면 사람에게 기대게 되네. 돈이나 시간을 내라 하면 더욱 멀리하게."][grade];
+  /* 가까운 이를 보낸 뒤 — 유품과 빈자리 */
+  if(/유품|유골|납골|산소|제사상|돌아가신|떠나보낸|보낸\s*지|상(을)?\s*치르|장례\s*뒤|사십구재|빈자리/.test(S.q||"")&&!/반려|강아지|고양이/.test(S.q||"")&&!(I&&/^(임종|상속|가족건강|반려이별|명절)$/.test(I.k)))
+    verdict=["천천히 하게. 오늘 한 칸만 손대도 되네. 끝내는 것이 잊는 것은 아닐세.","천천히 하게. 하루에 한 상자면 되네. 버릴 것과 남길 것을 미리 정하지 말고, 손에 잡히는 대로 보게.","지금은 서두르지 말게. 아직 마음이 덜 여물었네. 가까운 사람 하나를 불러 함께 여는 날을 잡게.","혼자 하지 말게. 지금 혼자 그 방을 열면 자네가 오래 앓네. 사람을 부르고, 하나만 곁에 남겨 두게."][grade];
   /* 식구가 집을 나간 일 — '거리를 두라'는 답이 아닐세 */
   if(/(아들|딸|동생|형|오빠|언니|누나|아이|애)(이|가|은|는)?\s*.{0,10}집(을|에서)?\s*나(갔|간|가)/.test(S.q||"")&&!(I&&/^(독립|가출)$/.test(I.k)))
     verdict=["돌아오네. 멀리 가지 않았으니, 찾아 나서기보다 돌아올 자리를 비워 두고 짧은 안부만 보내 두게.","돌아오네. 다만 바로는 아닐세. 다그치는 말 대신 '언제든 와도 된다'는 말 한 줄만 남겨 두게.","스스로는 쉽게 돌아오지 않네. 자주 가던 곳과 가까운 사람에게 먼저 연락해 보고, 무사한 것부터 확인하게.","혼자 기다릴 일이 아닐세. 오늘 안에 가까운 사람들에게 수소문하고, 연락이 닿지 않으면 경찰에 알리게. 돌아왔을 때 할 말은 그 뒤에 고르게."][grade];
