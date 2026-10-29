@@ -2157,7 +2157,7 @@ $("go").addEventListener("click",()=>{
     openSheet("same");
     return;
   }
-  S.q=text; S.rec=null; S.freeTexts=null; S.paidTexts=null; S.paid=false; S.agreedAt=null; S.pay=null; S.replay=false; S.pin=false;
+  S.q=text; S.q0=null; S.rec=null; S.freeTexts=null; S.paidTexts=null; S.paid=false; S.agreedAt=null; S.pay=null; S.replay=false; S.pin=false;
   S.aiIntent=null;
   askIntent(text);
   S.order=[];
@@ -4267,7 +4267,7 @@ function setupBoard(){
 }
 function replay(rec){
   enterFlow();
-  S.q=rec.q; S.rec=rec; S.replay=true; S.pin=false; S.tp=rec.tp||"";
+  S.q=rec.q; S.q0=null; S.rec=rec; S.replay=true; S.pin=false; S.tp=rec.tp||"";
   S.picked=rec.picks.map(([i,r])=>({card:DECK[i],idx:i,rev:!!r}));
   const cl=a=>Array.isArray(a)?a.map(x=>x==null?x:cleanAI(x)):null;   /* 저장된 글도 다시 걸러 낸다 */
   S.paid=!!rec.paid; S.agreedAt=null; S.pay=rec.pay||null; S.freeTexts=cl(rec.free); S.paidTexts=cl(rec.paidTexts);
@@ -4288,6 +4288,8 @@ async function openReading(){
     if(!live()) return;
     const extra=await askMore(); if(!live()) return;
     if(extra){
+      /* 되읊을 때는 손님이 처음 적은 물음을 읊는다 */
+      S.q0=S.q;
       S.q=(S.q+" "+extra).replace(/\s+/g," ").trim().slice(0,180);
       S.aiIntent=null; S.R=null;
       await line("호연",`<em>“${esc(extra)}”</em>… 그 말이면 되네. 다시 보겠네.`); if(!live()) return;
@@ -4541,7 +4543,7 @@ async function showPaid(){
            : E.qtype==="누구" ? `자네가 물은 것은 사람이었네.`
            : E.qtype==="속" ? `자네가 물은 것은 ${E.nopartner?"인연":posLabel(5).replace(/의 속$/,"")}의 속이었네.`
            : E.qtype==="어느"&&R.A&&R.B ? `자네는 ‘${esc(R.A)}’ 쪽과 ‘${esc(R.B)}’ 쪽 사이에서 물었네.`
-           : R.short ? `자네가 물은 것은 되느냐 안 되느냐였지.` : `자네는 ‘${esc(R.last)}’ 하고 물었지.`;
+           : R.short ? `자네가 물은 것은 되느냐 안 되느냐였지.` : `자네는 ‘${esc((S.q0&&(readQ(S.q0)||{}).last)||R.last)}’ 하고 물었지.`;
   if(E.qtype==="어떻게"&&!E.aiv&&!/게[.!]/.test(String(E.verdict))&&!(S.rec&&S.rec.fx&&S.rec.fx.v)) E.verdict=String(E.verdict)+" "+actLine(E,S.picked[8].idx+8);
   if(S.aiAns&&!S.replay&&!(S.rec&&S.rec.fx&&S.rec.fx.v&&S.rec.fx.ai)){ E.verdict0=E.verdict; E.verdict=S.aiAns; E.aiv=1; }
   await line("열 장을 한데", wholeTalk(E)); if(!live()) return;
