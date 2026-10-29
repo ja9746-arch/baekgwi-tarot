@@ -145,11 +145,11 @@ function hage(t) {
   s = s.replace(new RegExp("(거|게)야" + END, "g"), "걸세").replace(new RegExp("말이야" + END, "g"), "말일세");
   s = s.replace(new RegExp("([가-힣])다고" + END, "g"), "$1다네").replace(/([가-힣])이일세/g, (m, c) => (jong(c) ? c + "일세" : m));
   s = s.replace(new RegExp("([가-힣])이야" + END, "g"), (m, c) => c + (jong(c) ? "일세" : "이일세"));
-  s = s.replace(new RegExp("([겠했었았였])어" + END, "g"), "$1네").replace(/자네게(?=\s)/g, "자네에게").replace(/당신/g, "자네").replace(/(지금|이제|먼저|다시|자네|그) \1(?=\s)/g, "$1").replace(/거일세/g, "걸세").replace(/([가-힣])네네(?=[.!…\s<]|$)/g, "$1네").replace(/겁이 있네/g, "겁이 나네").replace(/([가-힣])야 네(?=[.!…\s<]|$)/g, "$1야 하네").replace(/않을 일세/g, "않을 걸세").replace(/얽인/g, "얽힌").replace(/아니야(?=[.!…\s<]|$)/g, "아닐세").replace(/체크(하|해)/g, "확인$1").replace(/체크/g, "확인").replace(/타이밍/g, "때").replace(/패턴/g, "버릇").replace(/(끝까지|자꾸만|자꾸|조금씩|천천히|정말|너무) \1(?=\s)/g, "$1").replace(/아니일세/g, "아닐세").replace(/귀담아 들게/g, "귀담아듣게").replace(/천천할 수/g, "천천히 할 수");
+  s = s.replace(new RegExp("([겠했었았였])어" + END, "g"), "$1네").replace(/자네게(?=\s)/g, "자네에게").replace(/당신/g, "자네").replace(/(지금|이제|먼저|다시|자네|그) \1(?=\s)/g, "$1").replace(/(\s)거일세/g, "$1걸세").replace(/([가-힣])네네(?=[.!…\s<]|$)/g, "$1네").replace(/겁이 있네/g, "겁이 나네").replace(/([가-힣])야 네(?=[.!…\s<]|$)/g, "$1야 하네").replace(/않을 일세/g, "않을 걸세").replace(/얽인/g, "얽힌").replace(/아니야(?=[.!…\s<]|$)/g, "아닐세").replace(/체크(하|해)/g, "확인$1").replace(/체크/g, "확인").replace(/타이밍/g, "때").replace(/패턴/g, "버릇").replace(/(끝까지|자꾸만|자꾸|조금씩|천천히|정말|너무) \1(?=\s)/g, "$1").replace(/아니일세/g, "아닐세").replace(/귀담아 들게/g, "귀담아듣게").replace(/천천할 수/g, "천천히 할 수");
   /* 겁주는 몸 표현 */
   s = s.replace(/목을 조이/g, "발목을 잡").replace(/목을 조여/g, "발목을 잡아");
   s = s.replace(/([가-힣])(갈|올|될|할|볼|줄)세(?=[.!…]|<|$)/g, "$1$2 걸세");
-  s = s.replace(/([가-힣])세(?=[.!…]|<|$)/g, (m, c) => (jong(c) === 8 && !/[일걸]/.test(c) ? c + " 걸세" : m));
+  s = s.replace(/([가-힣])세(?=[.!…]|<|$)/g, (m, c) => (jong(c) === 8 && !/[일걸닐럴널]/.test(c) ? c + " 걸세" : m));
   /* 문장 끝의 '~다' (따옴표 안은 건드리지 않는다: 바로 뒤가 마침표·느낌표·<br>·끝일 때만) */
   s = s.replace(/([가-힣]{1,8})다(?=\s*(?:[.!]|<br>|<\/strong>|<\/em>|$))/g, (m, w) => {
     if (/(것이|거|게|터)$/.test(w)) return w.replace(/(것이|거|게|터)$/, (x) => (x === "것이" ? "것일세" : x === "터" ? "터일세" : "걸세"));
@@ -159,6 +159,8 @@ function hage(t) {
     if (d && !/^(않는|있는|없는)$/.test(w)) return w.slice(0, -1) + d + "네";
     return w + "네";
   });
+  /* 마침표 뒤 띄어쓰기가 빠지면 넣는다 */
+  s = s.replace(/([.!?])(?=[가-힣‘“'])/g, "$1 ");
   return s;
 }
 
@@ -522,15 +524,15 @@ export default async function handler(req, res) {
     /* 확답 다듬기 — 뼈대와 결이 같고, 조심시키는 말을 지켰을 때만 쓴다(아니면 화면의 확답을 그대로 둔다) */
     let answer = "";
     if (ansRaw) {
-      let a = hage(noHanja(String(ansRaw.text || ""))).replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
+      let a = hage(noHanja(String(ansRaw.text || "").replace(/<br\s*\/?>/gi, " "))).replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
       a = scrub("答", a);
       const base = String(bone.verdict || "");
       const KEEP = ["진료", "상담", "신고", "수의사", "변호사", "법률", "노무", "노동청", "지급정지", "임차권등기", "의료진", "멈추", "넣지 말", "서지 말", "받지 말", "보내지 말", "재검"];
       const NEG = /(말게|아닐세|어렵네|이르네|멈추게|오지 않네|달라지지 않네|돌아오지 않네|아니네)/;
       const first = (t) => (String(t).match(/^[^.!?]*[.!?]?/) || [""])[0];
       const sents = a.split(/(?<=[.!?])\s+/).filter(Boolean);
-      const ok = a.length >= 12 && a.length <= 130 && sents.length <= 3 && /(네|게|세|지)[.!]?$/.test(a)
-        && !/[一-龥]|\d\s*월|봄머리|당신|그대/.test(a) && (a.match(/\d+/g) || []).every((d) => q.includes(d))
+      const ok = a.length >= 12 && a.length <= 150 && sents.length <= 4 && /(네|게|세|지)[.!]?$/.test(a)
+        && !/[一-龥]|\d\s*월|봄머리|당신|그대(?!로)/.test(a) && (a.match(/\d+/g) || []).every((d) => q.includes(d))
         && KEEP.every((k) => !base.includes(k) || a.includes(k))
         && first(a).length <= 34 && !/다만|뿐|수도\s*있|알\s*수\s*없|모르겠|반반|두고\s*봐야|애매|기울어\s*있/.test(first(a))
         && !(bone.noWhen && /\d|[0-9]월|봄|여름|가을|겨울/.test(a))
