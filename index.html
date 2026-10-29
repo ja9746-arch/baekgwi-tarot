@@ -59,6 +59,7 @@ body::after{content:'';position:fixed;inset:0;z-index:2147483000;pointer-events:
   opacity:0;transition:opacity .85s ease}
 #bg .plate.on{opacity:1}
 #bg::after{content:"";position:absolute;inset:0;z-index:1;background:
+  linear-gradient(90deg, rgba(10,5,7,.6) 0, rgba(10,5,7,0) 8%, rgba(10,5,7,0) 92%, rgba(10,5,7,.6) 100%),
   radial-gradient(86% 40% at 50% 6%, rgba(10,5,7,.92) 0%, rgba(10,5,7,.48) 56%, rgba(10,5,7,0) 100%),
   radial-gradient(74% 26% at 50% 47%, rgba(8,4,6,.72), transparent 72%),
   linear-gradient(180deg, rgba(10,5,7,.52) 0%, rgba(10,5,7,.16) 22%, rgba(10,5,7,.58) 58%, rgba(10,5,7,.94) 86%, #0a0507 100%)}
@@ -122,6 +123,8 @@ body{word-break:keep-all;overflow-wrap:anywhere}
   font-family:var(--serif);font-size:14px;font-weight:700;letter-spacing:.05em;color:#f1e3cf;position:relative;
   box-shadow:inset 0 0 0 1px rgba(0,0,0,.5),0 4px 12px rgba(0,0,0,.55);text-shadow:0 1px 4px #000;transition:.2s}
 .chips button:active{transform:scale(.96)}
+.chips button{position:relative}.chips button::after{content:"";position:absolute;inset:-6px -2px}
+.home::after,.snd::after{content:"";position:absolute;inset:-7px}
 @media (max-width:400px){.chips{gap:6px 5px}.chips button{padding:5px 10px;font-size:13px;letter-spacing:.02em}}
 @media (max-height:900px){#s-ask .ask .hint:last-child{display:none}}
 @media (max-height:720px){
@@ -185,7 +188,7 @@ body{word-break:keep-all;overflow-wrap:anywhere}
 .agree b{color:#e6d2ba;font-weight:600}
 .seal .minor,.minor{margin:10px auto 12px;max-width:300px;font-size:11px;line-height:1.6;color:#b3a596;word-break:keep-all;text-align:center}
 .biz .note{display:block;margin-top:5px;color:#8a7c70}
-.biz{margin:14px 0 0;text-align:center;font-size:9.5px;line-height:1.55;color:#6f6359;letter-spacing:-.01em;word-break:keep-all}
+.biz{margin:8px 0 0;text-align:center;font-size:9.5px;line-height:1.55;color:#6f6359;letter-spacing:-.01em;word-break:keep-all}
 .legal button{background:none;border:0;color:#9a8b7e;text-decoration:underline;font-size:11px;padding:2px 4px}
 
 /* 패 바퀴 */
@@ -268,15 +271,15 @@ body{word-break:keep-all;overflow-wrap:anywhere}
   padding:1px 4px;border-radius:1px;white-space:nowrap}
 
 /* 풀이 */
-.read{flex:1 1 auto;min-height:0;overflow-y:auto;margin-top:10px;padding:16px 14px 28px;margin-inline:-6px;border-radius:4px;
+.read{flex:1 1 auto;min-height:0;overflow-y:auto;margin-top:10px;padding:16px 14px 44px;margin-inline:-6px;border-radius:4px;
   background:linear-gradient(180deg,rgba(8,4,6,.62),rgba(8,4,6,.76));
-  -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 20px,#000 calc(100% - 22px),transparent);
-  mask-image:linear-gradient(to bottom,transparent 0,#000 20px,#000 calc(100% - 22px),transparent)}
+  -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 30px,#000 calc(100% - 22px),transparent);
+  mask-image:linear-gradient(to bottom,transparent 0,#000 30px,#000 calc(100% - 22px),transparent)}
 .read::-webkit-scrollbar{width:3px}
 .read::-webkit-scrollbar-thumb{background:var(--geum-dim)}
 .line{margin:0 0 17px;font-size:15.5px;font-weight:300;line-height:1.9;text-wrap:pretty;word-break:keep-all;color:var(--jae);
   letter-spacing:-.008em;animation:rise .5s ease both}
-.line .who{display:block;font-family:var(--serif);font-weight:700;font-size:11.5px;letter-spacing:.06em;font-size:12.5px;
+.line .who{display:block;font-family:var(--serif);font-weight:700;letter-spacing:.06em;font-size:13.5px;
   color:var(--jusa-hot);margin-bottom:7px;}
 .line em{font-style:normal;color:#e8c977;font-weight:500}
 .line strong{color:#ff8a6b;font-weight:500}
@@ -294,6 +297,7 @@ body{word-break:keep-all;overflow-wrap:anywhere}
   background:rgba(8,4,6,.8);text-align:center;animation:rise .6s ease both}
 .seal .why{font-family:var(--serif);font-weight:700;font-size:16px;color:var(--jae);margin:0 0 12px}
 .seal .blurwrap{position:relative}
+@media (max-height:700px){.seal .blurwrap{display:none}}
 .seal .bseal{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%) rotate(-5deg);font-family:var(--serif);font-weight:700;font-size:20px;letter-spacing:.12em;line-height:1;color:#ff5436;border:2px solid #e2392a;border-radius:4px;padding:6px 8px 6px 10px;background:rgba(12,5,6,.55);text-shadow:0 0 10px rgba(255,84,54,.35)}
 .seal .blur{color:var(--jae-dim);font-size:14px;line-height:1.95;filter:blur(5px);user-select:none;margin:0 0 14px}
 .seal .what{margin:0 0 14px;font-size:12.5px;color:#b9aa9c;line-height:1.95;text-align:left}
@@ -306,7 +310,7 @@ body{word-break:keep-all;overflow-wrap:anywhere}
 .seal .price.big{font-size:22px;margin:2px 0 6px}
 .seal .timer{margin:0 auto 10px;display:inline-block;padding:5px 12px;border:1px solid rgba(255,84,54,.55);background:rgba(192,54,42,.14);
   font-size:12.5px;color:#ffb39c;letter-spacing:.02em}
-.seal .timer b{font-family:var(--serif);font-size:16px;color:#fff;margin-left:4px;font-variant-numeric:tabular-nums}
+.seal .timer b{font-family:var(--sans);font-weight:700;font-size:16px;color:#fff;margin-left:4px;font-variant-numeric:tabular-nums}
 .seal .timer.over{border-color:var(--line);background:none;color:var(--jae-dim)}
 /* 첫 화면 — 호연을 배경에 녹인 머리 */
 #s-ask .ask{position:relative;z-index:3}
@@ -360,8 +364,7 @@ body{word-break:keep-all;overflow-wrap:anywhere}
 .ledger .lg-lq{margin:12px 0 14px;text-align:center;font-family:var(--serif);font-size:14px;line-height:1.7;color:var(--jae)}
 .ledger .lg-lk{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 14px}
 .ledger .lg-lk div{border:1px solid var(--line);padding:9px 8px;text-align:center;background:rgba(8,4,6,.6);display:flex;flex-direction:column;justify-content:flex-start}
-.ledger .lg-lk div.wide{justify-content:center}
-.ledger .lg-lk span{word-break:keep-all}
+.ledger .lg-lk span{word-break:keep-all;flex:1;display:flex;align-items:center;justify-content:center}
 .ledger .lg-lk div.wide{grid-column:1/-1}
 .ledger .lg-lk b{display:block;font-family:var(--serif);font-weight:400;font-size:11px;letter-spacing:.12em;color:var(--geum-dim);margin-bottom:3px}
 .ledger .lg-lk span{font-family:var(--serif);font-weight:700;font-size:14.5px;line-height:1.6;color:var(--jae)}
@@ -441,8 +444,9 @@ body{word-break:keep-all;overflow-wrap:anywhere}
 /* 크게 뒤집기 */
 .spot{position:fixed;inset:0;z-index:400;display:flex;overflow-y:auto;padding:16px 0;flex-direction:column;align-items:center;justify-content:center;justify-content:safe center;
   gap:10px;background:rgba(5,2,3,.97);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);transition:opacity .3s}
+@media (min-width:760px){.spot{background:radial-gradient(60% 80% at 50% 50%,rgba(5,2,3,.97) 40%,rgba(5,2,3,.82) 100%)}}
 .spot.out{opacity:0}
-@media (max-height:620px){.spot{padding-top:56px;padding-bottom:20px}}
+@media (max-height:700px){.spot{padding-top:56px;padding-bottom:20px}}
 .spotcard{width:min(66vw,270px,37vh);aspect-ratio:2/3;perspective:1000px}
 .spottap{margin:14px 0 0;font-size:12.5px;letter-spacing:.06em;color:#e8c977;opacity:0;transition:opacity .5s;text-shadow:0 2px 10px #000}
 .spothome{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));left:max(12px,calc(50% - 248px))}
@@ -451,9 +455,9 @@ body{word-break:keep-all;overflow-wrap:anywhere}
 @keyframes tapPulse{0%,100%{opacity:.55}50%{opacity:1}}
 .spotcard{position:relative}
 .spotcard .inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;
-  transition:transform .85s cubic-bezier(.3,.9,.3,1);transform:scale(.9)}
+  transition:transform .85s cubic-bezier(.3,.9,.3,1);transform:scale(.96)}
 .spot.open .spotcard .inner{transform:rotateY(180deg) scale(1);animation:flipLift .85s cubic-bezier(.3,.9,.3,1)}
-@keyframes flipLift{0%{transform:rotateY(0) scale(.92)}45%{transform:rotateY(100deg) scale(1.1) translateY(-10px)}100%{transform:rotateY(180deg) scale(1)}}
+@keyframes flipLift{0%{transform:rotateY(0) scale(.96)}45%{transform:rotateY(100deg) scale(1.1) translateY(-10px)}100%{transform:rotateY(180deg) scale(1)}}
 /* 뒤집기 전 — 뒷면이 숨 쉬듯 떠 있고, 눌러야 뒤집힌다 */
 .spot.await .spotcard{cursor:pointer;animation:cardTwitch 3.4s ease-in-out infinite 1s}
 .spot.await .spotcard .back{box-shadow:0 18px 60px rgba(0,0,0,.8),0 0 0 1px rgba(232,201,119,.6),0 0 44px rgba(255,84,54,.55);animation:backGlow 3.4s ease-in-out infinite}
@@ -488,7 +492,7 @@ body{word-break:keep-all;overflow-wrap:anywhere}
 .spotcard .front.rev .cf{border-color:#ff5436}
 .spotpos{margin:0;font-family:var(--serif);font-size:14px;letter-spacing:.08em;color:var(--geum)}
 .spotname{margin:6px 0 0;font-family:var(--serif);font-weight:700;font-size:21px;color:#fff;opacity:0;transition:opacity .4s .45s;text-shadow:0 2px 14px #000}
-.spotmeta{margin:2px 0 0;font-size:13px;line-height:1.75;color:#d6c8ba;opacity:0;transition:opacity .4s .55s;max-width:min(86vw,420px);text-align:center;text-shadow:0 2px 10px #000;word-break:keep-all}
+.spotmeta{margin:2px 0 0;font-size:13px;line-height:1.75;color:#d6c8ba;opacity:0;transition:opacity .4s .55s;max-width:min(86vw,420px);text-align:center;text-shadow:0 2px 10px #000;word-break:keep-all;text-wrap:balance}
 .spotsrc{display:block;margin-bottom:4px;font-family:var(--serif);font-size:11.5px;letter-spacing:.06em;color:#c9a24a}
 .spot.open .spotname,.spot.open .spotmeta{opacity:1}
 .rv{display:inline-block;font-family:var(--sans);font-weight:500;font-size:11px;letter-spacing:.08em;color:#fff;
@@ -529,7 +533,7 @@ body{word-break:keep-all;overflow-wrap:anywhere}
 .board .slot.combo .flipper{animation:combopulse 1s ease-in-out infinite;box-shadow:0 0 0 2px #ffcf6a,0 0 18px rgba(255,180,80,.85)}
 @keyframes combopulse{50%{box-shadow:0 0 0 2px #ff5436,0 0 26px rgba(255,84,54,.95)}}
 /* 다음 패 */
-.nextbtn{display:block;margin:2px auto 20px;padding:10px 24px;border-radius:22px;border:1px solid var(--geum);
+.nextbtn{display:block;margin:2px auto 20px;padding:12px 28px;min-height:44px;border-radius:24px;border:1px solid var(--geum);
   background:rgba(120,24,18,.45);color:var(--jae);font-family:var(--serif);font-weight:700;font-size:14.5px;animation:nextglow 1.6s ease-in-out infinite}
 @keyframes nextglow{50%{box-shadow:0 0 18px rgba(255,84,54,.55)}}
 .confirmbtn{margin:6px 0 20px}
@@ -575,13 +579,13 @@ body{word-break:keep-all;overflow-wrap:anywhere}
         <span class="count" id="count">0 / 120</span>
       </div>
       <p class="hint">생년월일은 묻지 않네. 질문 하나면 족하네.</p>
-      <p class="biz">온미라이프 · 대표 김민철 · 사업자등록번호 501-04-95672<br>통신판매업 신고 진행 중 · 고객센터 <a href='tel:1866-0423'>1866-0423</a><br>울산광역시 북구 염포로 685, 110동 1801호 · ja9746@naver.com<span class="note">오락 목적의 해석 콘텐츠이며 미래를 보장하지 않습니다</span></p>
       <p class="hint" style="font-size:11px;color:#8d7f73">여우의 연기, 호연 — 해동 백귀 백 장으로<br>말 속에 숨은 마음과 보이지 않는 기운을 읽는다</p>
     </div>
     <div class="foot">
       <p class="visit" id="visit" aria-hidden="true"></p>
       <button class="btn" id="go" disabled>패를 펴다</button>
       <p class="legal"><button id="histLink" hidden>지난 물음 다시 보기</button><button id="openTerms">이용약관 · 환불규정</button><button id="openPriv"><b>개인정보처리방침</b></button></p>
+      <p class="biz">온미라이프 · 대표 김민철 · 사업자등록번호 501-04-95672<br>통신판매업 신고 진행 중 · 고객센터 <a href='tel:1866-0423'>1866-0423</a><br>울산광역시 북구 염포로 685, 110동 1801호 · ja9746@naver.com<span class="note">오락 목적의 해석 콘텐츠이며 미래를 보장하지 않습니다</span></p>
     </div>
   </section>
 
@@ -1200,19 +1204,24 @@ const EL_WHEN = {
 function nearWhen(w){
   if(!w||!/오늘|내일|모레|이번\s*주|이번주|다음\s*주|다음주|당장|곧/.test(w)) return null;
   const t=w==="오늘"||w==="당장"?"오늘 안, 해 지기 전":w==="내일"?"내일, 바로 그 자리":w==="모레"?"모레, 그 자리":/다음/.test(w)?"다음 주 안":w==="곧"?"보름 안":"이번 주 안";
-  return {t, d:"자네가 가까운 날을 물었으니 패도 그날을 짚네"};
+  return {t, d:"가까운 날을 앞둔 물음이니 패도 그날을 짚네"};
 }
 /* '이번 시험·이번 면접'은 결과가 나오는 그때를 짚는다 */
 /* 수술·검사를 물으면 그 날을 기준으로 때를 잡는다(멀리 '내년'이라 하면 엉뚱하다) */
-function opWhen(I,R,topic){ if(R.when) return null; if(!(topic==="건강"||/^(가족건강|반려)/.test(I&&I.k||""))) return null;
+function opWhen(I,R,topic){ if(R.when&&!(/수술|시술/.test(S.q)&&/다음\s*주|이번\s*주|내일|모레|다음\s*달|이번\s*달/.test(R.when))) return null; if(!(topic==="건강"||/^(가족건강|반려)/.test(I&&I.k||""))) return null;
   const m=S.q.match(/수술|시술|항암|입원|검사|결과/); if(!m) return null;
   if(/검사|결과/.test(m[0])&&!/수술|시술/.test(S.q)) return {t:"검사 결과가 나오는 날", d:""};
   return {t:`${/시술/.test(S.q)&&!/수술/.test(S.q)?"시술":"수술"}을 마치고 보름 안`, d:""}; }
+/* 물음 자체에 시계가 있는 일 — 계약 만기, 몇 번 만난 사이 — 는 달력 대신 그 시계로 짚는다 */
+function clockWhen(I,R){ const q=S.q||"", k=I&&I.k||"";
+  if(/만기/.test(q)&&/^(보증금|집계약)$/.test(k)) return {t:"만기 날 무렵", d:""};
+  if(/소개팅|(한|두|세|네|\d+)\s*번\s*(만났|봤|만난)/.test(q)&&/^(속마음|고백|소개팅|새인연)$/.test(k)) return {t:"다음 만남 무렵", d:""};
+  return null; }
 /* 몸·가족·반려·아이의 아픔을 물을 때 '내년'은 너무 멀다 — 두 달 안으로 당긴다 */
 function healthClamp(w,I,topic){ if(!w||!/^내년/.test(w.t)) return w; if(!(topic==="건강"||/^(가족건강|반려|자녀)/.test(I&&I.k||""))) return w; return whenFor("토",S.rec?S.rec.t:Date.now()); }
 /* 연락 끊김·소개팅·대출처럼 곧 결판나는 물음에 '내년'은 너무 멀다 */
 function nearClamp(w,I){ if(!w||!I||!["잠수","소개팅","대출승인","직장사람","집계약"].includes(I.k)||!/^내년|사이/.test(w.t)) return w; return whenFor("금",S.rec?S.rec.t:Date.now()); }
-function examWhen(I,R){ if(!I||!["시험","면접"].includes(I.k)||R.when) return null; return {t:"결과가 나오는 날", d:""}; }
+function examWhen(I,R){ if(!I||!["시험","면접"].includes(I.k)||(R.when&&!/올해|이번|올\s*해|연내/.test(R.when))) return null; return {t:"결과가 나오는 날", d:""}; }
 /* '올해'를 물었는데 좋은 흐름이면 올해 안으로 잡는다(좋다면서 내년이라 하면 앞뒤가 안 맞는다) */
 function yearClamp(w,R,grade,I){ if(!w||!R||!/올해|연내|올\s*해/.test(R.when||"")||!/^내년/.test(w.t)||(grade>1&&!(I&&I.k==="운세"))) return w; return {t:"올해가 가기 전, 12월 안", d:w.d}; }
 /* 가족의 병을 물으면 '그 사람' 대신 그분을 부른다 */
@@ -1232,7 +1241,7 @@ const TOPIC_LABEL={연애:"사랑",금전:"돈",직장:"일",사람:"사람 사�
 /* 출전 — 전승: 옛이야기·기록에 있는 귀 / 바탕: 옛이야기에서 빚은 귀 / 창작: 백귀야행이 새로 그린 귀 */
 function srcText(c){ return c.kind==="전승"?`${c.src}에 전하는 귀네`:c.kind==="바탕"?`${c.src}에서 빚은 귀네`:"해동 백귀야행에 이름을 올린 귀네"; }
 function srcTag(c){ return c.kind==="전승"?`전승 · ${c.src}`:c.kind==="바탕"?`${c.src}에서`:"해동 백귀야행"; }
-function posLabel(i){ if(i!==5) return POS[i].desc; const R=S.R||readQ(S.q), E=S.E; if(E&&/^반려/.test(E.dkey)) return "그 아이의 속"; if(E&&E.dkey==="자녀") return (R.who&&/아들|딸/.test(R.who)?R.who:"아이")+"의 속"; if(E&&E.dkey==="가족건강"&&R.who) return honorWho("그 사람","가족건강",R)+"의 속"; const hw=honorWho("그 사람","",R); const who=(hw!=="그 사람"?hw:R.who)||(E&&["연애","사람"].includes(E.topic)?"상대":""); return who?`${who}의 속`:"이 일의 속"; }
+function posLabel(i){ if(i!==5) return POS[i].desc; const R=S.R||readQ(S.q), E=S.E; if(E&&/^반려/.test(E.dkey)) return "그 아이의 속"; if(E&&E.dkey==="자녀") return (R.who&&/아들|딸/.test(R.who)?R.who:"아이")+"의 속"; if(E&&E.dkey==="가족건강"&&R.who) return honorWho("그 사람","가족건강",R)+"의 속"; if(/전\s*(남|여)|헤어진|헤어졌|옛\s*(연인|애인)/.test(S.q||"")&&E&&E.topic==="연애") return "그 사람의 속"; const hw=honorWho("그 사람","",R); const who=(hw!=="그 사람"?hw:R.who)||(E&&["연애","사람"].includes(E.topic)?"상대":""); return who?`${who}의 속`:"이 일의 속"; }
 const GEN={목:"화",화:"토",토:"금",금:"수",수:"목"};
 const KE={목:"토",토:"수",수:"화",화:"금",금:"목"};
 const QTYPE = [
@@ -1252,17 +1261,23 @@ const FEEL_MAP=[[/불안/,"불안"],[/무서|두려/,"두려움"],[/힘들|힘�
 /* ── 물음의 뜻 — 사람들이 실제로 묻는 꼴마다 확답을 따로 둔다 ──
    위에서부터 먼저 걸리는 것을 쓴다. worry: 일어나지 않기를 바라는 일을 묻는 꼴(좋은 흐름 = 그 일이 없음) */
 const INTENTS=[
+ {k:"임신",t:"아이",re:/임신|난임|시험관|인공\s*수정|(아이|아기|애기)(가|는)?\s*(안|잘\s*안)\s*생|(아이|아기)를?\s*(갖|가지|기다리)|아기\s*소식/,
+  v:["오네. 기다리던 소식이 닿네.","오네. 다만 서두르지 말고 몸과 마음을 먼저 채우게.","더디게 오네. 의원과 함께 길을 차근차근 다시 짜 보게.","기다림이 길어지는 판일세. 혼자 짊어지지 말고 의원과 곁 사람에게 기대게."]},
+ {k:"발령",t:"직장",re:/발령|전근|지방\s*(근무|발령)|파견|주말\s*부부|기러기|혼자\s*(내려|올라)\s*(가|갈)/,
+  v:["가게. 새 자리에서 자네 몫이 커지네. 떨어져 지내는 동안 오갈 날을 미리 정해 두게.","가게. 처음 한 철이 고되니 가족과 주말에 오갈 날부터 정해 두게.","가되 혼자 한 철만 지내 보게. 그 뒤 가족과 오가는 셈을 놓고 다시 정하게.","혼자 가면 많이 흔들리는 판일세. 가기 전에 회사에 다른 길이 없는지 한 번 더 물어보게."]},
+ {k:"보증금",t:"금전",re:/보증금|전세금|(집주인|임대인).{0,16}(돌려|못\s*줘|안\s*줘|못\s*준|안\s*준|못\s*돌|안\s*돌)/,
+  v:["받네. 날짜가 조금 밀려도 제 몫은 돌아오네.","받네. 다만 한 번 미뤄지니 그 전에 서류를 다져 두게.","순순히는 안 오네. 계약서와 주고받은 기록부터 챙기고 상담을 받게.","기다리기만 해서는 안 오네. 지금 바로 상담부터 받고 절차를 밟게."]},
  {k:"배신",t:"사람",re:/배신|뒤통수|등\s*(을\s*)?돌릴|믿어도\s*될까|이용(당|하는)/,
   v:["배신하지 않네. 그 사람은 자네 편일세.","크게 등 돌리진 않네. 다만 둘 사이를 오가는 말은 조심하게.","마음을 다 주지는 말게. 그 사람에겐 제 셈이 먼저일세.","조심하게. 그 사람은 이미 제 몫을 셈하고 있네. 중요한 일은 맡기지 말게."]},
  {k:"면접",t:"직장",re:/면접/,
   v:["붙네. 준비한 말이 그대로 통하네.","붙네. 한 번 막히는 물음이 있으나 차분히 넘기면 되네.","지금 준비로는 아슬아슬하네. 답을 외우지 말고 자네 말로 다시 다듬게.","이번 자리는 어렵네. 오늘 받은 물음을 적어 두고 다음 면접을 채비하게."]},
  {k:"소개팅",t:"연애",re:/소개팅(?!\s*(한|했던|으로|에서)\s*(사람|만난|남자|여자|분|그))|맞선|선\s*(을\s*)?(보|봐|자리)|미팅|첫\s*만남|첫\s*데이트/,
   v:["잘 되네. 첫 자리부터 말이 잘 통하네.","잘 되네. 처음엔 어색하나 두 번째 만남에서 풀리네.","이번 자리에선 인연까지는 닿지 않네. 가볍게 다녀오게.","이번 사람은 자네 짝이 아닐세. 기대는 내려놓고 편히 다녀오게."]},
- {k:"직장사람",t:"사람",re:/(동료|상사|팀장|부장|과장|차장|대리|선배|후배|사수|직원|사장님?|회사\s*사람).{0,14}(싫어|미워|괴롭|갈등|사이|무시|따돌|불편|힘들|트러블|안\s*맞|마찰)|직장\s*내\s*(괴롭힘|갈등)/,
+ {k:"직장사람",t:"사람",re:/(동료|상사|팀장|부장|과장|차장|대리|선배|후배|사수|직원|사장님?|회사\s*사람).{0,14}(싫어|미워|괴롭|갈등|사이|무시|따돌|불편|힘들|트러블|안\s*맞|마찰)|직장\s*내\s*(괴롭힘|갈등)|(동료|상사|팀장|선배|후배|사수).{0,24}(가로채|가로챘|자기\s*것|뺏|공을|험담|뒷담|떠넘|아이디어)/,
   v:["풀리네. 오해 하나만 걷히면 사이가 편해지네.","풀리네. 한 번 부딪힌 뒤에 오히려 가까워지네.","지금은 서먹하네. 일 얘기 말고 짧은 인사부터 먼저 건네게.","그 사람과는 거리를 두는 게 낫네. 일로만 대하고 마음을 쓰지 말게."]},
  {k:"집계약",t:"금전",re:/(전세|월세|반전세|매매|집)\s*(계약|들어가|구해|얻|구할)|전세|월세\s*(계약|살)/,
   v:["하게. 큰 탈 없는 자리일세. 서류만 꼼꼼히 보게.","하게. 다만 한 번 조건이 흔들리니 그때 물러서지 말게.","지금 그 집은 서두르지 말게. 서류에 다시 볼 것이 있네.","그 집은 맞지 않네. 다른 자리를 보게."]},
- {k:"마음건강",t:"건강",re:/우울|불면|잠이\s*(안|않|오지)|잠을\s*(못|설)|무기력|공황|불안(해|하|감)|마음이\s*(힘들|아파|무거)|번아웃|의욕이\s*없/,
+ {k:"마음건강",t:"건강",re:/우울|불면|잠이\s*(안|않|오지)|잠을\s*(못|설)|무기력|공황|불안(해|하|감)|마음이\s*(힘들|아파|무거)|번아웃|의욕이\s*없|아무것도\s*하기\s*싫|출근(하는\s*게|이|길이)?\s*(너무\s*)?(무서|두려|겁)|숨이\s*막/,
   v:["나아지네. 쉬어 가는 만큼 마음도 가벼워지네.","나아지네. 한 번 더 무거운 날이 오지만 혼자 견디지 않으면 넘기네.","지금은 혼자 버티기엔 무겁네. 이번 주 안에 마음 진료를 한 번 받아 보게.","지금은 많이 지쳐 있네. 오늘이라도 믿는 사람과 의원에게 털어놓게."]},
  {k:"바람",t:"연애",worry:"바람",re:/바람\s*(을|이)?\s*(피|필|폈|핀|났|나|펴|핌|폈|피워|피운)|외도|불륜|(남편|아내|와이프|신랑|배우자|남친|여친|애인).{0,14}(내연|상간)|(남친|여친|남자\s*친구|여자\s*친구|애인|남편|아내|와이프|신랑|그\s*사람|그사람|걔|그\s*남자|그\s*여자).{0,10}(다른|딴)\s*(여자|남자|사람)\s*(이|을|를|과|와|하고|이랑|랑)?\s*(있|만나|생|좋아|사귀|연락)|양다리|한눈\s*(을\s*)?팔|바람(인가|인지|난|났|\s*같|\s*아닐|\s*의심)|수상해/,
   v:["걱정하는 그 일은 없네. 그 사람 마음은 아직 제자리에 있네. 의심을 거두면 더 단단해지네.","그 일까진 가지 않네. 다만 마음이 한 번 흔들리는 고비가 오니, 그때 자네가 먼저 다가가게.","기미가 있네. 아직 넘어가진 않았으니, 이번 주 안에 둘 사이의 빈틈부터 직접 짚게.","자네 걱정이 맞네. 마음이 이미 밖으로 새고 있거나 곧 드러나네. 감정보다 사실부터 확인하게."]},
@@ -1304,7 +1319,7 @@ const INTENTS=[
   v:["그 아이는 편안히 갔네. 자네 곁에서 받은 정을 다 안고 갔으니 너무 자책하지 말게.","그 아이는 자네를 원망하지 않네. 슬픔이 다 지나가면 좋은 기억만 남을 걸세.","아직 마음이 그 아이 곁에 머물러 있네. 충분히 슬퍼해도 되네. 그게 보내 주는 길일세.","그리움이 깊네. 혼자 삼키지 말고 그 아이 이야기를 누군가와 나누게."]},
  {k:"관계정리",t:"사람",re:/^(?!.*(주식|코인|펀드|종목|매수|매도|주가|비트)).*(손절|연을\s*끊|인연을\s*끊|절교)/,
   v:["끊지 말게. 서운함이 풀리면 다시 가까워지네.","당장 끊지 말고 거리를 조금 두게. 한 번 더 보고 정하게.","거리를 두는 게 낫네. 가까이 둘수록 자네만 다치네.","정리하게. 이 인연은 자네를 깎기만 하네."]},
- {k:"결혼생활",t:"연애",re:/결혼\s*생활|부부\s*(사이|싸움|관계|생활)|(남편|아내|와이프|신랑)(과|와|이랑|하고)\s*(사이|자꾸|매일|요즘)/,
+ {k:"결혼생활",t:"연애",re:/결혼\s*생활|부부\s*(사이|싸움|관계|생활)|(남편|아내|와이프|신랑)(과|와|이랑|하고)\s*(사이|자꾸|매일|요즘)|(남편|아내|와이프|신랑)(이|가)?.{0,24}(싸워|싸우|싸움|다퉈|다투|다툼|갈등)/,
   v:["힘든 고비는 지나가네. 둘이 함께 쉬는 날을 하나 만들게.","한 번 크게 부딪힌 뒤에 서로를 다시 보게 되네.","지금 이대로는 서로 지치기만 하네. 바라는 것을 말로 꺼내게.","혼자 짊어지지 말게. 자네를 먼저 지키는 쪽을 생각할 때일세."]},
  {k:"경조사",t:"사람",re:/축의금|부조금|조의금|결혼식(에)?\s*(가야|갈까|안\s*왔|안\s*가)|조문|장례식/,
   v:["마음 가는 만큼 하게. 정은 액수가 아니라 걸음으로 전해지네.","가게. 그 자리에서 다시 이어지는 인연이 있네.","무리하지 말게. 자네 형편 안에서 마음만 전해도 충분하네.","이번엔 한 걸음 물러서 있게. 억지로 가면 서로 불편하네."]},
@@ -1368,7 +1383,7 @@ const INTENTS=[
   v:["흐름이 자네 바라는 쪽으로 기우네. 다만 크게 기대어 걸지는 말게.","한 번 반대로 흔들린 뒤에 자네 바라는 쪽으로 가네. 흔들릴 때 서두르지 말게.","당분간은 자네 바라는 대로 움직이지 않네. 서두르지 말고 지켜보게.","자네 바람과 반대로 가네. 크게 걸지 말고 지킬 것부터 지키게."]},
  {k:"투자",t:"금전",re:/주식|코인|비트|투자|펀드|부동산|청약|집을?\s*(살|사|팔)|집\s*사도|아파트|땅을?\s*(살|사|팔)|매수/,
   v:["들어가도 되네. 다만 잃어도 괜찮은 돈만, 정한 만큼만 넣게.","되네. 한 번에 넣지 말고 나눠서 사고, 흔들려도 서둘러 빼지 말게. 잃어도 괜찮은 돈만 넣게.","지금은 아닐세. 들어가면 묶이네. 때를 기다리게.","손대지 말게. 지금 넣으면 잃네."]},
- {k:"사업",t:"금전",re:/사업|장사|가게|창업|매출|개업|폐업|손님|동업|부업/,
+ {k:"사업",t:"금전",re:/사업|장사|가게|창업|매출|개업|폐업|손님|동업|부업|차리|차릴|차려|(네일|미용|꽃|옷|빵)\s*(샵|집|가게)|오픈|식당|매장/,
   v:["되네. 판이 자네 쪽으로 열려 있네.","되네. 다만 한 번 고비를 넘긴 뒤에 자리를 잡네.","지금 모양으로는 어렵네. 판을 줄이거나 바꿔야 도네.","지금은 벌이지 말게. 벌인 것도 정리할 때일세."]},
  {k:"돈",t:"금전",re:/돈|재물|수입|월급|부자|금전|재정|형편|목돈/,
   v:["들어오네. 액수도 자네 생각보다 크네.","들어오네. 다만 한 번 새고 나서 들어오네.","크게 들지는 않네. 들어오는 것보다 나가는 것을 먼저 막는 때일세.","지금은 지킬 때일세. 들어올 돈보다 나갈 돈을 먼저 막게."]},
@@ -1380,7 +1395,7 @@ const INTENTS=[
   v:["옮기게. 새 자리가 자네를 기다리네.","옮기되 서두르지 말게. 한 번 엇갈린 뒤에 맞는 자리가 오네.","지금 나가면 후회하네. 갈 자리를 잡아 둔 뒤에 움직이게.","지금은 버티게. 나가는 길이 막혀 있네."]},
  {k:"취업",t:"직장",re:/취업|취직|일자리|구직|채용|입사|알바/,
   v:["되네. 자리가 곧 나네.","되네. 한 번 떨어진 뒤에 맞는 곳이 붙네.","지금 넣는 곳으론 어렵네. 눈을 조금 돌리게.","이번 판은 더디네. 준비를 다시 다지게."]},
- {k:"승진",t:"직장",re:/승진|진급|평가|인사\s*(발령|이동)|연봉|발령|정규직|전환|부서\s*이동/,
+ {k:"승진",t:"직장",re:/승진|진급|평가|인사\s*(발령|이동)|연봉|정규직|전환|부서\s*이동/,
   v:["오르네. 눈여겨보는 사람이 있네.","오르네. 다만 한 번 밀린 뒤에 오네.","이번엔 어렵네. 자네 공을 드러내는 법부터 바꾸게.","이번 판은 아닐세. 자리를 지키는 데 힘쓰게."]},
  {k:"소송",t:"사람",re:/소송|재판|고소|송사|법원|합의|고발|층간\s*소음|이웃(과|이랑|하고)?\s*(분쟁|다툼|싸움)/,
   v:["이기네. 서류가 자네 편일세.","이기네. 다만 한 번 뒤집혔다가 이기네.","지금 이대로는 어렵네. 서류와 증거를 다시 다지게. 법의 일은 전문가와 꼭 함께 보게.","지금 흐름으론 불리하네. 끝까지 맞서기보다 물러설 길도 함께 보게. 법의 일은 전문가와 상의하게."]},
@@ -1401,12 +1416,17 @@ const INTENTS=[
 function intentOf(q){
   /* 물음 자체의 주제와 어긋나는 '무른' 뜻은 건너뛰고, 남은 것 가운데 맨 앞에 나온 것을 쓴다 */
   const SOFT={새인연:["연애"],돈:["금전"],운세:["기타"]}, tp=topicOf(q);
-  let best=null, at=1e9;
-  INTENTS.forEach(x=>{ if(SOFT[x.k]&&tp!=="기타"&&!SOFT[x.k].includes(tp)) return; const m=q.match(x.re); if(m&&m.index<at){ at=m.index; best=x; } });
+  const scan=t=>{ let b=null, at=1e9; INTENTS.forEach(x=>{ if(SOFT[x.k]&&tp!=="기타"&&!SOFT[x.k].includes(tp)) return; const m=t.match(x.re); if(m&&m.index<at){ at=m.index; b=x; } }); return b; };
+  /* 사정을 먼저 적고 마지막 문장에서 묻는 일이 많다 — 묻는 문장에서 먼저 찾는다 */
+  const sents=String(q).split(/(?<=[.?!？。])\s+|\n+/).map(x=>x.trim()).filter(Boolean);
+  let best=(sents.length>1?scan(sents[sents.length-1]):null)||scan(q);
+  /* 배경으로 나온 말(연봉·돈·발표)보다 실제로 하려는 일이 본 물음이다 */
+  if(best&&["승진","돈","도전","결혼","화해","운세"].includes(best.k)){ for(const k of ["임신","발령","보증금","이직","사업","직장사람","집계약","투자"]){ const x=INTENTS.find(y=>y.k===k); if(x&&x.re.test(q)){ best=x; break; } } }
   /* '받아줄까·용서·빌려줄까·팔까' 같은 결정을 묻는 말은 앞에 무엇이 나오든 그것이 본 물음이다 */
-  const DECIDE=["가족건강","돈마련","고비","반려이별","반려입양","끊기","관계정리","결혼생활","경조사","망함","재계약","금지된인연","받아줄까","용서","빌려줌","매도","이별결정","이별이유","미련","잠수","반대","대출승인","돈받기","사기","상속","구설","분실","반려","꿈","개명","적성","연락","고르기","휴식"];
+  const DECIDE=["보증금","가족건강","돈마련","고비","반려이별","반려입양","끊기","관계정리","결혼생활","경조사","망함","재계약","금지된인연","받아줄까","용서","빌려줌","매도","이별결정","이별이유","미련","잠수","반대","대출승인","돈받기","사기","상속","구설","분실","반려","꿈","개명","적성","연락","고르기","휴식"];
   let d=null; for(const k of DECIDE){ const x=INTENTS.find(y=>y.k===k); if(x&&x.re.test(q)){ d=x; break; } }
   if(d) best=d;
+  if(best&&best.k==="연락"&&/전\s*(남|여)|헤어진|헤어졌|옛\s*(연인|애인)/.test(q)){ const rr=INTENTS.find(y=>y.k==="재회"); if(rr) best=rr; }
   if(best&&["고백","새인연","속마음"].includes(best.k)){ const zz=INTENTS.find(y=>y.k==="잠수"); if(zz&&zz.re.test(q)) best=zz; }
   return best;
 }
@@ -1506,7 +1526,7 @@ function readQ(q){
   const tidy=x=>x.replace(/\s*(둘\s*)?중(에)?\s*.*$/,"").replace(/\s*(어디로|어디에|어느\s*쪽으로|으로|로)?\s*(갈까|할까|살까|차릴까|옮길까|들어갈까)(요)?[?？]*$/,"").replace(/\s*(해도|사도|가도|해야|사야|가야|봐도)\s*(될까|할까|하나|되나|괜찮을까)(요)?[?？]*$/,"").replace(/(이|가)?\s*(뭐가|어느\s*게)?\s*(나을까|좋을까|맞을까|괜찮을까)(요)?$/,"").replace(/[?？!.]+$/,"").trim();
   if(A) A=tidy(A)||A; if(B) B=tidy(B)||B;
   const short=normKey(t).length<4;
-  return {who,when,feel,first,last,many:cut.length>1,A,B,short};
+  return {who,when,feel,first,last,many:cut.length>1,A,B,short,facts:cut.slice(0,6).map(x=>x.replace(/[.?!？~]+$/,"").slice(0,60))};
 }
 
 /* ── 상태 ── */
@@ -2006,10 +2026,51 @@ function topicOf(q){
   if(best==="기타"&&S.tp) return S.tp;
   return best;
 }
+/* ── 할지 말지를 묻는 물음 — 손님이 쓴 그 일을 그대로 받아 '하게/말게'로 답한다 ── */
+function toStem(w){
+  w=String(w).trim(); if(!w) return "";
+  if(/해$/.test(w)) return w.slice(0,-1)+"하";
+  const last=w.slice(-1), k=last.charCodeAt(0)-0xAC00; if(k<0||k>11171) return w;
+  const cho=Math.floor(k/588), jung=Math.floor((k%588)/28), jong=k%28;
+  if(jong) return w;
+  if(cho===11&&(jung===0||jung===4)&&w.length>1) return w.slice(0,-1);       /* 먹어→먹, 참아→참 */
+  const J={6:20,14:13,9:8,10:11};                                            /* ㅕ→ㅣ ㅝ→ㅜ ㅘ→ㅗ ㅙ→ㅚ */
+  let nj=J[jung]; if(nj===undefined&&jung===4&&cho===10) nj=18;               /* 써→쓰 */
+  if(nj===undefined) return w;
+  return w.slice(0,-1)+String.fromCharCode(0xAC00+cho*588+nj*28);
+}
+function actionOf(q){
+  const sents=String(q||"").split(/(?<=[.?!？。])\s+|\n+/).map(x=>x.trim()).filter(Boolean);
+  const ask=(sents[sents.length-1]||"").replace(/[?？!.~]+$/,"");
+  if(/어떻게|뭘|무엇을|어디로|어디에|어느|언제|누구|얼마/.test(ask)) return null;
+  let stem="";
+  let m=ask.match(/^(.+?)\s*(?:도|야)\s*(될까|할까|하나|되나|괜찮을까|되겠|맞을까|돼)/);
+  if(m&&!/(돼|되|있|없|좋|붙|받|올|와)$/.test(m[1])) stem=toStem(m[1]);
+  /* '해도 될까요'만 묻고 할 일은 앞 문장에 적은 경우 — '~하려고 하는데' 속의 그 일 */
+  if(stem==="하"||(m&&/^(그거|이거|그렇게|이렇게)?\s*해$/.test(m[1].trim()))){ const w=String(q).match(/([^.?!,]+?)(?:으)?려고\s*(?:하는데|해요|하는|하고|합니다|생각)/); stem=w?w[1].trim():""; }
+  if(!stem){ m=ask.match(/^(.+?)\s+볼까/); if(m) stem=m[1].trim()+" 보"; }
+  if(!stem){ m=ask.match(/^(.+?)는\s*게\s*(맞을까|나을까|좋을까|맞나|낫나)/); if(m) stem=m[1].trim(); }
+  if(!stem){ m=ask.match(/^(.+?)할까(요)?(\s*말까(요)?)?$/); if(m) stem=m[1].trim()+"하"; }
+  if(!stem){ m=ask.match(/^(.*?)(헤어질|만날|갈|팔|옮길|그만둘|보낼|차릴|바꿀|끊을|접을|버틸|기다릴|볼|낼)까(요)?(\s*말까(요)?)?$/);
+    if(m){ const v=m[2], t=v.endsWith("을")?v.slice(0,-1):(()=>{ const k=v.slice(-1).charCodeAt(0)-0xAC00; return v.slice(0,-1)+String.fromCharCode(0xAC00+k-8); })(); stem=(m[1].trim()+" "+t).trim(); } }
+  if(!stem) return null;
+  stem=stem.split(/,|는데|은데|인데|지만|니까/).pop().trim().replace(/^(그럼|그냥|그래서|근데|제가|저는|저도|내가|나는)\s+/,"");
+  const wds=stem.split(/\s+/); if(wds.length>5) stem=wds.slice(-5).join(" ");
+  if(stem.length<1||/^(하|가|보|해 보)$/.test(stem)) return null;
+  const lk=stem.slice(-1).charCodeAt(0)-0xAC00, jong=(lk>=0&&lk<11172)?lk%28:0;
+  const ger=(jong===8?stem.slice(0,-1)+String.fromCharCode(0xAC00+lk-8):stem)+"는 건";
+  return {stem, imp:stem+"게", neg:stem+"지 말게", ger};
+}
+function actVerdict(A,grade,care,vet){
+  const doc=vet?"수의사":"의원";
+  if(care) return grade<=1?`${A.imp}. 다만 ${doc}와 먼저 차근차근 상의하게.`.replace("의원와","의원과"):`${A.ger} 서두르지 말고, ${doc}와 먼저 상의한 뒤 정하게.`.replace("의원와","의원과");
+  return [`${A.imp}. 패가 자네 등을 밀어 주네.`,`${A.imp}. 다만 서두르지 말고 때를 골라 하게.`,`${A.ger} 조금 미루게. 막힌 것 하나를 먼저 풀고 하게.`,`${A.neg}. 지금 하면 더 꼬이네.`][grade];
+}
+
 function buildReading(){
   const I=intentOf(S.q);
   const own=topicOf(S.q);
-  const PEOPLE=/친구|가족|엄마|아빠|어머니|아버지|부모|형제|자매|형|누나|언니|오빠|동생|동료|상사|팀장|선배|후배|시어머니|시댁/;
+  const PEOPLE=/(?<!(남자|여자|남|여)\s*)친구|가족|엄마|아빠|어머니|아버지|부모|형제|자매|형|누나|언니|오빠|동생|동료|상사|팀장|선배|후배|시어머니|시댁/;
   const topic=!I?own
     : I.t===null ? (I.k==="연락"&&PEOPLE.test(S.q)?"사람":own)
     : I.t==="기타" ? own
@@ -2052,15 +2113,45 @@ function buildReading(){
   if(grade<=1) for(let k=combos.length-1;k>=0;k--) if(/^(daegui3|miss-|fox|betray|tiger|jailer)/.test(combos[k].id)) combos.splice(k,1);
 
   const seed=P.reduce((a,p,i)=>a+(p.idx+1)*(i+3),0);
+  S.wover=null; S.DO=null;
   let verdict=I?I.v[grade]:VERDICT[topic][grade];
   /* 아픈 게 아니라 검사 결과를 묻는 물음 — 아프다는 전제로 답하지 않는다 */
   const chk=(I&&I.k==="가족건강"||topic==="건강")&&/검진|검사/.test(S.q)&&!/수술|시술|입원|항암/.test(S.q);
   if(chk) verdict=CHK.v[grade];
   if(I&&I.k==="자녀"&&/적응|학교\s*생활|친구|새\s*학교|전학|어린이집|유치원/.test(S.q||"")) verdict=["잘 적응하네. 아이가 자네 생각보다 단단하네.","처음 한 철은 힘들어하나 곧 자리를 잡네. 그때 곁을 지켜 주게.","지금 아이가 낯선 자리를 버거워하고 있네. 다그치기보다 아이가 먼저 말을 꺼낼 때까지 곁에 있어 주게.","아이가 많이 지쳐 있네. 지금은 적응보다 아이 마음부터 보게."][grade];
+  if(I&&I.k==="자녀"&&/게임|방에서|방\s*밖|학교(도|에|를)?\s*(가기\s*)?싫|등교|말을\s*안/.test(S.q||"")) verdict=["곧 제자리로 돌아오네. 다그치지 말고 방문을 열어 둘 틈만 주게.","한 철 버거워하다 돌아오네. 게임을 뺏기보다 함께 이야기할 틈을 만들게.","지금 아이가 많이 지쳐 있네. 학교 이야기보다 아이 마음부터 들어 주게.","혼자 감당하기 버거운 일이 아이에게 있네. 학교 상담 선생님과 함께 곁을 지키게."][grade];
   if(I&&I.k==="마음건강"&&grade<=1) verdict+=" 다만 두 주 넘게 이어지면 마음 진료를 한 번 받게. 그건 약한 게 아닐세.";
   /* '~해도 될까·할까 말까'처럼 할지 말지를 물으면 '하게/하지 말게'로 바로 답한다 */
   if(!I&&qtype==="될까"&&/(해야\s*할까|해도\s*될까|할까\s*말까|해야\s*하나|해도\s*괜찮을까|해\s*볼까|가도\s*될까|사도\s*될까|봐도\s*될까)/.test(S.q))
     verdict=["하게. 패는 자네 편일세. 망설일 까닭이 없네.","하게. 다만 한 번 걸림돌이 있으니 채비를 단단히 하고 가게.","지금은 하지 말게. 이대로 하면 잃는 게 크네. 하나를 먼저 바꾼 뒤에 하게.","하지 말게. 이 길은 지금 자네 길이 아닐세."][grade];
+  /* 지쳐서 그만둘지를 물으면 — 나가는 일보다 쉬는 일이 먼저다 */
+  let tired=false;
+  if(I&&I.k==="이직"&&/아무것도\s*하기\s*싫|무서워|두려워|번아웃|우울|잠이\s*안|숨이\s*막|버티기\s*힘들/.test(S.q))
+    verdict=["그만둬도 되네. 다만 나가기 전에 먼저 쉬며 숨부터 고르게.","그만둬도 되네. 다만 서두르지 말고 휴가로 숨부터 고른 뒤 정하게.","바로 그만두기보다 먼저 쉬게. 휴가든 진료든 숨부터 고른 뒤 정하게.","지금은 그만둘지보다 쉬는 게 먼저일세. 휴가를 내고 마음 진료도 한 번 받아 보게."][grade], tired=true;
+  /* 손님이 '이걸 해도 될까'를 물었으면 그 일을 그대로 받아 답한다 */
+  { const DO=actionOf(S.q), first=String(verdict).split(/(?<=[.!?])\s/)[0];
+    const careQ=["건강","아이"].includes(topic)||/^(반려|자녀|가족건강|임신)/.test(I&&I.k||"");
+    if(DO&&!tired&&!(S.rec&&S.rec.fx&&S.rec.fx.v)&&!chk&&qtype!=="어느"&&!/(게|말게|하게|주게)\.?$/.test(first)&&!(I&&/^(마음건강|반려이별|자녀|발령)$/.test(I.k)))
+    { const av=actVerdict(DO,grade,careQ,/^반려/.test(I&&I.k||"")), rest=String(verdict).split(/(?<=[.!?])\s/).slice(1).join(" ");
+      /* 하려는 일이 곧 그 물음인 갈래는, 첫마디만 손님의 일로 바꾸고 뒤의 까닭은 갈래의 말을 살린다 */
+      verdict=(I&&/^(발령|사업|이직|이사|투자|진로|고백|연락|재회|빌려줌|매도|취업|휴식|집계약)$/.test(I.k)&&rest&&!careQ)?av.split(/(?<=[.!?])\s/)[0]+" "+rest:av; }
+    S.DO=DO; }
+
+  /* 손님이 적은 조건을 확답에 싣는다 — 숫자·기간·처지를 빼먹으면 남의 답처럼 들린다 */
+  { const q=S.q||"", k=I&&I.k||"", sen=String(verdict).split(/(?<=[.!?])\s/), head=sen[0];
+    if(k==="이직"&&!tired&&/연봉\s*(을\s*)?(낮|깎|줄|덜)/.test(q)) verdict=["연봉을 낮춰서라도 옮기게. 새 자리에서 그 몫을 되찾네.","옮기게. 다만 연봉을 낮추는 만큼 무엇을 얻는지 한 줄로 적어 보고 가게.","연봉을 깎으면서까지 지금 옮길 판은 아닐세. 갈 곳을 먼저 쥐고 움직이게.","지금은 버티게. 연봉을 낮춰 나가도 나아지지 않는 판일세."][grade];
+    if(k==="돈받기"&&/피하|피해|잠수|연락\s*(도\s*)?(안|없|끊|피)|안\s*갚/.test(q)) verdict=["받네. 다만 저쪽이 피하는 동안엔 안 오니, 날짜와 금액을 글로 보내 두게.","받네. 다만 한 번에 오지 않으니, 날짜와 금액을 글로 박아 보내 두게.","순순히는 안 오네. 날짜와 금액을 글로 보내고, 답이 없으면 절차를 알아보게.","저쪽이 버티는 판일세. 기다리지 말고 지금 절차부터 알아보게."][grade];
+    const amt=(q.match(/\d[\d,]*\s*(억|천만|천|백만|만)\s*원?|\d[\d,]*\s*원/)||[""])[0].replace(/\s/g,"");
+    if(k==="사업"&&amt) verdict+=grade<=1?` 다만 ${amt}${/원$/.test(amt)?"":"원"} 가운데 문 연 뒤 석 달 버틸 돈은 손대지 말고 떼어 두게.`:` ${amt}${/원$/.test(amt)?"":"원"} 안에서 판을 줄여 셈을 다시 해 보게.`;
+    if(k==="결혼생활"&&/시댁|시가|처가|친정/.test(q)&&/주말|매주|자주|명절/.test(q)) verdict=head+" "+`${/시댁|시가/.test(q)?"시댁":/처가/.test(q)?"처가":"친정"}에 가는 날을 한 달에 몇 번으로 할지 숫자로 정해 ${/남편|신랑/.test(q)?"남편":/아내|와이프/.test(q)?"아내":"배우자"}과 맞추게.`.replace("아내과","아내와");
+    if(k==="속마음"&&/만났|소개팅|만난\s*지/.test(q)) verdict=head+" "+(grade<=1?"다음 만남에서 자네가 먼저 다음 약속을 잡아 보게.":"다음 만남까지 지켜보고, 그때도 미지근하면 마음을 거두게.");
+    if(k==="직장사람"&&/아이디어|가로|자기\s*것|공을/.test(q)&&S.DO) verdict=grade<=1?`${S.DO.imp}. 다만 '가로챘다'는 말 대신, 자네가 먼저 낸 날짜가 찍힌 기록부터 들고 가게.`:grade===2?`${S.DO.ger} 조금 미루게. 그 전에 자네가 먼저 낸 날짜가 찍힌 기록부터 모아 두게.`:`${S.DO.neg}. 지금은 자네가 낸 기록만 차곡차곡 모아 두게.`;
+    if(S.DO&&grade>=1&&!/연락/.test(S.DO.stem)&&/연락(이|도)?\s*(하루\s*\S+\s*)?(줄|뜸|끊|안\s*와|없)/.test(q)) verdict=(grade===1?`${S.DO.imp}. 다만 줄어든 연락의 까닭부터 먼저 묻고 꺼내게.`:grade===2?`${S.DO.ger} 조금 미루게. 줄어든 연락의 까닭부터 먼저 묻게.`:`${S.DO.neg}. 지금은 줄어든 연락의 까닭부터 묻게.`);
+    if(k==="보증금"&&grade>=1&&/만기/.test(q)) verdict=head+" "+"만기 날 돈이 안 오면 짐을 빼기 전에 임차권등기부터 걸어 두게.";
+    if(k==="시험"&&grade<=1&&/(두|세|네|다섯|\d+)\s*번째|재수|삼수|사수|\d\s*수/.test(q)) verdict+=" 지난번과 달리 이번엔 쌓아 온 것이 버텨 주네.";
+    if(k==="반려"&&/(1\d|[2-9]\d)\s*살|노견|노묘|신장|만성|수치|암|심장/.test(q)){ verdict=["오래 곁에 있네. 수의사가 일러 준 밥과 물을 지키면 편한 날이 늘어나네.","고비가 오가도 곁에서 버티네. 수의사가 일러 준 대로 돌보며 편한 날을 늘리게.","힘든 날이 늘고 있네. 수의사와 함께 그 아이가 편한 쪽을 먼저 보게.","그 아이가 많이 지쳐 있네. 아프지 않게 해 주는 것을 먼저 수의사와 의논하게."][grade]; S.wover={g:"그 무렵 편히 먹고 쉬는 날이 늘어나네.",b:"그 무렵까지는 수의사 말을 따라 무리 없이 돌보게."}; }
+    if(k==="임신"&&/시험관|인공\s*수정|난임/.test(q)){ verdict=S.DO?(grade<=1?`${S.DO.imp}. 더 미룰 까닭이 없네. 상담부터 잡고 의원과 차근차근 가게.`:`${S.DO.ger} 의원과 먼저 상의한 뒤 정하게. 몸과 마음을 함께 돌보며 가게.`):verdict; S.wover={g:"그 무렵 길이 한결 또렷해지네.",b:"그 무렵까지는 몸과 마음을 먼저 채우게."}; }
+  }
   /* '잘 볼까'처럼 붙느냐가 아니라 잘 치르느냐를 물으면 */
   if(I&&I.k==="시험"&&/잘\s*(볼|봐|치|칠|보)/.test(S.q)) verdict=verdict.replace(/^붙네\./,"잘 보네.");
   /* '왜'를 물으면 까닭을 먼저 말한다 — 막는 자리(敵)의 말과 같은 것을 쓴다 */
@@ -2081,7 +2172,7 @@ function buildReading(){
       else if(c.tone>0&&grade<=1&&!toldUp&&!/^flood-/.test(c.id)){ toldUp=true; c.line+=/^(wake|fire|wakeline)/.test(c.id)?" 흐름이 자네 편이니, 한 번 밀리는 일이 있어도 생각보다 빨리 지나가네.":(/다만/.test(c.line)?" 그래도":" 다만")+" 흐름이 자네 편이니, 미리 대비해 두면 큰 탈로 번지지 않네."; } }); }
   if(qtype==="어느"&&R.A&&R.B){ const pickS=esc((grade<=1?R.A:R.B).replace(/[?？!.]+$/,"")); verdict=`패는 ‘${pickS}’ 쪽을 가리키네. `+(grade<=1?"자네 마음이 이미 기운 쪽과 같다면 망설일 까닭이 없네.":"쉽지는 않으나 그쪽이 덜 다치는 길일세."); }
   return {topic,qtype,combos,el,elN:tally[el],rev,grade,score,why,leanSuit,leanN:suits[leanSuit],daegui,seed,
-    verdict:(S.rec&&S.rec.fx&&S.rec.fx.v)||honorWho(verdict,I&&I.k,R), when:(S.rec&&S.rec.fx&&S.rec.fx.w)||nearWhen(R.when)||examWhen(I,R)||opWhen(I,R,topicOf(S.q))||nearClamp(healthClamp(yearClamp(whenFor(el,S.rec?S.rec.t:Date.now()),R,grade,I),I,topicOf(S.q)),I),
+    wover:S.wover, verdict:(S.rec&&S.rec.fx&&S.rec.fx.v)||honorWho(verdict,I&&I.k,R), when:(S.rec&&S.rec.fx&&S.rec.fx.w)||opWhen(I,R,topicOf(S.q))||clockWhen(I,R)||nearWhen(R.when)||examWhen(I,R)||nearClamp(healthClamp(yearClamp(whenFor(el,S.rec?S.rec.t:Date.now()),R,grade,I),I,topicOf(S.q)),I),
     tie:pickV(TIE[(I&&TIE[I.k])?I.k:topic],seed),intent:I?I.k:"",worry:I&&I.worry||"",chk,
     dkey:(I&&I.k==="시험"&&/(^|[^가-힣])(우리\s*)?(아이|아들|딸|자녀|애)(가|는|이|의|\s)/.test(S.q))?"자녀":(I&&DETAIL[I.k]?I.k:"")};
 }
@@ -2172,7 +2263,7 @@ const ACT_I={
  돈받기:{g:["언제, 얼마를 갚을지 문자로 받아 두게."],b:["주고받은 기록을 모아 두고, 갚을 날을 글로 다시 못 박게."]},
  투자:{g:["넣을 돈과 뺄 때를 미리 적어 두고 그대로 지키게."],b:["이번 주는 사지도 팔지도 말고 지켜보게."]},
  이직:{g:["갈 곳을 먼저 정해 두고 나서 사표를 쓰게."],b:["지금 자리에서 마무리 못 한 일부터 끝내 두게."]},
- 결혼:{g:["혼인 이야기를 이번 주 안에 한 번 차분히 꺼내 보게."],b:["혼인을 두고 서로 바라는 것을 이번 주 안에 하나씩 적어 견주어 보게."]}
+ 결혼:{g:["혼인 이야기를 이번 주 안에 한 번 차분히 꺼내 보게."],b:["혼인 이야기를 꺼내기 전에, 자네가 바라는 것부터 혼자 한 줄로 적어 두게."]}
 };
 ACT.연애={g:["하고 싶은 말을 한 줄로 줄여 이번 주 안에 그 사람에게 직접 건네게. 돌려 말하지 말게."],b:["그 사람 연락을 기다리며 휴대폰을 붙들지 말게. 사흘만 자네 일에 몰두하게."]};
 /* ── 물음 갈래별 풀이 묶음 — 큰 주제의 공용 문장이 엉뚱하게 끼지 않게, 갈래마다 자리별 말을 따로 둔다 ── */
@@ -2206,6 +2297,32 @@ const PACK={
   N:{g:["지금 흐름은 자네 쪽으로 열려 있네. 편하게 나가면 되네.","지금 자네 기분이 밝으니 그게 그대로 전해지네."],b:["지금은 서로 알아 가는 첫걸음일세. 한 번에 다 보려 하지 말게.","지금은 설렘보다 부담이 크네. 가볍게 생각하게."]},
   A:{g:["만나면 그 사람 이야기를 먼저 묻고 끝까지 들어 주게."],b:["이번 자리는 가볍게 밥 한 끼로 생각하고, 다음을 정하지 말고 나오게."]},
   W:{g:"그 무렵 다음 만남이 잡히네.",b:"그 무렵이면 이 인연이 어디까지인지 드러나네."}},
+ 보증금:{
+  D:{助:["계약서와 주고받은 문자가 자네를 지키네. 하나도 버리지 말게.","같은 일을 먼저 겪은 사람 하나가 길을 일러 주네. 그 말을 귀담아듣게."],
+   why:["설마 하며 미뤄 둔 자리에 앉은 것일세.","집주인 말만 믿고 서류를 챙기지 않은 틈에 앉은 것일세."],
+   隱:["자네가 못 보는 건 집주인도 돈이 묶여 쩔쩔매고 있다는 것일세. 버티는 게 아니라 못 내는 것일세.","자네가 못 보는 건 날짜일세. 만기 전에 해 둘 일이 있네."],
+   敵:["막는 건 집주인의 빈 곳간일세. 다음 세입자가 들어와야 돈이 도네.","막는 건 말로만 오간 약속일세. 글로 남기지 않은 것이 발목을 잡네."],
+   心:{g:["집주인도 돌려줄 마음은 있네. 다만 돈이 묶여 있을 뿐일세.","집주인은 일을 크게 만들고 싶지 않아 하네. 차분히 날짜를 물으면 답이 오네."],b:["집주인은 지금 버틸 궁리부터 하고 있네. 말로만 기다리지 말게.","집주인은 다음 세입자에게 기대고 있네. 자네가 먼저 움직여야 하네."]},
+   果:{g:["끝은 만기 무렵 제 몫이 돌아오는 모양일세.","끝은 조금 늦되 한 푼도 빠짐없이 돌아오는 모양일세."],b:["끝은 절차를 밟은 뒤에야 돌아오는 모양일세. 미루지 말게.","끝은 나눠서 돌아오는 모양일세. 받을 날을 글로 못 박아 두게."]}},
+  B:["대귀가 나왔네. 집값이나 경기 같은 자네 손 밖의 흐름이 끼어 있다는 뜻일세.","말의 귀가 나왔네. 집주인과 오간 말 한마디가 판을 가른다는 뜻일세.","정에 얽힌 귀가 나왔네. 좋게 지내던 사이라 모질게 못 하고 있다는 뜻일세.","셈의 귀가 나왔네. 집주인 돈이 다른 데 묶여 돌지 않는다는 뜻일세.","넋의 귀가 나왔네. 걱정이 앞서 할 일을 미루고 있다는 뜻일세."],
+  G:["손 밖의 흐름을 핑계 삼아 날짜를 미루게 하지.","말로만 약속하게 해 나중에 딴소리를 하게 하지.","정에 기대게 해 모질게 따지지 못하게 하지.","돈을 다른 데 묶어 두게 하지.","걱정만 키워 할 일을 미루게 하지."],
+  F:["집값 흐름은 따지지 말고, 받을 날짜만 못 박게.","집주인과 오간 말은 꼭 문자로 다시 남기게.","좋은 사이라도 날짜와 액수는 글로 받게.","계약서와 이체 내역을 한곳에 모아 두게.","걱정이 일면 할 일 하나를 적고 그것부터 하게."],
+  N:{g:["지금 집주인은 다음 세입자를 구하는 중일세. 그게 자네 돈길일세.","지금 흐름은 자네 쪽일세. 서류만 챙겨 두면 되네."],b:["지금 집주인 쪽 돈이 꽉 막혀 있네.","지금은 말로 기다릴 때가 아닐세. 기록을 남길 때일세."]},
+  A:{g:["집주인에게 돌려받을 날짜를 문자로 받아 두게."],b:["계약서와 주고받은 문자를 모아 두고, 이번 주 안에 상담을 한 번 받게."]},
+  W:{g:"그 무렵 보증금이 돌아오네.",b:"그 무렵까지 안 오면 바로 절차를 밟게. 그 전에 서류를 갖춰 두게."}},
+ 발령:{
+  D:{助:["가족 가운데 한 사람이 자네 마음을 알고 있네. 그 사람과 먼저 터놓게.","새 자리에 자네를 아는 사람이 하나 있네. 그 사람이 처음 자리 잡는 길을 열어 주네."],
+   why:["가족 뜻을 묻기 전에 혼자 결론부터 낸 자리에 앉은 것일세.","일과 가족 사이에서 어느 쪽도 놓지 못한 자리에 앉은 것일세."],
+   隱:["자네가 못 보는 건 가족도 자네 몸과 마음을 먼저 걱정한다는 것일세.","자네가 못 보는 건 이번 자리가 자네 다음 걸음과 이어져 있다는 것일세."],
+   敵:["막는 건 떨어져 지낼 외로움일세. 혼자 버틸 채비부터 하게.","막는 건 서로 하지 못한 말일세. 가족과 바라는 것을 먼저 맞추게."],
+   心:{g:["가족은 자네를 붙잡기보다 응원하고 싶어 하네.","가족은 자네가 다녀오는 걸 받아들일 마음이 있네. 다만 서운할 뿐일세."],b:["가족은 아직 떨어져 지내는 게 겁이 나네.","가족은 자네가 혼자 정한 것 같아 서운해하네."]},
+   果:{g:["끝은 떨어져 지내도 사이가 더 단단해지는 모양일세.","끝은 새 자리에서 자네 몫이 커지는 모양일세."],b:["끝은 한 철 해 보고 다시 정하는 모양일세.","끝은 가족 곁으로 돌아올 길을 찾는 모양일세."]}},
+  B:["대귀가 나왔네. 회사 사정 같은 자네 손 밖의 일이 이 일을 정했다는 뜻일세.","말의 귀가 나왔네. 가족과 나눌 말 한마디가 이 일을 가른다는 뜻일세.","정에 얽힌 귀가 나왔네. 가족과 떨어지는 서운함이 마음을 붙잡고 있다는 뜻일세.","셈의 귀가 나왔네. 두 집 살림 셈이 마음에 걸려 있다는 뜻일세.","넋의 귀가 나왔네. 낯선 곳에 대한 걱정이 앞서 있다는 뜻일세."],
+  G:["회사 사정을 탓하며 마음을 지치게 하지.","가족과 오가는 말을 날카롭게 하지.","서운함을 키워 서로 등을 돌리게 하지.","두 집 살림 셈만 하게 하지.","낯선 곳 걱정을 키워 잠을 설치게 하지."],
+  F:["회사 사정은 탓하지 말고 바꿀 수 있는 것만 보게.","가족과 이야기할 땐 정한 것 말고 바라는 것부터 말하게.","떨어져 지내는 동안 날마다 짧게라도 목소리를 듣게.","두 집 살림 셈을 한 장에 적어 가족과 같이 보게.","가기 전에 새 동네를 한 번 미리 다녀오게."],
+  N:{g:["지금 흐름은 새 자리로 열려 있네.","지금 가족 마음도 조금씩 풀리고 있네."],b:["지금 가족과 자네 마음이 엇갈려 있네.","지금 마음이 일과 가족 사이에서 흔들리고 있네."]},
+  A:{g:["가족과 오갈 날과 연락할 때를 미리 정해 두고 가게."],b:["가기 전에 가족과 한 번 마주 앉아 서로 바라는 것을 하나씩 말하게."]},
+  W:{g:"그 무렵 새 자리에 몸과 마음이 붙네.",b:"그 무렵 한 번 다시 정할 일이 오니 가족과 미리 의논해 두게."}},
  배신:{
   D:{助:["자네 사정을 오래 지켜본 사람 하나가 있네. 그 사람 눈을 한 번 빌리게.","자네가 지켜 온 약속들이 자네를 지키네. 흔들리지 말게."],
    why:["마음을 다 내어 준 뒤 서운함이 쌓인 자리에 앉은 것일세.","들은 말 한마디가 의심을 키운 자리에 앉은 것일세."],
@@ -2429,7 +2546,7 @@ function frameCore(i,p,E){
     敵:sens?"":"거꾸로 나왔으니 이 벽은 생각보다 오래가지 않네.",助:sens?"":"거꾸로 나왔으니 도움이 조금 늦게 오네.",
     心:sens?"":(good?"거꾸로 나왔으니 그 속을 겉으로 잘 드러내지 않네.":"거꾸로 나왔으니 겉으로는 덤덤한 척하네."),時:"",
     鬼:sens?"":"거꾸로 나왔으니 이 귀의 짓이 지금 한창일세.",符:"거꾸로 나왔으니 한 번으론 안 듣네. 마음이 흔들릴 때마다 다시 하게.",果:sens||/날|그때/.test(E.when.t)?"":"거꾸로 나왔으니 결과가 생각보다 일찍 나오네."};
-  const rv=p.rev&&REVP[k]?" "+REVP[k]:"";
+  const rv=p.rev&&REVP[k]&&/^(緣|敵|果)$/.test(k)?" "+REVP[k]:"";
   const W=E.worry, q1=`‘${esc(R.first)}’`;
   const NK=E.chk?CHK.N:(NOW[E.dkey]||NOW[E.topic]||NOW.기타);
   switch(i){
@@ -2437,6 +2554,7 @@ function frameCore(i,p,E){
       (R.when&&/자꾸|계속|오래/.test(R.when) ? `자네가 ‘${R.when}’ 그렇다 한 그 일, 바로 여기서 꼬이기 시작했네.`
        : R.short ? `물음은 짧아도 뿌리는 깊네.`
        : /^(반려|가족건강|자녀)/.test(E.dkey) ? ``
+       : R.many&&R.first&&!/…/.test(R.first)&&R.first.length>=6&&/\d|년|개월|달|번째|살|만원|주일/.test(R.first) ? `자네가 ‘${esc(R.first.replace(/[.,!?~]+$/,""))}’ 하고 꺼낸 그 사정, 거기서 이 일이 시작됐네.`
        : pickV(nearWhen(R.when)||["면접","시험","소개팅","집계약","대출승인","운세","이사","마음건강"].includes(E.intent)?[`자네 물음은 바로 여기서 싹텄네.`,`자네가 들고 온 그 일의 시작이 바로 이것일세.`]:[`자네 물음은 바로 여기서 싹텄네.`,`이 일은 어제오늘 생긴 게 아닐세.`,`자네가 들고 온 그 일의 시작이 바로 이것일세.`],sd));
     case 1: { const NI=nowFor(E,NK);
       return `${open}<br>${nm}${jo(n,"이가")} 지금 자리에 앉았네.${rv}<br>${pickV(good?NI.g:(E.grade===2&&NI.m?NI.m:NI.b),sd)}`; }
@@ -2452,7 +2570,7 @@ function frameCore(i,p,E){
     }
     case 6: return `${open}<br>${nm}${jo(n,"이가")} 때를 쥐었네.<br>`+whenTalk(R,E)+
       (E.dkey==="반려이별"?`그리움이 한결 가벼워지는 때는 <strong class="nw">${E.when.t}</strong>일세. 그때까지는 억지로 잊으려 하지 말고 충분히 그리워하게.`
-        :`때는 <strong class="nw">${E.when.t}</strong>일세. `+(nearWhen(R.when)?`${E.when.d}. `:"")+(()=>{ if(E.qtype==="어느"&&R.A&&R.B&&!nearWhen(R.when)) return "고르는 건 미루지 말고 지금 하게. 그 무렵이면 고른 쪽이 옳았다는 게 드러나네. "; const W2=(E.chk?CHK.W:null)||(E.dkey==="자녀"&&E.intent==="시험"?{g:"그 무렵 아이에게서 반가운 소식을 듣네.",b:"그날은 결과보다 아이 얼굴을 먼저 살피게."}:null)||(nearWhen(R.when)&&E.intent==="시험"?{g:"그날 아는 문제가 먼저 눈에 들어오네.",b:"그날 아는 것부터 차분히 풀면 되네."}:null)||WHEN_WHAT[E.intent]||WHEN_WHAT[E.dkey]||WHEN_WHAT[E.topic]||WHEN_WHAT.기타; const ww=(good?W2.g:W2.b); return (/날|자리|그때|오늘|내일|모레/.test(E.when.t)?ww.replace(/^그 무렵/,"그날"):ww)+" "; })()+(p.rev&&!nearWhen(R.when)&&!/날|그때/.test(E.when.t)&&(good||!sens)?"거꾸로 나왔으니 그보다 조금 이르게 오네.":""));
+        :`때는 <strong class="nw">${E.when.t}</strong>일세. `+(nearWhen(R.when)&&E.when.d?`${E.when.d}. `:"")+(()=>{ if(E.qtype==="어느"&&R.A&&R.B&&!nearWhen(R.when)) return "고르는 건 미루지 말고 지금 하게. 그 무렵이면 고른 쪽이 옳았다는 게 드러나네. "; const W2=E.wover||(E.chk?CHK.W:null)||(E.dkey==="자녀"&&E.intent==="시험"?{g:"그 무렵 아이에게서 반가운 소식을 듣네.",b:"그날은 결과보다 아이 얼굴을 먼저 살피게."}:null)||(nearWhen(R.when)&&E.intent==="시험"?{g:"그날 아는 문제가 먼저 눈에 들어오네.",b:"그날 아는 것부터 차분히 풀면 되네."}:null)||WHEN_WHAT[E.intent]||WHEN_WHAT[E.dkey]||WHEN_WHAT[E.topic]||WHEN_WHAT.기타; const ww=(good?W2.g:W2.b); return (/날|자리|그때|오늘|내일|모레/.test(E.when.t)?ww.replace(/^그 무렵/,"그날"):ww)+" "; })()+(p.rev&&!nearWhen(R.when)&&!/날|그때/.test(E.when.t)&&(good||!sens)?"거꾸로 나왔으니 그보다 조금 이르게 오네.":""));
     case 7: { const GD=(GUI_DO_K[E.dkey]||{})[c.suit]||(GUI_DO[c.suit]||{})[E.topic]||(GUI_DO[c.suit]||{}).기타||"";
       return `${open}<br>자네 뒤에 붙은 건 ${nm}일세.${rv} 이 귀는 ${GD}<br>왜 붙었느냐. ${pickV(D.why,sd)}`; }
     case 8: {
@@ -2818,10 +2936,10 @@ async function askSeer(E,from,to,stage){
   const opened=Array.from({length:from},(_,i)=>({pos:POS[i].k, nm:S.picked[i].card.full}));
   const R=S.R||readQ(S.q);
   const bone = stage==="free"
-    ? {stage, topic:E.topic, qtype:E.qtype, who:R.who, feel:R.feel, whenWord:R.when, intent:E.intent, worry:E.worry, subject:(/^반려/.test(E.dkey||"")?"반려":E.dkey||"")}   /* 무료 단계엔 덮인 패의 답을 보내지 않는다 */
+    ? {stage, lean:E.grade<=1?"good":"bad", tired:/아무것도\s*하기\s*싫|무서워|두려워|번아웃|우울|잠이\s*안|숨이\s*막/.test(S.q)?1:0, topic:E.topic, qtype:E.qtype, who:R.who, feel:R.feel, whenWord:R.when, intent:E.intent, worry:E.worry, subject:(/^반려/.test(E.dkey||"")?"반려":E.dkey||""), facts:R.facts||[], act:(S.DO&&S.DO.stem)||""}   /* 무료 단계엔 덮인 패의 답을 보내지 않는다 */
     : {stage, opened, combos:(E.combos||[]).map(c=>c.name), grade:E.grade, why:E.why, topic:E.topic, qtype:E.qtype, el:E.el, elN:E.elN, rev:E.rev,
        leanSuit:E.leanSuit, leanN:E.leanN, daegui:E.daegui, when:E.when, verdict:E.verdict,
-       who:R.who, feel:R.feel, whenWord:R.when, intent:E.intent, worry:E.worry, subject:(/^반려/.test(E.dkey||"")?"반려":E.dkey||"")};
+       who:R.who, feel:R.feel, whenWord:R.when, intent:E.intent, worry:E.worry, subject:(/^반려/.test(E.dkey||"")?"반려":E.dkey||""), facts:R.facts||[], act:(S.DO&&S.DO.stem)||"", tired:/아무것도\s*하기\s*싫|무서워|두려워|번아웃|우울|잠이\s*안|숨이\s*막/.test(S.q)?1:0};
   const ctrl=new AbortController();
   const bail=setTimeout(()=>ctrl.abort(), 45000);
   try{
@@ -2905,9 +3023,9 @@ async function openReading(){
   if(hidden.length){
     await nextTap("계속"); if(!live()) return;
     if(!S.replay){ bell(698,.1); $("stage").classList.add("shake"); setTimeout(()=>$("stage").classList.remove("shake"),620); }
-    if(link){ const li=link.pos.find(i=>i<3); $("fl"+li).parentElement.classList.add("combo"); }
+    if(link){ const li=link.pos.find(i=>i<3); $("fl"+li).parentElement.classList.add("combo"); setTimeout(()=>{ const z=$("fl"+li); if(z) z.parentElement.classList.remove("combo"); },2600); }
     const ln=link?S.picked[link.pos.find(i=>i<3)].card.nm:"";
-    if(!S.replay){ await halt({name:`숨은 조합 ${hidden.length}개`,han:"合".repeat(Math.min(hidden.length,3)),pos:link?[link.pos.find(i=>i<3)]:[]},"덮인 패 속에 조합이 숨어 있다고?"); if(!live()) return; }
+    if(!S.replay){ await halt({name:`숨은 조합 ${hidden.length}개`,han:`合 × ${hidden.length}`,pos:link?[link.pos.find(i=>i<3)]:[]},"덮인 패 속에 조합이 숨어 있다고?"); if(!live()) return; }
     const nC=Math.max(1,Math.min(E.combos.length,5));
     await line("잠깐",(link?`방금 연 <em>${ln}</em>${jo(ln,"이가")} 덮인 패 하나와 이어져 있네. 짝이 숨어 있다는 뜻일세.<br>`:"")+
       `덮인 일곱 장 속에 <strong>조합 ${hidden.length}개</strong>가 숨어 있네. 이런 판은 흔치 않네.<br>`+
@@ -3303,18 +3421,16 @@ async function makeShare0(T){
     x.fillStyle="#0d0607"; x.fillRect(cx,cy,cw,ch);
     if(open){
       x.strokeStyle="rgba(201,162,74,.55)"; x.lineWidth=2; x.strokeRect(cx+7,cy+7,cw-14,ch-14);
-      x.fillStyle="#c9a24a"; x.font='400 17px "Song Myung", serif';
-      x.textAlign="left"; x.fillText(c.no,cx+16,cy+34); x.textAlign="right"; x.fillText(c.suit.replace(/\(.*\)/,""),cx+cw-16,cy+34); x.textAlign="center";
-      const aw=cw-28, ah=Math.round(aw*0.6);
-      if(p.rev){ x.save(); x.translate(cx+14+aw/2,cy+46+ah/2); x.rotate(Math.PI); cover(x,arts[i],-aw/2,-ah/2,aw,ah); x.restore();
-        x.fillStyle="rgba(192,54,42,.95)"; x.fillRect(cx+cw/2-44,cy+46+ah-14,88,28); x.fillStyle="#fff"; x.font='400 18px "Song Myung", serif'; x.fillText("逆 깨어남",cx+cw/2,cy+46+ah+6); }
-      else cover(x,arts[i],cx+14,cy+46,aw,ah);
-      x.strokeStyle="rgba(201,162,74,.45)"; x.lineWidth=1.5; x.strokeRect(cx+14,cy+46,aw,ah);
+      const aw=cw-28, ah=Math.round(aw*0.78), ay=cy+16;
+      if(p.rev){ x.save(); x.translate(cx+14+aw/2,ay+ah/2); x.rotate(Math.PI); cover(x,arts[i],-aw/2,-ah/2,aw,ah); x.restore();
+        x.fillStyle="rgba(192,54,42,.95)"; x.fillRect(cx+cw/2-30,ay+ah-18,60,34); x.fillStyle="#fff"; x.font='400 26px "Song Myung", serif'; x.fillText("逆",cx+cw/2,ay+ah+8); }
+      else cover(x,arts[i],cx+14,ay,aw,ah);
+      x.strokeStyle="rgba(201,162,74,.45)"; x.lineWidth=1.5; x.strokeRect(cx+14,ay,aw,ah);
       const hj=/[가-힣]/.test(c.hanja)||!c.hanja?"":c.hanja;
-      if(hj){ x.fillStyle="#e2463a"; x.font='400 30px "Song Myung", serif'; x.fillText(hj,cx+cw/2,cy+ch-62);
-        x.fillStyle="#ece0d2"; x.font='400 25px "Song Myung", serif'; x.fillText(c.nm,cx+cw/2,cy+ch-26); }
+      if(hj){ x.fillStyle="#e2463a"; x.font=`400 ${hj.length>3?30:36}px "Song Myung", serif`; x.fillText(hj,cx+cw/2,cy+ch-66);
+        x.fillStyle="#ece0d2"; x.font=`400 ${c.nm.length>4?27:31}px "Song Myung", serif`; x.fillText(c.nm,cx+cw/2,cy+ch-24); }
       else { /* 한자 이름이 없는 귀는 우리말 이름을 붉은 자리에 크게 — 칸이 비어 보이지 않게 */
-        x.fillStyle="#e2463a"; x.font=`400 ${c.nm.length>4?26:30}px "Song Myung", serif`; x.fillText(c.nm,cx+cw/2,cy+ch-44); }
+        x.fillStyle="#e2463a"; x.font=`400 ${c.nm.length>4?30:36}px "Song Myung", serif`; x.fillText(c.nm,cx+cw/2,cy+ch-44); }
     } else {
       cover(x,backI,cx,cy,cw,ch); x.fillStyle="rgba(6,3,4,.55)"; x.fillRect(cx,cy,cw,ch);
       x.fillStyle="#ff5436"; x.font='400 70px "Song Myung", serif'; x.fillText("封",cx+cw/2,cy+ch/2+24);
@@ -3336,7 +3452,7 @@ async function makeShare0(T){
   }
   x.fillStyle="#9a8b7e"; x.font='400 32px "Noto Sans KR", sans-serif';
   x.fillText(`${fmtDate(S.rec?S.rec.t:Date.now())}의 패 · 백귀타로`,W/2,H-92);
-  x.fillStyle="#6f6258"; x.font='400 22px "Noto Sans KR", sans-serif';
+  x.fillStyle="#7d6f64"; x.font='400 26px "Noto Sans KR", sans-serif';
   x.fillText("해석 규칙과 생성형 AI가 함께 쓴 풀이 · 오락용",W/2,H-48);
   let url="";
   try{ url=cv.toDataURL("image/jpeg",.9); }catch(e){}

@@ -121,7 +121,7 @@ function hage(t) {
   s = s.replace(new RegExp("(거|게)야" + END, "g"), "걸세").replace(new RegExp("말이야" + END, "g"), "말일세");
   s = s.replace(new RegExp("([가-힣])다고" + END, "g"), "$1다네").replace(/([가-힣])이일세/g, (m, c) => (jong(c) ? c + "일세" : m));
   s = s.replace(new RegExp("([가-힣])이야" + END, "g"), (m, c) => c + (jong(c) ? "일세" : "이일세"));
-  s = s.replace(new RegExp("([겠했었았였])어" + END, "g"), "$1네").replace(/자네게(?=\s)/g, "자네에게").replace(/당신/g, "자네").replace(/(지금|이제|먼저|다시|자네|그) \1(?=\s)/g, "$1").replace(/거일세/g, "걸세");
+  s = s.replace(new RegExp("([겠했었았였])어" + END, "g"), "$1네").replace(/자네게(?=\s)/g, "자네에게").replace(/당신/g, "자네").replace(/(지금|이제|먼저|다시|자네|그) \1(?=\s)/g, "$1").replace(/거일세/g, "걸세").replace(/([가-힣])네네(?=[.!…\s<]|$)/g, "$1네").replace(/겁이 있네/g, "겁이 나네").replace(/([가-힣])야 네(?=[.!…\s<]|$)/g, "$1야 하네").replace(/않을 일세/g, "않을 걸세").replace(/얽인/g, "얽힌").replace(/천천할 수/g, "천천히 할 수");
   /* 겁주는 몸 표현 */
   s = s.replace(/목을 조이/g, "발목을 잡").replace(/목을 조여/g, "발목을 잡아");
   s = s.replace(/([가-힣])(갈|올|될|할|볼|줄)세(?=[.!…]|<|$)/g, "$1$2 걸세");
@@ -187,6 +187,11 @@ F. 짧게. 한 자리에 두세 문장(符는 네 문장까지). 한 문장은 �
 15. 손님을 탓하거나 겁주는 몸 표현(목을 조인다, 짓누른다, 헛것을 본다, 한 맺힌 넋, 피, 죽음)을 쓰지 않는다. 특히 몸·마음·가족의 병을 물을 때는 더 부드럽게 쓴다.
 16. 하게체 어미만 쓴다. 문장 끝은 '~네', '~일세', '~게', '~지', '~가', '~세(함께 하자는 뜻)'로 맺는다. '~다.'로 끝나는 해라체(예: 괜찮다, 끝이다, 온다)와 '~을세', '~ㄹ 게다', '~테일세' 같은 틀린 꼴은 쓰지 않는다. 바른 예: 오네, 있네, 끝일세, 괜찮네. '~ㄹ 걸세'는 짐작처럼 들리니 한 자리에 한 번을 넘기지 않는다. '~야', '~거야', '~한다고', '~말이야' 같은 반말 끝맺음도 쓰지 않는다.
 17. 귀 이름 뒤에 한자를 괄호로 붙이지 않는다.
+18. 손님이 남에게 당했거나(돈을 떼임, 공을 빼앗김, 보증금을 못 받음) 병·나이 때문에 생긴 일이면, 뿌리(因)를 손님의 잘못이나 성격 탓으로 돌리지 않는다.
+19. 손님이 말하지 않은 사람(누군가, 사람 하나, 집안 어른, 주변 사람)을 새로 등장시키지 않는다. base에 그런 사람이 나와도 손님이 물음에 쓴 사람이나 손님 자신이 가진 것(기록, 경험, 시간)으로 바꿔 쓴다.
+20. 한 풀이 안에서 결정의 방향이 흔들리지 않게 한다. 확답(또는 흐름의 결)과 반대되는 조언을 어느 자리에서도 하지 않는다.
+21. 손님의 물음 문장을 그대로 다시 읊지 않는다. 손님이 쓴 말은 숫자·사람·사건 같은 조각만 짚는다.
+22. 늙은 반려동물이나 오래가는 병(신장 수치 등)은 '다시 살아난다', '곧 낫는다'고 하지 않고, 떠남을 넌지시 비치지도 않는다. 수의사가 일러 준 대로 편한 날을 늘리는 쪽으로 푼다. 아이를 기다리는 물음엔 몸이나 마음을 탓하지 않고, 임신 시기를 못 박지 않는다.
 
 형식
 - 결과는 JSON 배열 하나만 내놓는다. 설명이나 머리말, 코드 울타리를 붙이지 않는다.
@@ -212,6 +217,8 @@ function cleanBone(b, cut) {
     topic: word(b.topic, 6), qtype: word(b.qtype, 4), intent: word(b.intent, 8), worry: cut(b.worry, 30),
     subject: ["반려", "자녀"].includes(b.subject) ? b.subject : "",
     who: cut(b.who, 20), feel: cut(b.feel, 20), whenWord: cut(b.whenWord, 20),
+    lean: ["good", "bad"].includes(b.lean) ? b.lean : "", tired: b.tired ? 1 : 0,
+    facts: Array.isArray(b.facts) ? b.facts.slice(0, 6).map((x) => cut(x, 60)).filter(Boolean) : [], act: cut(b.act, 40),
     opened: Array.isArray(b.opened) ? b.opened.slice(0, 10).map((o) => ({ pos: cut(o?.pos, 4), nm: cut(o?.nm, 30) })) : [],
     verdict: cut(b.verdict, 160), why: list(b.why, 6, 120), combos: list(b.combos, 8, 40),
     when: b.when ? { t: cut(b.when.t, 40), d: cut(b.when.d, 80) } : null,
@@ -249,6 +256,10 @@ function buildPrompt(q, cards, bone, stage) {
     /검진|검사/.test(q) && !/수술|시술/.test(q) ? "- 이 물음은 검사 결과를 묻는 것이다. 이미 아프다고 전제하지 않는다." : "",
     bone.subject === "자녀" ? "- 물음의 대상: 손님의 자녀. 아이를 탓하지 말고, 부모가 할 수 있는 일로 풀어 준다." : "",
     bone.worry ? `- 손님이 걱정하는 일: ${bone.worry} (좋은 흐름이면 '그 일은 일어나지 않는다', 나쁜 흐름이면 '그 기미가 있다'로 푼다)` : "",
+    bone.facts && bone.facts.length > 1 ? `- 손님이 적은 사정 조각: ${bone.facts.map((f, i) => "①②③④⑤⑥"[i] + " " + f).join("  ")}\n  · 숫자·기간·사람·사건은 손님이 쓴 말 그대로 받아 짚는다(예: '3년', '500만원', '팀장'). 자리마다 서로 다른 조각을 짚고, 같은 조각을 두 자리에서 되풀이하지 않는다.\n  · 손님이 쓰지 않은 사정(집안 반대, 돈 문제, 다른 사람 등)은 보태지 않는다.` : "",
+    bone.act ? `- 손님이 할지 말지 묻는 일: '${bone.act}'. 확답이 바로 이 일에 대한 답이니, 자리마다 이 결정에 닿게 푼다(이 일을 할 때 무엇이 막고 무엇이 돕는지).` : "",
+    bone.lean ? `- 이번 판의 결(손님에게는 말하지 말 것): ${bone.lean === "good" ? "좋은 쪽" : "막힌 쪽"}. 앞의 세 장도 이 결과 어긋나는 조언을 하지 않는다.` : "",
+    bone.tired ? "- 손님은 많이 지쳐 있다. 쉼과 마음 진료를 먼저 권하고, 그 두려움을 다른 사람 탓으로 지어내지 않는다. 그 두려움이 옳다고 맞장구치지도 않는다." : "",
     bone.who ? `- 물음 속 사람: ${bone.who}` : "",
     bone.feel ? `- 물음 속 마음: ${bone.feel}` : "",
     bone.whenWord ? `- 물음 속 때를 가리키는 말: ${bone.whenWord}` : "",
@@ -431,6 +442,8 @@ export default async function handler(req, res) {
         .replace(/>/g, (m, i, str) => (/<\/?(br|em|strong)\s*\/?$/i.test(str.slice(Math.max(0, i - 9), i)) ? ">" : "〉"))
         .replace(/<(\/?)(br|em|strong)\s*\/?>/gi, (m, c, t) => (t.toLowerCase() === "br" ? "<br>" : `<${c}${t.toLowerCase()}>`)),
     }));
+    /* '그 너머는 덮인 일곱 장이…'는 무료의 마지막 자리(隱)에만 붙는다 */
+    clean.forEach((s) => { if (s.pos !== "隱") s.text = s.text.replace(/\s*(<br>)?\s*그 너머는 덮인 일곱 장이[^.<]*[.]?/g, "").trim(); });
 
     res.setHeader("cache-control", "no-store");
     res.status(200).json({ sections: clean });
