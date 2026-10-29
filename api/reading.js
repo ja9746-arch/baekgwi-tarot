@@ -447,8 +447,12 @@ export default async function handler(req, res) {
       res.status(200).json({ intent: "" });
       return;
     }
-    const keys = (Array.isArray(body?.keys) ? body.keys : [])
-      .map((k) => cut(k, 12)).filter((k) => /^[가-힣]{1,12}$/.test(k)).slice(0, 200);
+    /* 갈래는 이름만으로는 뜻이 안 통한다 — 화면 쪽이 한 줄 힌트를 함께 보낸다 */
+    const raw = Array.isArray(body?.keys) ? body.keys.slice(0, 200) : [];
+    const list = raw
+      .map((e) => (typeof e === "string" ? { k: cut(e, 12), h: "" } : { k: cut(e?.k, 12), h: cut(e?.h, 70) }))
+      .filter((e) => /^[가-힣]{1,12}$/.test(e.k));
+    const keys = list.map((e) => e.k);
     if (!keys.length) {
       res.setHeader("cache-control", "no-store");
       res.status(200).json({ intent: "" });
@@ -456,9 +460,13 @@ export default async function handler(req, res) {
     }
     const sys = "너는 한국어 물음을 미리 정해진 갈래 하나로 가르는 일만 한다. 설명하지 않고 갈래 이름 하나만 답한다.";
     const pr =
-      `갈래 목록:\n${keys.join(", ")}\n\n물음:\n"${q}"\n\n` +
+      "갈래 목록 (이름 — 어떤 물음을 받는 갈래인지):\n" +
+      list.map((e) => (e.h ? `${e.k} — ${e.h}` : e.k)).join("\n") +
+      `\n\n물음:\n"${q}"\n\n` +
       "이 물음이 무엇에 대한 것인지 위 목록에서 가장 알맞은 갈래 하나를 고른다.\n" +
-      "- 목록에 들어맞는 것이 없으면 빈칸으로 답한다. 억지로 고르지 않는다.\n" +
+      "- 설명이 이 물음과 딱 맞아떨어지는 갈래만 고른다. 이름만 비슷하고 설명이 어긋나면 고르지 않는다.\n" +
+      "- 조금이라도 망설여지면 '없음'이라고 답한다. 틀린 갈래를 고르는 것이 '없음'보다 훨씬 나쁘다.\n" +
+      "- 물음이 짧거나 사정이 적혀 있지 않아 무엇을 묻는지 알 수 없으면 '없음'이라고 답한다.\n" +
       "- 물음에 곁들인 사정이 아니라, 손님이 실제로 묻고 있는 그 일을 고른다.\n" +
       "- 갈래 이름을 그대로, 글자 하나 바꾸지 말고 적는다. 다른 말은 적지 않는다.";
     let pick = "";
@@ -466,7 +474,7 @@ export default async function handler(req, res) {
       const out = await callModel(req, sys, pr, 24, { models: [FAST], budget: 12000 });
       pick = String(out || "").replace(/[^가-힣]/g, "").trim();
     } catch {}
-    if (!keys.includes(pick)) pick = "";
+    if (pick === "없음" || !keys.includes(pick)) pick = "";
     /* 규칙이 못 잡은 물음만 셈해 둔다 — 물음 글은 남기지 않는다 */
     if (body?.miss) console.log("intent-miss", pick || "(없음)");
     res.setHeader("cache-control", "no-store");
