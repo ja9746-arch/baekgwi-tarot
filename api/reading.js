@@ -265,6 +265,7 @@ function cleanBone(b, cut) {
     subject: ["반려", "자녀"].includes(b.subject) ? b.subject : "",
     who: cut(b.who, 20), feel: cut(b.feel, 20), whenWord: cut(b.whenWord, 20),
     lean: ["good", "bad"].includes(b.lean) ? b.lean : "", tired: b.tired ? 1 : 0,
+    loose: b.loose ? 1 : 0, thin: b.thin ? 1 : 0,
     facts: Array.isArray(b.facts) ? b.facts.slice(0, 6).map((x) => cut(x, 60)).filter(Boolean) : [], act: cut(b.act, 40),
     opened: Array.isArray(b.opened) ? b.opened.slice(0, 10).map((o) => ({ pos: cut(o?.pos, 4), nm: cut(o?.nm, 30) })) : [],
     verdict: cut(b.verdict, 160), why: list(b.why, 6, 120), combos: list(b.combos, 8, 40),
@@ -374,7 +375,9 @@ ${cards.some((c) => c.pos === "果") ? `- 배열 맨 끝에 {"pos":"答","text":
   · 첫마디에 흐리는 말을 쓰면 그 풀이는 버린다. 이런 말은 절대 쓰지 않는다 — '다만 ~뿐', '~일 수도 있네', '달라질 수 있네', '바뀔 수 있네', '어려울 수 있네', '알 수 없네', '아직 모르네', '반반', '절반', '두고 봐야', '지켜봐야', '가 봐야 아네', '자네 하기 나름일세', '~에 달렸네', '경우에 따라', '어쩌면', '아마', '글쎄', '장담은 못 하네', '단정하기 어렵네', '~일지도 모르네', '어느 쪽도', '~인 듯하네'.
   · 첫마디는 '예' 아니면 '아니오'가 바로 읽히는 한마디여야 한다. 읽는 사람이 다시 물어야 한다면 틀린 첫마디일세.
   · 뼈대의 확답 "${bone.verdict}"와 같은 쪽을 말한다. 좋다·나쁘다, 하라·말라의 결을 절대 뒤집지 않는다. 뼈대 확답에 든 조심시키는 말(진료·상담·신고·수의사·법률·글로 남기기·멈추라는 말 같은 것)은 빼지 않는다.
-  · 答은 뼈대의 확답 "${bone.verdict}"가 가리키는 그 일만 말한다. 符나 다른 자리에 적은 처방·행동을 答으로 옮겨 적지 않는다. 뼈대 확답에 없는 새 지시(글로 남겨라, 사흘 입을 다물어라, 세 가지를 적어라 같은 것)를 지어내지 않는다.
+${bone.loose ? `  · 뼈대의 확답 "${bone.verdict}"는 갈래를 가리지 못해 내놓은 두루뭉술한 바닥 문장이다. 그 문장에 매이지 말고, 손님이 적은 그 일에 맞춰 答을 새로 지어라. 다만 좋고 나쁨의 결은 반드시 지킨다 — 지금 판은 ${(bone.grade ?? 0) <= 1 ? "열리는 쪽이니 되네·하게 쪽으로" : "막힌 쪽이니 어렵네·말게 쪽으로"} 말한다.
+` : ""}${bone.thin ? `  · 손님이 사정을 거의 적지 않았다. 없는 사정을 지어내 단정하지 말고, 패가 가리키는 흐름만 말한 뒤 무엇을 묻는지 한 줄 더 적어 달라고 청한다. 사람을 끊으라거나 인연이 끝났다는 식의 모진 말은 하지 않는다.
+` : ""}${bone.loose ? "" : `  · 答은 뼈대의 확답 "${bone.verdict}"가 가리키는 그 일만 말한다.`} 符나 다른 자리에 적은 처방·행동을 答으로 옮겨 적지 않는다. 뼈대 확답에 없는 새 지시(글로 남겨라, 사흘 입을 다물어라, 세 가지를 적어라 같은 것)를 지어내지 않는다.
   · 손님이 겪은 일을 손님 탓으로 돌리지 않는다. '자네 안의 망설임 때문일세', '자네 마음이 불러온 일일세', '자네 탓일세' 같은 말은 쓰지 않는다. 남이 한 짓은 남이 한 짓으로 말한다.
   · 손님이 적지 않은 사정을 지어내지 않는다. 두 곳 가운데 고르는 물음에 '지금 다니는 곳'을 끌어오거나, 집안일 물음에 없는 다툼을 넣지 않는다.
   · 날짜나 달 이름은 넣지 않는다(때는 따로 말한다). 패나 귀 이름도 넣지 않는다.
@@ -594,12 +597,17 @@ export default async function handler(req, res) {
       const sents = a.split(/(?<=[.!?])\s+/).filter(Boolean);
       const ok = a.length >= 12 && a.length <= 150 && sents.length <= 4 && /(네|게|세|지)[.!]?$/.test(a)
         && !/[一-龥]|\d\s*월|봄머리|당신|그대(?!로)/.test(a) && (a.match(/\d+/g) || []).every((d) => q.includes(d))
-        && KEEP.every((k) => !base.includes(k) || a.includes(k))
+        && (bone.loose || KEEP.every((k) => !base.includes(k) || a.includes(k)))
         && first(a).length <= 34 && !VAGUE_HEAD.test(first(a)) && !VAGUE_ANY.test(a)
         && !BLAME.test(a) && !(DO_NOW.test(base) && HOLD_OFF.test(a)) && !madeUpCount(a, base)
         && !(bone.noWhen && /\d|[0-9]월|봄|여름|가을|겨울/.test(a))
-        && !(NEG.test(first(base)) && !NEG.test(a))
-        && !(!NEG.test(first(base)) && (bone.grade ?? 0) <= 1 && NEG.test(first(a)) && !/서두르지 말게|겁먹지 말게|미루지 말게|놓지 말게|졸이지 말게/.test(first(a)));
+        && (bone.loose
+          /* 바닥 문장일 땐 뼈대 말이 아니라 판의 등급과 결이 맞는지만 본다 */
+          ? ((bone.grade ?? 0) <= 1
+              ? !NEG.test(first(a)) || /서두르지 말게|겁먹지 말게|미루지 말게|놓지 말게|졸이지 말게|혼자 앓지 말게/.test(first(a))
+              : !/^(되네|좋네|풀리네|들어오네|트이네|오네|이루어지네|잘되네)[.!]/.test(first(a)))
+          : (!(NEG.test(first(base)) && !NEG.test(a))
+             && !(!NEG.test(first(base)) && (bone.grade ?? 0) <= 1 && NEG.test(first(a)) && !/서두르지 말게|겁먹지 말게|미루지 말게|놓지 말게|졸이지 말게/.test(first(a)))));
       if (ok) answer = /[.!]$/.test(a) ? a : a + ".";
       else console.log("answer rejected", JSON.stringify(a).slice(0, 160));
     }

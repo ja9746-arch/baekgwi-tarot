@@ -1429,7 +1429,7 @@ const INTENTS=[
   v:["잘 적응하네. 첫 달만 넘기면 제자리를 찾네.","처음 한 달은 힘들어도 곧 자리를 잡네. 편지와 전화로 곁을 지켜 주게.","처음엔 버거워하네. 소식을 자주 주고받으며 힘든 마음을 털어놓을 틈을 주게.","한동안 많이 지치네. 힘들다는 말이 오면 흘려듣지 말고 부대와도 상의하게."]},
  {k:"서운",t:"사람",re:/모른\s*척|고마운\s*줄\s*(모르|몰라)|생색|은혜를?\s*(모르|잊)|(안|못)\s*(불렀|불렸|부르|불러|초대)|초대(를|도|받지)?\s*(안|못)|(나만|저만)\s*(빼고|빠지|모르)|빼고\s*(만나|모였|갔|먹)|서운(합니다|해요|하네요|하다|한\s*(마음|말|일|소리|티)|해서|했|하고)|섭섭(합니다|해요|하네요|했|해서|하다|한\s*(마음|말|일))/,
   v:["자네 잘못이 아닐세. 그쪽 사정이 먼저였네. 서운한 마음은 짧게 말하고 넘기게.","큰 잘못은 아닐세. 오래 쌓인 서운함 하나가 있으니 한 번 담백하게 물어보게.","사이에 쌓인 것이 있네. 따지기보다 먼저 안부를 건네 보게.","이 사이는 이미 멀어져 있네. 붙잡기보다 자네를 아끼는 사람들 쪽을 보게."]},
- {k:"답답",t:"기타",re:/^(그냥\s*)?(너무\s*)?(답답|막막|힘들어|지쳐)(해요|요|하다|합니다|하네|해)?[.!?~ㅠㅜ]*$|사는\s*게\s*(답답|힘들|버거)/,
+ {k:"답답",t:"기타",re:/^[\sㄱ-ㆎㅠㅜ.,!?~]*((그냥|진짜|너무|정말|많이|요즘)\s*)*(답답|막막|힘들|힘듦|지쳐|지쳤|괴로|버거)[가-힣]*[\s.,!?~ㅠㅜ]*$|사는\s*게\s*(답답|힘들|버거)/,
   v:["풀리네. 막힌 것 하나만 빠지면 숨이 트이네.","풀리네. 다만 한 번 더 버거운 고비를 넘긴 뒤일세.","혼자 지고 있는 것부터 내려놓게. 믿는 사람 하나에게 털어놓으면 거기서 길이 나네. 답답함이 오래가면 마음 진료도 한 번 받아 보게.","지금은 많이 지친 때일세. 혼자 견디지 말고 오늘 믿는 사람 하나에게 털어놓게. 오래가면 마음 진료를 꼭 받아 보게."]},
  {k:"외로움",t:"기타",re:/외로(워|운|움|와)|쓸쓸|혼자(라서|인\s*게|\s*사는\s*게)/,
   v:["곧 마음 나눌 사람이 곁에 오네. 자네가 먼저 한 걸음 나가게.","외로움은 지나가네. 다만 기다리지 말고 사람 있는 자리에 한 번 나가 보게.","외로움이 길어지는 때일세. 오래 연락 못 한 사람에게 먼저 안부를 건네게.","지금은 많이 외로운 때일세. 혼자 견디지 말고 믿는 사람에게 털어놓게. 오래가면 상담도 한 번 받아 보게."]},
@@ -2122,7 +2122,7 @@ $("go").addEventListener("click",()=>{
   /* 사정이 담기지 않은 물음(ㅋㅋㅋ, ?, 숫자, 영어만)은 패를 펴지 않는다 */
   const risk=riskOf(text);
   const han=(text.match(/[가-힣]/g)||[]).length;
-  if(!risk&&han<4){ toast("자네 사정을 한 줄만 더 적어 주게. 예) 그 사람과 다시 이어질까요"); q.focus(); return; }
+  if(!risk&&(han<4||(qThin(text)&&han<14))){ toast("누구의 무슨 일인지 한 줄만 더 적어 주게. 예) 그 사람과 다시 이어질까요"); q.focus(); return; }
   if(risk){ $("riskMsg").innerHTML=RISK_MSG[risk]; openSheet("risk"); return; }
   const same=skipSame?null:findSame(text); skipSame=false;
   if(same){
@@ -2156,6 +2156,26 @@ function askIntent(text){
     .then(r=>r.ok?r.json():null)
     .then(j=>{ clearTimeout(bail); if(j&&j.intent&&S.q===text&&INTENTS.some(x=>x.k===j.intent)) S.aiIntent=j.intent; })
     .catch(()=>{ clearTimeout(bail); });
+}
+/* ── 물음에 알맹이가 있는가 ── */
+/* 물음을 이루는 뼈대 말(저는·어떻게·될까요 같은 것)을 걷어 내고 남는 것이 있는지 본다 */
+const Q_FILLER=/(저는|저도|저|제가|제|나는|나도|내가|내|우리|지금|요즘|이제|그냥|좀|너무|진짜|정말|많이|자꾸|계속|어떻게|어떡|어쩌|무엇|뭐|뭘|왜|언제|언제쯤|어디|누구|해야|하나요|할까요|될까요|좋을까요|괜찮을까요|인가요|건가요|걸까요|나요|까요|예요|이에요|입니다|합니다|해요|모르겠|모르|몰라|도와|도움|봐주|봐\s*주|제발|부탁|궁금|알려|말해|답|것|거|수|게|일|때|분|점|을|를|이|가|은|는|에|의|도|만|과|와|랑|하고|에게|한테|에서|으로|로)/g;
+/* 사정은 안 적고 괴로움만 쏟아 놓은 물음 — 이건 막지 않고 받는다 */
+const Q_CRY=/^[\s\u3131-\u318Eㅠㅜ.,!?~]*((그냥|진짜|너무|정말|많이|요즘|사는\s*게)\s*)*(답답|막막|힘들|힘듦|지쳐|지쳤|괴로|버거)[가-힣]*[\s.,!?~ㅠㅜ]*$/;
+const Q_SELF=/(제|내)\s*(문제|탓|잘못)|(제가|내가)\s*(이상|예민|못난|부족|문제)|(저|나)\s*때문/;
+function qCore(t){ return (String(t||"").replace(Q_FILLER,"").match(/[가-힣]/g)||[]).length; }
+function qThin(t){
+  const han=(String(t||"").match(/[가-힣]/g)||[]).length;
+  if(Q_CRY.test(t)||Q_SELF.test(t)) return false;
+  let I=null,A=null,R={}; try{ I=intentOf(t); }catch(e){}
+  try{ A=actionOf(t); }catch(e){}
+  try{ R=readQ(t)||{}; }catch(e){}
+  if(I||A) return false;
+  /* 묻는 꼴조차 없이 사람이나 말 한 토막만 적어 놓은 것도 얇은 물음일세 */
+  if(han<10&&!/[?？]|까|나요|ㄹ지|을지|는지|할지|될지|어떻|어떡|언제|왜|누구|어디/.test(t)) return true;
+  if(R.who) return false;
+  if(topicOf(t)!=="기타"&&han>=8) return false;
+  return qCore(t)<4;
 }
 function enterFlow(){ try{ if(!(history.state&&history.state.bg)) history.pushState({bg:1},""); }catch(e){} }
 window.addEventListener("popstate",e=>{
@@ -2504,6 +2524,9 @@ function buildReading(){
   /* 갈래가 안 잡힌 식구 이야기에 '거리를 두게'라 하지 않는다 */
   if(!I&&topic==="사람"&&grade>=2&&/엄마|아빠|어머니|아버지|부모님|할머니|할아버지|아들|딸|자식|형|누나|언니|오빠|동생|며느리|사위|손주/.test(S.q||""))
     verdict=["지금 모양으로는 안 풀리네. 바라는 것을 탓이 아니라 부탁으로 한 번 꺼내 보게.","지금은 맞서지 말고 한 걸음 물러서 있게. 거리를 두는 것이 끊는 것은 아닐세. 자네 마음부터 추스르게."][grade-2];
+  /* 사정을 거의 안 적은 물음 — 적은 것만 보고 사람을 끊으라 하지 않는다 */
+  if(!I&&qThin(S.q))
+    verdict=["풀리네. 적어 준 것만 보아도 흐름이 자네 쪽일세. 다만 무엇을 묻는지 한 줄만 더 적으면 더 또렷하게 짚어 주겠네.","풀리네. 한 번 더 답답한 고비를 넘긴 뒤일세. 걸리는 일이 무엇인지 한 줄만 더 적어 주면 그 자리를 짚어 주겠네.","지금 모양으로는 더디네. 다만 적어 준 것이 짧아 끝까지는 못 보네. 누구의 무슨 일인지 한 줄만 더 적어 주게.","지금은 붙들수록 꼬이네. 하나를 내려놓아야 길이 나는 판일세. 무엇을 붙들고 있는지 한 줄만 더 적어 주면 그것부터 짚어 주겠네."][grade];
   const chaseQ=/만회|본전|물타|빚\s*내|대출\s*(받아|내서|끼고)|더\s*(넣|사|부어|투자|들어가)/.test(S.q)&&/주식|코인|비트|투자|종목|펀드|선물|레버리지|잃|손실|물렸/.test(S.q);
   /* 아픈 게 아니라 검사 결과를 묻는 물음 — 아프다는 전제로 답하지 않는다 */
   const chk=(I&&I.k==="가족건강"||topic==="건강")&&/검진|검사|재검/.test(S.q)&&!/수술|시술|입원|항암/.test(S.q);
@@ -2751,7 +2774,9 @@ function buildReading(){
     combos.forEach(c=>{ if(c.tone<0&&grade>=2&&!toldDown){ toldDown=true; c.line+=(/다만/.test(c.line)?" 지금은":" 다만 지금은")+" 막힌 것 하나를 먼저 치워야 그 덕을 보네."; }
       else if(c.tone>0&&grade<=1&&!toldUp&&!/^flood-/.test(c.id)){ toldUp=true; c.line+=/^(wake|fire|wakeline)/.test(c.id)?" 흐름이 자네 편이니, 한 번 밀리는 일이 있어도 생각보다 빨리 지나가네.":(/다만/.test(c.line)?" 그래도":" 다만")+" 흐름이 자네 편이니, 미리 대비해 두면 큰 탈로 번지지 않네."; } }); }
   if(qtype==="어느"&&R.A&&R.B&&!(I&&/^(치료선택|모시기)$/.test(I.k))){ const raw=(grade<=1?R.A:R.B).replace(/[?？!.]+$/,""), pickS=esc(/(야|지)$/.test(raw)?raw+" 할까":raw); verdict=(/(야|지)$/.test(raw)?`패는 자네가 ‘${pickS}’ 하고 물은 쪽을 가리키네. `:`패는 ‘${pickS}’ 쪽을 가리키네. `)+(grade<=1?"자네 마음이 이미 기운 쪽과 같다면 망설일 까닭이 없네.":"쉽지는 않으나 그쪽이 덜 다치는 길일세."); }
-  return {topic,qtype,combos,el,elN:tally[el],rev,grade,score,why,leanSuit,leanN:suits[leanSuit],daegui,seed,
+  /* 갈래도 못 잡고 어느 분기도 끼어들지 않아 바닥 문장이 그대로 나가는 판 */
+  const loose=!I&&verdict===VERDICT[topic][grade];
+  return {topic,qtype,combos,el,elN:tally[el],rev,grade,score,why,leanSuit,leanN:suits[leanSuit],daegui,seed,loose,thin:qThin(S.q),
     wover:S.wover, verdict:(S.rec&&S.rec.fx&&S.rec.fx.v)||honorWho(verdict,I&&I.k,R), when:(S.rec&&S.rec.fx&&S.rec.fx.w)||(I&&I.k==="임종"?{t:"바로 지금",d:"",fixed:true}:null)||opWhen(I,R,topicOf(S.q))||dateWhen(I,R)||clockWhen(I,R)||nearWhen(R.when)||examWhen(I,R)||nearClamp(healthClamp(yearClamp(whenFor(el,S.rec?S.rec.t:Date.now()),R,grade,I),I,topicOf(S.q)),I),
     tie:pickV(TIE[(I&&TIE[I.k])?I.k:topic],seed),lean:leanOf(score,grade),intent:I?I.k:"",worry:worryOv!==null?worryOv:(I&&I.worry||""),chk,chase:chaseQ,
     nopartner:!!(I&&I.k==="새인연"&&/생길|생기|나타날|언제\s*생|올까|들어올|만날\s*수|인연이?\s*(언제|있)/.test(S.q)&&!/썸|그\s*사람|좋아하는|짝사랑|소개팅|고백/.test(S.q))||!!(I&&I.k==="결혼"&&!/앞두고|예정|날짜|식장|준비|예비/.test(S.q)&&(!/남친|여친|남자\s*친구|여자\s*친구|애인|그\s*사람|만나는|사귀|연인|약혼|상견례|프러포즈|청혼/.test(S.q)||/(만나는|사귀는)\s*사람(은|이|도)?\s*없|애인(은|이|도)?\s*없|솔로/.test(S.q))),
@@ -4152,7 +4177,7 @@ async function askSeer(E,from,to,stage){
     ? {stage, lean:E.grade<=1?"good":"bad", tired:/아무것도\s*하기\s*싫|무서워|두려워|번아웃|우울|잠이\s*안|숨이\s*막/.test(S.q)?1:0, topic:E.topic, qtype:E.qtype, who:R.who, feel:R.feel, whenWord:R.when, intent:E.intent, worry:E.worry, subject:(/^반려/.test(E.dkey||"")?"반려":E.dkey||""), facts:R.facts||[], act:(S.DO&&S.DO.stem)||""}   /* 무료 단계엔 덮인 패의 답을 보내지 않는다 */
     : {stage, opened, combos:(E.combos||[]).map(c=>c.name), grade:E.grade, why:E.why, topic:E.topic, qtype:E.qtype, el:E.el, elN:E.elN, rev:E.rev,
        leanSuit:E.leanSuit, leanN:E.leanN, daegui:E.daegui, when:E.when, verdict:E.verdict, noWhen:whenNeedOf(E)?0:1, lean10:E.lean||5,
-       who:R.who, feel:R.feel, whenWord:R.when, intent:E.intent, worry:E.worry, subject:(/^반려/.test(E.dkey||"")?"반려":E.dkey||""), facts:R.facts||[], act:(S.DO&&S.DO.stem)||"", tired:/아무것도\s*하기\s*싫|무서워|두려워|번아웃|우울|잠이\s*안|숨이\s*막/.test(S.q)?1:0};
+       loose:E.loose?1:0, thin:E.thin?1:0, who:R.who, feel:R.feel, whenWord:R.when, intent:E.intent, worry:E.worry, subject:(/^반려/.test(E.dkey||"")?"반려":E.dkey||""), facts:R.facts||[], act:(S.DO&&S.DO.stem)||"", tired:/아무것도\s*하기\s*싫|무서워|두려워|번아웃|우울|잠이\s*안|숨이\s*막/.test(S.q)?1:0};
   const ctrl=new AbortController();
   const bail=setTimeout(()=>ctrl.abort(), 45000);
   try{
