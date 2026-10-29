@@ -29,9 +29,11 @@
 
 /* ══ 들어가는 화면 — 그림 한 장을 깔고 그 위에 손댈 것만 얹는다 ══ */
 #s-ask{padding-left:0;padding-right:0;overflow:hidden}
+/* 그림이 세로로 남는 자리는 그림 끝 빛깔로 이어 둔다 — 액자 테처럼 보이지 않게 */
+#s-ask .introwrap{background:linear-gradient(180deg,#140709 0%,#0b0406 42%,#0b0406 58%,#190505 100%)}
 .introwrap{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;align-items:center;
-  justify-content:center;gap:6px;overflow-y:auto;overscroll-behavior:contain;
-  padding:env(safe-area-inset-top,0px) 0 calc(6px + env(safe-area-inset-bottom,0px))}
+  justify-content:center;justify-content:safe center;gap:6px;overflow-y:auto;overscroll-behavior:contain;
+  padding:0 0 calc(6px + env(safe-area-inset-bottom,0px))}
 .introwrap::-webkit-scrollbar{width:0}
 .intro{position:relative;flex:none;--u:0.414px;width:100%;
   background:url(img/intro.webp) center/100% 100% no-repeat;
@@ -82,7 +84,7 @@
 .intro .lkP{left:48.5%;width:16.5%}
 /* 그림에 담지 못한 법정 고지 */
 .underlegal{flex:none;text-align:center;font-size:11px;color:#7d7066;line-height:1.7;padding:0 16px}
-.underlegal #histLink{background:none;border:0;color:#a39486;text-decoration:underline;font-size:11.5px;padding:5px 6px}
+.underlegal #histLink,.underlegal #openRefund{background:none;border:0;color:#a39486;text-decoration:underline;font-size:11.5px;padding:5px 6px;font-family:inherit}
 .underlegal .biz{display:inline-block;font-size:11px}
 .underlegal .biz summary{padding:4px 6px;color:#8d8075;text-decoration:underline;cursor:pointer}
 .underlegal .biz[open] summary{margin-bottom:2px}
@@ -531,10 +533,10 @@ body{word-break:keep-all;overflow-wrap:anywhere}
 .sheet{position:fixed;inset:0;z-index:500;background:rgba(4,2,3,.86);display:flex;align-items:flex-end}
 .sheet .inner{width:100%;max-width:520px;margin:0 auto;max-height:86%;overflow-y:auto;
   background:#0d0709;border-top:1px solid var(--line);
-  padding:22px max(20px,env(safe-area-inset-left,0px)) calc(24px + env(safe-area-inset-bottom,0px));
+  padding:22px calc(max(20px,env(safe-area-inset-right,0px)) + 44px) calc(24px + env(safe-area-inset-bottom,0px)) max(20px,env(safe-area-inset-left,0px));
   animation:up .32s cubic-bezier(.2,.9,.3,1) both}
 @keyframes up{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}
-.sheet .sx{position:sticky;top:-10px;float:right;margin:-12px -8px 0 8px;width:40px;height:40px;border:1px solid var(--line);border-radius:50%;background:#0d0709;color:var(--jae);font-size:16px;line-height:1;z-index:2;cursor:pointer}
+.sheet .sx{position:sticky;top:4px;float:right;margin:-8px -42px 0 10px;width:38px;height:38px;border:1px solid var(--line);border-radius:50%;background:#140c0e;color:var(--jae);font-size:16px;line-height:1;z-index:2;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,.8)}
 .sheet h3{font-family:var(--serif);font-weight:700;font-size:17px;margin:0 0 4px;color:var(--jae)}
 .sheet h4{font-family:var(--serif);font-weight:700;font-size:13.5px;margin:20px 0 7px;color:var(--geum)}
 .sheet p,.sheet li{font-size:12.5px;line-height:1.95;color:#bfb1a3;margin:0 0 7px}
@@ -758,7 +760,8 @@ body{word-break:keep-all;overflow-wrap:anywhere}
       </div>
       <div class="underlegal">
         <button id="histLink" hidden>지난 물음 다시 보기</button>
-        <details class="biz"><summary>사업자 정보 · 환불규정</summary>온미라이프 · <span>대표 김민철 · 사업자등록번호 501-04-95672<br>통신판매업 신고 진행 중 · 고객센터 <a href='tel:1866-0423'>1866-0423</a><br>울산광역시 북구 염포로 685, 110동 1801호 · ja9746@naver.com</span></details>
+        <button id="openRefund">환불규정</button>
+        <details class="biz"><summary>사업자 정보</summary>온미라이프 · <span>대표 김민철 · 사업자등록번호 501-04-95672<br>통신판매업 신고 진행 중 · 고객센터 <a href='tel:1866-0423'>1866-0423</a><br>울산광역시 북구 염포로 685, 110동 1801호 · ja9746@naver.com</span></details>
         <p class="note">오락 목적의 해석 콘텐츠이며 미래를 보장하지 않습니다</p>
       </div>
     </div>
@@ -864,7 +867,7 @@ body{word-break:keep-all;overflow-wrap:anywhere}
       <li>결제는 결제대행사를 통해 처리되며, 본 서비스는 카드번호 등 결제수단 정보를 보관하지 않습니다.</li>
     </ul>
 
-    <h4>환불</h4>
+    <h4 id="refundHead">환불</h4>
     <ul>
       <li>결제 즉시 디지털 콘텐츠가 제공되므로, <b>봉인을 해제해 풀이를 열람한 뒤에는 환불이 어렵습니다.</b> (전자상거래법 제17조 제2항 제5호)</li>
       <li>결제 전 앞의 세 장을 무료로 먼저 열어 보여 드리는 것으로 시험 사용을 갈음합니다. (같은 법 제17조 제6항)</li>
@@ -2174,6 +2177,10 @@ document.addEventListener("keydown",e=>{
 });
 $("openTerms").addEventListener("click",()=>openSheet("terms"));
 $("openPriv").addEventListener("click",()=>openSheet("priv"));
+/* 환불규정은 이용약관 안에 있으니, 그 자리로 바로 데려다 준다 */
+$("openRefund").addEventListener("click",()=>{ openSheet("terms");
+  setTimeout(()=>{ const h=document.getElementById("refundHead");
+    if(h) try{ h.scrollIntoView({block:"start",behavior:"smooth"}); }catch(e){ h.scrollIntoView(); } },260); });
 $("read").addEventListener("click",e=>{ if(!e.target.closest("button")) S.skip=true; });
 $("spotHome").addEventListener("click",e=>{ e.stopPropagation(); $("home").click(); });
 $("home").addEventListener("click",()=>{ reset(); try{ if(history.state&&history.state.bg) history.back(); }catch(e){} });
@@ -2208,9 +2215,11 @@ function fitIntro(){
   const legal=wrap.querySelector(".underlegal");
   const availW=Math.max(0, wrap.clientWidth);
   let availH=wrap.clientHeight-(legal?legal.offsetHeight:0)-10;
-  const typing=document.getElementById("s-ask").classList.contains("typing");
+  /* 가로를 가득 채우는 것이 먼저일세. 세로로 조금 넘치면 밀어 보면 되네.
+     다만 가로로 누운 화면처럼 터무니없이 넘칠 때는 높이에 맞춘다. */
   let w=availW;
-  if(!typing && availH>80){ w=Math.min(availW, availH*INTRO_W/INTRO_H); }
+  const tall=availW*INTRO_H/INTRO_W;
+  if(availH>80 && tall>availH*1.35){ w=Math.min(availW, availH*INTRO_W/INTRO_H); }
   if(!(w>80)) w=availW;
   w=Math.round(w);
   el.style.width=w+"px";
