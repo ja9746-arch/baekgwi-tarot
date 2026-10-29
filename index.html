@@ -188,8 +188,16 @@ body{word-break:keep-all;overflow-wrap:anywhere}
 .agree b{color:#e6d2ba;font-weight:600}
 .seal .minor,.minor{margin:10px auto 12px;max-width:300px;font-size:11px;line-height:1.6;color:#b3a596;word-break:keep-all;text-align:center}
 .biz .note{display:block;margin-top:5px;color:#8a7c70}
-.biz{margin:8px 0 0;text-align:center;font-size:9.5px;line-height:1.55;color:#6f6359;letter-spacing:-.01em;word-break:keep-all}
-.legal button{background:none;border:0;color:#9a8b7e;text-decoration:underline;font-size:11px;padding:2px 4px}
+.biz{margin:4px 0 0;text-align:center;font-size:10.5px;line-height:1.6;color:#85776b;letter-spacing:-.01em;word-break:keep-all}
+.biz summary{cursor:pointer;list-style:none;display:inline-block;padding:3px 6px;color:#958779}
+.biz summary::-webkit-details-marker{display:none}
+.biz summary::after{content:' ▾';font-size:9px}
+.biz[open] summary::after{content:' ▴'}
+.biz>span{display:block;margin-top:2px}
+.legal .biz{margin:0;font-size:11.5px}.legal .biz summary{padding:7px 6px;color:#a39486;text-decoration:underline}
+.legal .biz[open]{flex-basis:100%;font-size:10.5px}.legal .biz[open] summary{font-size:11.5px}
+.biz.note{margin-top:0;color:#85776b}
+.legal button{background:none;border:0;color:#a39486;text-decoration:underline;font-size:11.5px;padding:7px 6px}
 
 /* 패 바퀴 */
 .fanwrap{position:absolute;left:0;right:0;z-index:3;touch-action:none;
@@ -340,6 +348,11 @@ body{word-break:keep-all;overflow-wrap:anywhere}
 }
 @media (max-height:790px) and (min-height:681px) and (max-width:420px){ #s-ask .hero-brand{height:clamp(250px,38vh,300px)} #s-ask .hero-brand .mark img{width:min(80vw,320px)} }
 @media (max-height:680px){ #s-ask .hero-brand{height:clamp(230px,37vh,260px)} #s-ask .hero-brand .mark img{width:min(70vw,270px)} }
+/* 첫 화면 — 물음 칸이 아래 단추 줄에 가리지 않게, 남는 높이만큼만 그림을 쓴다 */
+#s-ask:not(.typing) .hero-brand{height:clamp(178px,calc(100svh - 482px),460px)}
+#s-ask:not(.typing) .ask{padding-top:6px;padding-bottom:30px;justify-content:center}
+@media (max-height:760px){#s-ask .topics-h{display:none}}
+@media (max-height:600px){ #s-ask .hero-brand{height:190px} #s-ask .hero-brand .mark img{width:min(60vw,226px)} #s-ask .hero-foot h2{font-size:14px;line-height:1.45} #s-ask .topics-h{display:none} .field textarea{min-height:66px} #s-ask .ask{gap:8px} }
 @media (max-height:600px){
   #s-ask .hero-brand{height:236px}#s-ask .hero-brand .mark img{width:min(68vw,250px)}
   #s-ask .hero-foot h2{font-size:14.5px}#s-ask .ask{gap:8px}.field textarea{min-height:70px}
@@ -389,7 +402,7 @@ body{word-break:keep-all;overflow-wrap:anywhere}
 .ledger .lg-chips span{font-family:var(--serif);font-size:12px;padding:3px 8px;border:1px solid var(--line);color:var(--jae);background:rgba(8,4,6,.6)}
 .ledger .lg-chips span small{color:var(--geum-dim);margin-left:4px;font-size:10.5px}
 .ledger .lg-cf{font-size:13px;color:#cdbfb1;line-height:1.8;margin:0}
-.ledger .lg-note{margin:12px 0 0;text-align:center;font-size:10.5px;color:#8a7c70;letter-spacing:0}
+.ledger .lg-note{margin:12px 0 0;text-align:center;font-size:11px;color:#9a8b7e;letter-spacing:0}
 .ledger .lg-seal2{margin:16px auto 0;width:58px;height:58px;border:2px solid var(--jusa);color:var(--jusa-hot);display:grid;place-items:center;
   font-family:var(--serif);font-weight:700;font-size:15px;line-height:1.1;text-align:center;transform:rotate(-8deg);opacity:.85}
 .tail b{color:var(--geum);font-weight:400}
@@ -584,8 +597,8 @@ body{word-break:keep-all;overflow-wrap:anywhere}
     <div class="foot">
       <p class="visit" id="visit" aria-hidden="true"></p>
       <button class="btn" id="go" disabled>패를 펴다</button>
-      <p class="legal"><button id="histLink" hidden>지난 물음 다시 보기</button><button id="openTerms">이용약관 · 환불규정</button><button id="openPriv"><b>개인정보처리방침</b></button></p>
-      <p class="biz">온미라이프 · 대표 김민철 · 사업자등록번호 501-04-95672<br>통신판매업 신고 진행 중 · 고객센터 <a href='tel:1866-0423'>1866-0423</a><br>울산광역시 북구 염포로 685, 110동 1801호 · ja9746@naver.com<span class="note">오락 목적의 해석 콘텐츠이며 미래를 보장하지 않습니다</span></p>
+      <div class="legal"><button id="histLink" hidden>지난 물음 다시 보기</button><button id="openTerms">이용약관 · 환불규정</button><button id="openPriv"><b>개인정보처리방침</b></button><details class="biz"><summary>사업자 정보</summary>온미라이프 · <span>대표 김민철 · 사업자등록번호 501-04-95672<br>통신판매업 신고 진행 중 · 고객센터 <a href='tel:1866-0423'>1866-0423</a><br>울산광역시 북구 염포로 685, 110동 1801호 · ja9746@naver.com</span></details></div>
+      <p class="biz note">오락 목적의 해석 콘텐츠이며 미래를 보장하지 않습니다</p>
     </div>
   </section>
 
