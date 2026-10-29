@@ -33,8 +33,7 @@
   justify-content:center;gap:6px;overflow-y:auto;overscroll-behavior:contain;
   padding:env(safe-area-inset-top,0px) 0 calc(6px + env(safe-area-inset-bottom,0px))}
 .introwrap::-webkit-scrollbar{width:0}
-.intro{position:relative;flex:none;container-type:inline-size;
-  width:min(100%,calc((100svh - 60px) * 941 / 1672));aspect-ratio:941/1672;
+.intro{position:relative;flex:none;--u:0.414px;width:100%;
   background:url(img/intro.webp) center/100% 100% no-repeat;
   box-shadow:0 0 44px rgba(0,0,0,.75)}
 /* 갈래 패 — 그림 위 제자리에 투명한 단추를 얹는다 */
@@ -43,40 +42,38 @@
 #s-ask.typing .introwrap{justify-content:flex-start}
 .intro .chips{position:static;display:block}
 .intro .chips button{position:absolute;appearance:none;border:0;background:none;padding:0;
-  border-radius:7%;cursor:pointer;-webkit-tap-highlight-color:transparent;
-  font-size:0;color:transparent;transition:box-shadow .18s ease,background .18s ease}
+  border-radius:0;box-shadow:none;text-shadow:none;cursor:pointer;-webkit-tap-highlight-color:transparent;
+  font-size:0;color:transparent}
 .intro .chips button:active{transform:scale(.97)}
-.intro .chips button.on{
-  background:radial-gradient(ellipse at 50% 46%,rgba(196,46,22,.36),rgba(140,26,12,.2) 58%,rgba(140,26,12,0) 76%);
-  box-shadow:0 0 0 .22cqw rgba(255,186,110,.95),0 0 2.4cqw .5cqw rgba(255,112,42,.72),
-             inset 0 0 2.2cqw rgba(255,96,40,.34)}
+.intro .chips button.on{background:none;box-shadow:none}
+.intro .chips button.on::after{content:"";position:absolute;left:-6.944%;top:-7.463%;
+  width:113.889%;height:114.925%;background:url(img/glow.webp) center/100% 100% no-repeat;
+  pointer-events:none;animation:glowin .22s ease both}
+@keyframes glowin{from{opacity:0}to{opacity:1}}
 /* 물음을 적는 자리 */
 .intro textarea{position:absolute;left:16.15%;top:62.05%;width:68.0%;height:7.1%;
-  margin:0;padding:0 2.3cqw;border:0;outline:none;resize:none;background:transparent;
-  color:#efe3d2;font-family:var(--serif);font-weight:500;font-size:3.1cqw;line-height:1.55;
-  text-align:left;overflow-y:auto;-webkit-tap-highlight-color:transparent}
-.intro textarea::placeholder{color:#8e8073}
+  margin:0;padding:calc(var(--u)*10) calc(var(--u)*22) 0;border:0;outline:none;resize:none;background:transparent;
+  color:#f5ead9;font-family:var(--serif);font-weight:500;font-size:calc(var(--u)*30);line-height:1.6;
+  text-align:left;overflow-y:auto;-webkit-tap-highlight-color:transparent;
+  text-shadow:0 0 calc(var(--u)*12) rgba(255,186,118,.3),0 calc(var(--u)*2) calc(var(--u)*5) rgba(0,0,0,.9)}
+.intro textarea::placeholder{color:#938476;text-shadow:0 calc(var(--u)*2) calc(var(--u)*4) rgba(0,0,0,.8)}
 .intro textarea::-webkit-scrollbar{width:0}
 .intro .count{position:absolute;right:15.6%;top:69.9%;margin:0;display:block;
-  font-size:2.3cqw;letter-spacing:.02em;color:#8e8073;font-variant-numeric:tabular-nums}
+  font-size:calc(var(--u)*22);letter-spacing:.02em;color:#8e8073;font-variant-numeric:tabular-nums}
 /* 오늘 앉은 인연 — 숫자만 그림 위에 얹는다 */
-.intro .visit{position:absolute;left:58.5%;top:76.45%;transform:translate(-50%,-50%);
-  margin:0;white-space:nowrap;font-family:var(--serif);font-weight:700;font-size:4.6cqw;
-  letter-spacing:.02em;color:#ffd98a;opacity:0;transition:opacity 1.4s ease;
-  text-shadow:0 0 1.6cqw rgba(255,150,60,.75),0 .1cqw .3cqw #000}
+.intro .visit{position:absolute;left:58.5%;top:76.75%;transform:translate(-50%,-50%);
+  margin:0;white-space:nowrap;font-family:var(--serif);font-weight:700;font-size:calc(var(--u)*60);
+  letter-spacing:.05em;color:#fff3d6;opacity:0;transition:opacity 1.4s ease;
+  text-shadow:0 0 calc(var(--u)*6) rgba(255,214,130,.95),
+              0 0 calc(var(--u)*18) rgba(255,160,60,.8),
+              0 0 calc(var(--u)*40) rgba(255,96,30,.55),
+              0 calc(var(--u)*2) calc(var(--u)*5) rgba(0,0,0,.9)}
 .intro .visit.on{opacity:1}
 /* 패를 여는 단추 */
 .intro #go{position:absolute;left:10.9%;top:79.5%;width:78.1%;height:9.6%;
-  padding:0;border:0;border-radius:3.4cqw;background:transparent;box-shadow:none;
+  padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;
   font-size:0;color:transparent;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .intro #go::before,.intro #go::after{display:none}
-.intro #go:disabled{opacity:1;filter:none}
-.intro #go:disabled::before{content:"";display:block;position:absolute;inset:-1.4%;
-  width:auto;height:auto;transform:none;margin:0;border:0;
-  border-radius:inherit;background:rgba(8,4,5,.34);pointer-events:none;
-  -webkit-backdrop-filter:saturate(.4) brightness(.58);backdrop-filter:saturate(.4) brightness(.58)}
-.intro #go:not(:disabled){animation:introglow 2.2s ease-in-out infinite}
-@keyframes introglow{0%,100%{box-shadow:0 0 0 rgba(255,120,50,0)}50%{box-shadow:0 0 3.2cqw .4cqw rgba(255,120,50,.42)}}
 .intro #go:active{transform:scale(.985)}
 /* 아래 글귀 두 개 */
 .intro .lk{position:absolute;top:94.6%;height:4.6%;border:0;background:none;padding:0;
@@ -261,21 +258,6 @@ body{word-break:keep-all;overflow-wrap:anywhere}
 .btn:hover{background:linear-gradient(180deg,#6c1d15 0%,#470f0b 55%,#320a08 100%);
   box-shadow:inset 0 0 0 3px rgba(20,6,6,.85),inset 0 0 0 4px rgba(232,201,119,.55),0 0 28px rgba(255,84,54,.28),0 10px 26px rgba(0,0,0,.6)}
 .btn:disabled{opacity:.92;cursor:default;filter:saturate(.85) brightness(.92)}
-#go{padding:17px 50px 17px 22px;border-radius:10px;border-color:rgba(201,162,74,.85);
-  box-shadow:inset 0 0 0 1px rgba(8,4,5,.9),inset 0 0 0 2px rgba(201,162,74,.3),0 8px 26px rgba(0,0,0,.55)}
-#go .gl{font-family:var(--serif);font-weight:700;font-size:clamp(17px,4.9vw,21px);letter-spacing:.015em;
-  text-shadow:0 1px 6px #000,0 0 18px rgba(255,120,60,.3)}
-#go .ga{position:absolute;top:50%;right:18px;width:26px;height:26px;margin-top:-13px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;font-style:normal;font-size:17px;line-height:1;
-  padding-bottom:2px;border:1px solid rgba(232,201,119,.75);color:var(--geum-hot);background:rgba(10,5,6,.4)}
-#go:not(:disabled) .ga{animation:nextglow 1.8s ease-in-out infinite}
-#go:not(:disabled){box-shadow:inset 0 0 0 1px rgba(8,4,5,.9),inset 0 0 0 2px rgba(240,207,122,.45),0 0 24px rgba(255,110,60,.3),0 8px 26px rgba(0,0,0,.55)}
-#go::before,#go::after{display:none}
-.gosub{margin:9px 0 0;display:flex;align-items:center;gap:10px;justify-content:center;
-  font-family:var(--serif);font-size:12px;letter-spacing:.06em;color:#a79682;text-shadow:0 1px 6px #000}
-.gosub::before,.gosub::after{content:"";height:1px;width:34px;background:linear-gradient(90deg,transparent,rgba(201,162,74,.6))}
-.gosub::after{background:linear-gradient(90deg,rgba(201,162,74,.6),transparent)}
-@media (max-height:700px){.gosub{display:none}}
 .btn.ghost{background:transparent;border-color:var(--line);color:#c9b37e;font-weight:400;
   font-size:14px;letter-spacing:.06em;padding:13px}
 .btn.ghost:hover{border-color:var(--geum-dim);color:var(--jae);box-shadow:none}
@@ -770,7 +752,7 @@ body{word-break:keep-all;overflow-wrap:anywhere}
                   placeholder="예) 그 사람과 끝까지 갈 수 있을까요"></textarea>
         <span class="count" id="count">0 / 120</span>
         <p class="visit" id="visit" aria-hidden="true"></p>
-        <button class="btn" id="go" aria-label="호연에게 패를 열어 묻는다" disabled></button>
+        <button class="btn" id="go" aria-label="호연에게 패를 열어 묻는다"></button>
         <button class="lk lkT" id="openTerms" aria-label="이용약관 · 환불규정"></button>
         <button class="lk lkP" id="openPriv" aria-label="개인정보처리방침"></button>
       </div>
@@ -2198,9 +2180,9 @@ $("home").addEventListener("click",()=>{ reset(); try{ if(history.state&&history
 
 /* ── 1. 질문 ── */
 const q=$("q");
-q.addEventListener("focus",()=>{ $("s-ask").classList.add("typing"); $("stage").classList.add("typing");
-  setTimeout(()=>{ try{ q.scrollIntoView({block:"center",behavior:"smooth"}); }catch(e){} },260); });
-q.addEventListener("blur",()=>{ $("s-ask").classList.remove("typing"); $("stage").classList.remove("typing"); });
+q.addEventListener("focus",()=>{ $("s-ask").classList.add("typing"); $("stage").classList.add("typing"); fitIntro();
+  setTimeout(()=>{ fitIntro(); try{ q.scrollIntoView({block:"center",behavior:"smooth"}); }catch(e){} },260); });
+q.addEventListener("blur",()=>{ $("s-ask").classList.remove("typing"); $("stage").classList.remove("typing"); setTimeout(fitIntro,60); });
 /* 주제 고르기 — 누르면 본보기 물음을 넣어 주고, 글에 주제 낱말이 없을 때 그 주제로 읽는다 */
 const CHIPS=[
  {l:"연애",t:"연애",q:["지금 만나는 사람과 끝까지 갈 수 있을까요","남자친구가 바람필까 걱정돼요","여자친구가 헤어지자고 할까 봐 불안해요","이 사람과 결혼까지 갈 수 있을까요","요즘 연인과 자꾸 싸우는데 괜찮을까요","언제쯤 좋은 인연이 생길까요","썸 타는 사람과 사귈 수 있을까요","이 사람과 헤어져야 할까요","연락이 뜸해진 이유가 뭘까요","요즘 권태기인데 계속 만나도 될까요","부모님이 연애를 반대하는데 어떡하죠"]},
@@ -2213,22 +2195,33 @@ const CHIPS=[
  {l:"가족",t:"사람",q:["가족과의 갈등이 풀릴까요","부모님과 사이가 나아질까요","시댁과의 관계가 좋아질까요","형제와 다툰 일이 풀릴까요","아이와의 사이가 나아질까요","우리 아이가 학교에 잘 적응할까요","유산 문제가 잘 풀릴까요","이사해도 괜찮을까요"]},
  {l:"건강",t:"건강",q:["요즘 몸이 무거운데 괜찮을까요","잠을 못 자는데 언제 나아질까요","수술이 잘 될까요","부모님 건강이 괜찮을까요","요즘 마음이 지쳤는데 언제 나아질까요","올해 사고 날 일은 없을까요","번아웃이 왔는데 쉬어도 될까요","우리 강아지가 아픈데 괜찮을까요"]}
 ];
-/* 갈래마다 붙는 작은 그림 — 금빛 선으로만 그린다 */
-const TOPIC_ICON={
- "연애":'<circle cx="12" cy="6.8" r="3"/><circle cx="17" cy="10.4" r="3"/><circle cx="15.1" cy="16.3" r="3"/><circle cx="8.9" cy="16.3" r="3"/><circle cx="7" cy="10.4" r="3"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/>',
- "재회":'<path d="M16.4 4.4a8 8 0 1 0 3.3 12.3A8.4 8.4 0 0 1 16.4 4.4Z"/><path d="M6.4 5.6v3M4.9 7.1h3"/>',
- "속마음":'<path d="M12 20.2C9.6 18.4 4.3 14.6 4.3 10.6A3.9 3.9 0 0 1 12 8.6a3.9 3.9 0 0 1 7.7 2c0 4-5.3 7.8-7.7 9.6Z"/>',
- "돈":'<circle cx="12" cy="12" r="7"/><rect x="9.9" y="9.9" width="4.2" height="4.2"/><path d="M12 5v1.8M12 17.2V19M5 12h1.8M17.2 12H19"/>',
- "사업":'<path d="M12 3.4v11.4"/><path d="M12.9 5.6 18 14.8h-5.1Z"/><path d="M11.1 7.8 6.6 14.8h4.5"/><path d="M3.6 17.1h16.8c-1.2 2.4-3.1 3.6-5.6 3.6H9.2c-2.5 0-4.4-1.2-5.6-3.6Z"/>',
- "직장":'<rect x="5.2" y="4.4" width="13.6" height="15.2" rx="1.5"/><path d="M8.6 8.7h6.8M8.6 12h6.8M8.6 15.3h4.4"/>',
- "시험":'<path d="m18.4 4.4 1.4 1.4-7.9 7.9-2.1-.7-.7-2.1Z"/><path d="m9.8 12.9-2.9 7 6.9-2.9"/>',
- "사람 사이":'<circle cx="8.4" cy="8.2" r="2.6"/><circle cx="15.6" cy="8.2" r="2.6"/><path d="M3.6 19.4c0-2.7 2.1-4.7 4.8-4.7s4.8 2 4.8 4.7"/><path d="M14 15c.5-.2 1-.3 1.6-.3 2.7 0 4.8 2 4.8 4.7"/>',
- "가족":'<circle cx="12" cy="7.2" r="2.8"/><circle cx="5.4" cy="10.4" r="2.1"/><circle cx="18.6" cy="10.4" r="2.1"/><path d="M7.2 19.8c0-2.8 2.1-4.9 4.8-4.9s4.8 2.1 4.8 4.9"/><path d="M2.4 19.8c0-2 1-3.4 2.6-3.9"/><path d="M21.6 19.8c0-2-1-3.4-2.6-3.9"/>',
- "건강":'<path d="M10.3 3.6h3.4"/><path d="M10.6 4.8v2.6c0 1.3-2.7 2-2.7 5.7 0 3.6 1.9 7.3 4.1 7.3s4.1-3.7 4.1-7.3c0-3.7-2.7-4.4-2.7-5.7V4.8"/><path d="M9.1 13.6h5.8"/>'
-};
 /* 그림(941×1672) 안 갈래 패의 자리 — 연애·재회·속마음·돈·사업 / 직장·사람 사이·가족·건강 */
 const CHIP_BOX=[[76,638],[237,638],[399,638],[559,638],[720,638],[140,788],[310,788],[486,788],[657,788]];
 const IW=941, IH=1672, CW=144, CH=134;
+/* ── 들어가는 그림의 크기를 손수 잰다 ──
+   svh·min()·컨테이너 단위는 앱 안의 브라우저에서 어긋나는 일이 있어 쓰지 않는다.
+   그림 너비를 정하고, 그 너비를 941로 나눈 값을 --u 로 두어 글씨까지 함께 줄고 늘게 한다. */
+const INTRO_W=941, INTRO_H=1672;
+function fitIntro(){
+  const el=document.getElementById("intro"); if(!el) return;
+  const wrap=el.parentElement; if(!wrap) return;
+  const legal=wrap.querySelector(".underlegal");
+  const availW=Math.max(0, wrap.clientWidth);
+  let availH=wrap.clientHeight-(legal?legal.offsetHeight:0)-10;
+  const typing=document.getElementById("s-ask").classList.contains("typing");
+  let w=availW;
+  if(!typing && availH>80){ w=Math.min(availW, availH*INTRO_W/INTRO_H); }
+  if(!(w>80)) w=availW;
+  w=Math.round(w);
+  el.style.width=w+"px";
+  el.style.height=Math.round(w*INTRO_H/INTRO_W)+"px";
+  el.style.setProperty("--u",(w/INTRO_W)+"px");
+}
+addEventListener("resize",fitIntro);
+addEventListener("orientationchange",()=>setTimeout(fitIntro,120));
+if(window.visualViewport) visualViewport.addEventListener("resize",fitIntro);
+fitIntro(); setTimeout(fitIntro,60); setTimeout(fitIntro,400);
+addEventListener("load",fitIntro);
 S.tp=""; const chipN={};
 (function(){
   const box=document.getElementById("topics");
@@ -2252,11 +2245,12 @@ q.addEventListener("input",()=>{
   if(!chipFill&&S.tp){ S.tp=""; document.querySelectorAll("#topics button.on").forEach(b=>b.classList.remove("on")); }
   growQ();
   $("count").textContent=q.value.length+" / 120";
-  $("go").disabled=q.value.trim().length<2;
+  $("go").disabled=document.getElementById("intro")?false:q.value.trim().length<2;
 });
 $("go").addEventListener("click",()=>{
   audio(); startBed();
-  const text=q.value.trim(); if(text.length<2) return;
+  const text=q.value.trim();
+  if(text.length<2){ toast("무엇이 궁금한지 한 줄만 적어 주게."); try{ q.focus(); }catch(e){} return; }
   /* 사정이 담기지 않은 물음(ㅋㅋㅋ, ?, 숫자, 영어만)은 패를 펴지 않는다 */
   const risk=riskOf(text);
   const han=(text.match(/[가-힣]/g)||[]).length;
@@ -4930,7 +4924,7 @@ function reset(){
   Object.assign(S,{q:"",aiIntent:null,order:[],picked:[],brushN:0,pass:0,dir:0,sinceFlip:0,done:false,spin:0,paid:false,E:null,R:null,replay:false,rec:null,freeTexts:null,paidTexts:null,paidJobs:null,aiAns:null,cOk:0,price:0,pin:false,tp:"",busy:false});
   document.querySelectorAll("#topics button.on").forEach(b=>b.classList.remove("on"));
   ["same","hist","share","cv","terms","risk","priv"].forEach(closeSheet);
-  q.value=""; $("count").textContent="0 / 120"; $("go").disabled=true;
+  q.value=""; $("count").textContent="0 / 120"; $("go").disabled=!document.getElementById("intro");
   S.tp=""; document.querySelectorAll("#topics button.on").forEach(b=>b.classList.remove("on"));
   $("dealmsg").style.opacity=""; $("pickmsg").style.opacity="";
   $("dealmsg").innerHTML='패를 세 번 쓸어 보게<small>'+(matchMedia("(pointer:fine)").matches?"마우스로 패 위를 좌우로 훑으면 되네":"손으로 패 위를 좌우로 훑으면 되네")+'</small><span class="tally" id="tally"><i></i><i></i><i></i></span>';
