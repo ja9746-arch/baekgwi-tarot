@@ -262,7 +262,7 @@ function buildPrompt(q, cards, bone, stage) {
     .map(
       (c, i) =>
         `${i + 1}) 자리 ${c.pos} (${c.posDesc})
-   패: ${noHanja(c.nm)} · ${c.rev ? "뒤집힘(더 빨리, 세게 옴)" : "바로 놓임"}
+   패: ${noHanja(c.nm)} · ${c.rev ? "뒤집힘(base에 그 말이 있을 때만 짚는다)" : "바로 놓임"}
    base(이 자리의 답 — 이 뜻 그대로, 더 쉽고 또렷하게): ${noHanja(c.base || "")}`
     )
     .join("\n");
@@ -485,6 +485,7 @@ export default async function handler(req, res) {
     const SCARE = /목을\s*(졸|조)|헤집|밀어냈|뚝\s*끊|피를\s*|죽음|떨어질지|목숨/;
     const BLAME = /자네[^.]{0,36}(번지|번진|옮기|옮겨|옮긴|전해지|전해진|전해졌|더디게\s*하|밀어\s*넣|탓일세|탓이네|때문일세)/;
     const REV = /거꾸로|뒤집혀/;
+    const FAST = /더\s*빨리,?\s*(더\s*)?세게|빨리,?\s*세게/;
     const scrub = (pos, t) => {
       const parts = String(t).split(/(<br>)/);
       let kept = 0, total = 0;
@@ -494,7 +495,7 @@ export default async function handler(req, res) {
         return ss.filter((x, k) => {
           if (!x.trim()) return true;
           total++;
-          const bad = GUESS.test(x.trim()) || SCARE.test(x) || (SENS && (BLAME.test(x) || REV.test(x)));
+          const bad = GUESS.test(x.trim()) || SCARE.test(x) || FAST.test(x) || (SENS && (BLAME.test(x) || REV.test(x)));
           if (bad && !(k === 0 && seg === parts[0] && ss.length === 1)) return false;
           kept++; return true;
         }).join(" ");

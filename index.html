@@ -281,8 +281,8 @@ body{word-break:keep-all;overflow-wrap:anywhere}
 /* 풀이 */
 .read{flex:1 1 auto;min-height:0;overflow-y:auto;margin-top:10px;padding:16px 14px 44px;margin-inline:-6px;border-radius:4px;
   background:linear-gradient(180deg,rgba(8,4,6,.62),rgba(8,4,6,.76));
-  -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 30px,#000 calc(100% - 22px),transparent);
-  mask-image:linear-gradient(to bottom,transparent 0,#000 30px,#000 calc(100% - 22px),transparent)}
+  -webkit-mask-image:linear-gradient(to bottom,transparent 0,transparent 6px,#000 42px,#000 calc(100% - 22px),transparent);
+  mask-image:linear-gradient(to bottom,transparent 0,transparent 6px,#000 42px,#000 calc(100% - 22px),transparent)}
 .read::-webkit-scrollbar{width:3px}
 .read::-webkit-scrollbar-thumb{background:var(--geum-dim)}
 .line{margin:0 0 17px;font-size:15.5px;font-weight:300;line-height:1.9;text-wrap:pretty;word-break:keep-all;color:var(--jae);
@@ -305,7 +305,7 @@ body{word-break:keep-all;overflow-wrap:anywhere}
   background:rgba(8,4,6,.8);text-align:center;animation:rise .6s ease both}
 .seal .why{font-family:var(--serif);font-weight:700;font-size:16px;color:var(--jae);margin:0 0 12px}
 .seal .blurwrap{position:relative}
-@media (max-height:700px){.seal .blurwrap{display:none}}
+@media (max-height:700px){.seal .blurwrap{max-height:62px;overflow:hidden}.seal .blurwrap .blur{margin-bottom:6px}}
 .seal .bseal{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%) rotate(-5deg);font-family:var(--serif);font-weight:700;font-size:20px;letter-spacing:.12em;line-height:1;color:#ff5436;border:2px solid #e2392a;border-radius:4px;padding:6px 8px 6px 10px;background:rgba(12,5,6,.55);text-shadow:0 0 10px rgba(255,84,54,.35)}
 .seal .blur{color:var(--jae-dim);font-size:14px;line-height:1.95;filter:blur(5px);user-select:none;margin:0 0 14px}
 .seal .what{margin:0 0 14px;font-size:12.5px;color:#b9aa9c;line-height:1.95;text-align:left}
@@ -394,7 +394,7 @@ body{word-break:keep-all;overflow-wrap:anywhere}
 .ledger .lg-wake{display:block;margin-top:4px;font-size:11px;letter-spacing:.06em;color:#e0705e;font-weight:400}
 .ledger .lg-nm{font-size:13px;line-height:1.55;color:#cdbfb1}
 .ledger .lg-nm em{font-style:normal;font-family:var(--serif);font-weight:700;font-size:14px;color:#e8c977;margin-right:4px}
-.ledger .lg-nm i{font-style:normal;font-size:10px;color:#fff;background:rgba(192,54,42,.92);padding:0 4px;margin-left:4px;border-radius:1px;vertical-align:1px}
+.ledger .lg-nm i{font-style:normal;font-size:11px;color:#fff;background:rgba(192,54,42,.92);padding:0 4px;margin-left:4px;border-radius:1px;vertical-align:1px}
 .ledger .lg-fx{margin:0;padding:0;list-style:none}
 .ledger .lg-fx p{margin:0 0 6px;padding-left:16px;position:relative;font-size:13.5px;line-height:1.8;color:var(--jae)}
 .ledger .lg-fx p::before{content:"符";position:absolute;left:0;top:1px;font-family:var(--serif);font-size:11px;color:var(--jusa-hot)}
@@ -459,9 +459,11 @@ body{word-break:keep-all;overflow-wrap:anywhere}
   gap:10px;background:rgba(5,2,3,.97);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);transition:opacity .3s}
 @media (min-width:760px){.spot{background:radial-gradient(60% 80% at 50% 50%,rgba(5,2,3,.97) 40%,rgba(5,2,3,.82) 100%)}}
 .spot.out{opacity:0}
-@media (max-height:700px){.spot{padding-top:56px;padding-bottom:20px}}
+@media (max-height:700px){.spot{padding-top:56px;padding-bottom:20px}.spot .spotcard{width:min(62vw,240px,32vh)}.spotmeta{font-size:12.5px;line-height:1.65}}
+@media (max-height:600px){.spot .spotcard{width:min(62vw,230px,33vh)}.spotmeta{font-size:12px;line-height:1.6;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}.spotname{font-size:19px}}
 .spotcard{width:min(66vw,270px,37vh);aspect-ratio:2/3;perspective:1000px}
-.spottap{margin:14px 0 0;font-size:12.5px;letter-spacing:.06em;color:#e8c977;opacity:0;transition:opacity .5s;text-shadow:0 2px 10px #000}
+.spottap{position:fixed;left:0;right:0;bottom:0;margin:0;padding:22px 0 calc(14px + env(safe-area-inset-bottom,0px));text-align:center;font-size:12.5px;letter-spacing:.06em;color:#e8c977;opacity:0;transition:opacity .5s;text-shadow:0 2px 10px #000;background:linear-gradient(to bottom,transparent,rgba(5,2,3,.92) 55%);pointer-events:none}
+.spot{padding-bottom:58px!important}
 .spothome{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));left:max(12px,calc(50% - 248px))}
 .spot.ready .spottap{opacity:1;animation:tapPulse 1.8s ease-in-out infinite}
 .spot.ready{cursor:pointer}
@@ -504,8 +506,8 @@ body{word-break:keep-all;overflow-wrap:anywhere}
 .spotcard .front.rev .cf-rev{display:block}
 .spotcard .front.rev .cf{border-color:#ff5436}
 .spotpos{margin:0;font-family:var(--serif);font-size:14px;letter-spacing:.08em;color:var(--geum)}
-.spotname{margin:6px 0 0;font-family:var(--serif);font-weight:700;font-size:21px;color:#fff;opacity:0;transition:opacity .4s .45s;text-shadow:0 2px 14px #000}
-.spotmeta{margin:2px 0 0;font-size:13px;line-height:1.75;color:#d6c8ba;opacity:0;transition:opacity .4s .55s;max-width:min(86vw,420px);text-align:center;text-shadow:0 2px 10px #000;word-break:keep-all;text-wrap:balance}
+.spotname{margin:6px 0 0;font-family:var(--serif);font-weight:700;font-size:21px;color:#fff;opacity:0;transition:opacity .4s .45s;text-shadow:0 2px 6px rgba(0,0,0,.9)}
+.spotmeta{margin:2px 0 0;font-size:13px;line-height:1.75;color:#d6c8ba;opacity:0;transition:opacity .4s .55s;max-width:min(86vw,420px);text-align:center;text-shadow:0 1px 5px rgba(0,0,0,.95);word-break:keep-all;text-wrap:balance}
 .spotsrc{display:block;margin-bottom:4px;font-family:var(--serif);font-size:11.5px;letter-spacing:.06em;color:#c9a24a}
 .spot.open .spotname,.spot.open .spotmeta{opacity:1}
 .rv{display:inline-block;font-family:var(--sans);font-weight:500;font-size:11px;letter-spacing:.08em;color:#fff;
@@ -546,15 +548,30 @@ body{word-break:keep-all;overflow-wrap:anywhere}
 .board .slot.combo .flipper{animation:combopulse 1s ease-in-out infinite;box-shadow:0 0 0 2px #ffcf6a,0 0 18px rgba(255,180,80,.85)}
 @keyframes combopulse{50%{box-shadow:0 0 0 2px #ff5436,0 0 26px rgba(255,84,54,.95)}}
 /* 다음 패 */
-.nextbtn{display:block;margin:2px auto 20px;padding:12px 28px;min-height:44px;border-radius:24px;border:1px solid var(--geum);
+.nextbtn{display:block;margin:2px auto 20px;padding:12px 28px;min-height:44px;min-width:168px;border-radius:24px;border:1px solid var(--geum);
   background:rgba(120,24,18,.45);color:var(--jae);font-family:var(--serif);font-weight:700;font-size:14.5px;animation:nextglow 1.6s ease-in-out infinite}
 @keyframes nextglow{50%{box-shadow:0 0 18px rgba(255,84,54,.55)}}
 .confirmbtn{margin:6px 0 20px}
 .seal .tease{margin:-6px 0 12px;font-family:var(--serif);font-weight:700;font-size:15px;color:#ffcf6a;text-shadow:0 0 14px rgba(255,180,80,.5)}
 .cfrow{display:grid;grid-template-columns:34px 1fr;gap:10px;align-items:start}
+/* 작은 화면에서 카드가 줄어들면 카드 속 글자도 함께 줄인다 */
+.spotcard{container-type:inline-size}
+.spotcard .cf-hanja{font-size:min(25px,10.4cqw)}.spotcard .cf-hanja:empty+.cf-name{font-size:min(24px,10cqw)}
+.spotcard .cf-name{font-size:min(17px,7.1cqw)}.spotcard .cf-nat{font-size:min(12px,5.1cqw)}
+.spotcard .cf-top{font-size:min(11.5px,4.8cqw)}.spotcard .cf-foot{font-size:min(11px,4.6cqw)}
+.spotcard .cf-mid{gap:min(4px,1.6cqw)}
 .minicard{display:block;width:34px;aspect-ratio:2/3;margin:6px 0 0;border:1px solid var(--geum);border-radius:2px;background:#150c0d center/cover no-repeat}
 .minicard.rev{transform:rotate(180deg)}
 #pay.nudge{animation:nudge .45s ease 2}
+#payDock{padding-top:9px;padding-bottom:11px}
+#payDock .dkp{display:block;margin:0 0 3px;font-family:var(--sans);font-weight:400;font-size:11.5px;letter-spacing:0;text-indent:0;color:#f0d9b8}
+#payDock .dkp s{opacity:.7}
+#payDock ~ #againBtn{border:0;background:none;box-shadow:none;padding:10px;font-size:13.5px;letter-spacing:.02em;text-decoration:underline;text-underline-offset:3px;color:#b8a48a}
+#payDock ~ #againBtn::before,#payDock ~ #againBtn::after{display:none}
+.sheet .btn.ghost.close{border:0;background:none;box-shadow:none;padding:12px;font-size:14px;letter-spacing:.04em;text-decoration:underline;text-underline-offset:3px;color:#b8a48a}
+.sheet .btn.ghost.close::before,.sheet .btn.ghost.close::after{display:none}
+.halt::after{content:"";position:absolute;left:50%;bottom:calc(36px + env(safe-area-inset-bottom,0px));width:120px;height:2px;margin-left:-60px;background:linear-gradient(90deg,#c9a24a,#c9a24a) left/100% 100% no-repeat,rgba(201,162,74,.18);animation:haltbar 1.7s linear both}
+@keyframes haltbar{from{background-size:0 100%,auto}to{background-size:100% 100%,auto}}
 @keyframes nudge{0%,100%{transform:none}50%{transform:scale(1.04)}}
 .board.confirmboard{grid-template-columns:repeat(var(--n),46px)!important;justify-content:center;width:fit-content;margin-left:auto;margin-right:auto;padding-left:14px;padding-right:14px}
 @media (max-height:680px){.board.confirmboard{grid-template-columns:repeat(var(--n),34px)!important}}
@@ -1178,7 +1195,7 @@ function fuPair(E,g,sd){
   }
   return [a1,a2];
 }
-function guiFix(E,g){ return (GUI_FIX_K[E.dkey]||GUI_FIX_K[E.intent]||{})[g.suit]||(GUI_FIX[g.suit]||{})[E.topic]||(GUI_FIX[g.suit]||{}).기타||g.fix; }
+function guiFix(E,g){ if(E.chase) return ({"대귀":"잃은 돈은 이미 지난 일로 접고, 남은 돈만 보게.","검(소드)":"돈 이야기가 오가는 단톡방과 글은 한 달 멀리하게.","잔(컵)":"아쉬운 마음이 들면 사흘 묵힌 뒤에 다시 보게.","전(펜타클)":"남은 돈을 셈해 한 장에 적어 두게.","지(완드)":"잠들기 전엔 시세를 보지 말게."})[g.suit]||"남은 돈을 셈해 한 장에 적어 두게."; return (GUI_FIX_K[E.dkey]||GUI_FIX_K[E.intent]||{})[g.suit]||(GUI_FIX[g.suit]||{})[E.topic]||(GUI_FIX[g.suit]||{}).기타||g.fix; }
 const NOWHO_HEART={
  금전:{g:["돈의 흐름 속은 자네 생각보다 밝네. 들어올 길이 이미 나 있네.","이 돈 문제의 속은 단순하네. 새는 곳 하나만 막으면 되네."],b:["이 돈 문제의 속은 겉보다 복잡하네. 숫자를 다시 맞춰 보게.","돈의 흐름 속엔 아직 새는 구멍이 남아 있네."]},
  직장:{g:["자네 일의 흐름은 겉보다 좋네. 자네를 보는 눈이 있네.","속을 들여다보면 자네 자리는 단단하네."],b:["자네 일의 속은 겉보다 무겁네. 혼자 버티지 말게.","속을 들여다보면 자네 몫이 제대로 셈해지지 않고 있네."]}};
@@ -1517,7 +1534,7 @@ const BRIDGE={
    건강:"정에 얽힌 귀가 몸 물음에 나왔네. 마음에 쌓인 것이 몸으로 번지고 있다는 뜻일세.",
    기타:"정에 얽힌 귀가 나왔네. 이 일엔 마음이 먼저 기운 쪽이 있다는 뜻일세. 그 마음을 숨기지 말게."},
  "검(소드)":{연애:"말의 귀가 사랑 물음에 나왔네. 둘 사이에 오간 말, 또는 끝내 하지 못한 말이 이 일을 끌고 간다는 뜻일세.",
-   금전:"말의 귀가 돈 물음에 나왔네. 돈을 두고 오간 말, 또는 남의 말에 솔깃했던 데서 이 일이 비롯됐다는 뜻일세.",
+   금전:"말의 귀가 돈 물음에 나왔네. 돈을 두고 오가는 말에 마음이 흔들리기 쉽다는 뜻일세. 남의 말보다 자네 셈을 믿게.",
    직장:"말의 귀가 일 물음에 나왔네. 자네 일이 실력보다 말과 평판에 휘둘린다는 뜻일세.",
    아이:"말의 귀가 나왔네. 주변 말에 마음이 흔들리고 있다는 뜻일세. 남의 말은 귀에 담지 말게.",
    건강:"말의 귀가 몸 물음에 나왔네. 남의 말에 받은 상처가 몸으로 쌓이고 있다는 뜻일세.",
@@ -2353,7 +2370,7 @@ const ACT={
  직장:["지금 자리에서 해낸 일 세 가지를 글로 정리해 두게. 그게 자네 무기일세.","사흘 동안만이라도 불평을 입 밖에 내지 말게. 그 사이 판이 바뀌네."],
  사람:["그 사람에게 할 말을 먼저 글로 적어 하루 묵힌 뒤에 건네게.","뒷말이 들리면 옮기지 말고 당사자에게 직접 확인하게."],
  건강:["이번 주 안에 진료를 한 번 받게. 그게 첫 매듭일세.","무리한 일정 하나를 덜어 내고, 그 시간엔 몸을 쉬게 하게."],
- 아이:["조급한 마음을 내려놓고, 의원과 함께 길을 정하게.","몸을 데우고 잠을 넉넉히 자게. 힘이 먼저 차야 하네."],
+ 아이:["다음 진료 날짜와 의원이 일러 준 것을 수첩에 적고, 곁 사람과 함께 보게.","그날까지 잠과 끼니를 챙기고, 기다리는 마음은 곁 사람과 나눠 지게."],
  기타:["이 일에서 지금 당장 할 수 있는 것 하나만 골라 오늘 하게.","혼자 끌어안지 말고 믿는 사람 하나에게 털어놓게."],
  반려:["그 아이 먹고 자는 모양을 날마다 짧게 적어 두게. 수의사에게 큰 도움이 되네.","그 아이 이름을 자주 불러 주게. 자네 목소리가 약일세."],
  반려이별:["그 아이 사진 한 장을 골라 잘 보이는 곳에 두게. 그리고 고마웠다고 소리 내어 말해 주게.","그 아이 이야기를 함께 아는 사람과 나누게. 나눌수록 가벼워지네."],
@@ -2437,7 +2454,7 @@ const PACK={
    敵:["막는 건 집주인의 빈 곳간일세. 다음 세입자가 들어와야 돈이 도네.","막는 건 말로만 오간 약속일세. 글로 남기지 않은 것이 발목을 잡네."],
    心:{g:["집주인도 돌려줄 마음은 있네. 다만 돈이 묶여 있을 뿐일세.","집주인은 일을 크게 만들고 싶지 않아 하네. 차분히 날짜를 물으면 답이 오네."],b:["집주인은 지금 버틸 궁리부터 하고 있네. 말로만 기다리지 말게.","집주인은 다음 세입자에게 기대고 있네. 자네가 먼저 움직여야 하네."]},
    果:{g:["끝은 만기 무렵 제 몫이 돌아오는 모양일세.","끝은 조금 늦되 한 푼도 빠짐없이 돌아오는 모양일세."],b:["끝은 절차를 밟은 뒤에야 돌아오는 모양일세. 미루지 말게.","끝은 나눠서 돌아오는 모양일세. 받을 날을 글로 못 박아 두게."]}},
-  B:["대귀가 나왔네. 집값이나 경기 같은 자네 손 밖의 흐름이 끼어 있다는 뜻일세.","말의 귀가 나왔네. 집주인과 오간 말 한마디가 판을 가른다는 뜻일세.","정에 얽힌 귀가 나왔네. 좋게 지내던 사이라 모질게 못 하고 있다는 뜻일세.","셈의 귀가 나왔네. 집주인 돈이 다른 데 묶여 돌지 않는다는 뜻일세.","넋의 귀가 나왔네. 걱정이 앞서 할 일을 미루고 있다는 뜻일세."],
+  B:["대귀가 나왔네. 집값이나 경기 같은 자네 손 밖의 흐름이 끼어 있다는 뜻일세.","말의 귀가 나왔네. 집주인과 오간 말 한마디가 판을 가른다는 뜻일세.","정에 얽힌 귀가 나왔네. 정 때문에 할 말을 미루면 손해가 커진다는 뜻일세. 절차는 정과 따로 밟게.","셈의 귀가 나왔네. 집주인 돈이 다른 데 묶여 돌지 않는다는 뜻일세.","넋의 귀가 나왔네. 걱정이 앞서 할 일을 미루고 있다는 뜻일세."],
   G:["손 밖의 흐름을 핑계 삼아 날짜를 미루게 하지.","말로만 약속하게 해 나중에 딴소리를 하게 하지.","정에 기대게 해 모질게 따지지 못하게 하지.","돈을 다른 데 묶어 두게 하지.","걱정만 키워 할 일을 미루게 하지."],
   F:["집값 흐름은 따지지 말고, 받을 날짜만 못 박게.","집주인과 오간 말은 꼭 문자로 다시 남기게.","좋은 사이라도 날짜와 액수는 글로 받게.","계약서와 이체 내역을 한곳에 모아 두게.","걱정이 일면 할 일 하나를 적고 그것부터 하게."],
   N:{g:["지금 집주인은 다음 세입자를 구하는 중일세. 그게 자네 돈길일세.","지금 흐름은 자네 쪽일세. 서류만 챙겨 두면 되네."],b:["지금 집주인 쪽 돈이 꽉 막혀 있네.","지금은 말로 기다릴 때가 아닐세. 기록을 남길 때일세."]},
@@ -2841,7 +2858,7 @@ Object.entries(PACK).forEach(([k,P])=>{
 });
 })();
 
-function actLine(E,sd){ if(E.chase) return pickV(SUBP.chase.A,sd); if(E.chk) return pickV(E.grade<=1?["결과 듣는 날 함께 가서 의원 말을 같이 듣고 적어 두게."]:["결과 듣는 날 함께 가서, 다시 볼 날짜와 할 일을 그 자리에서 적어 두게."],sd); if(E.qtype==="어느"&&S.R&&S.R.A&&S.R.B) return pickV(["두 쪽에서 얻을 것과 잃을 것을 한 줄씩 적어 오늘 견주어 보게.","두 쪽 가운데 자네가 끝까지 버틸 수 있는 쪽이 어디인지 오늘 한 줄로 적어 보게."],sd); const A=(E.dkey==="자녀"?null:ACT_I[E.intent])||ACT[E.dkey]||ACT[E.topic]||ACT.기타; const t=pickV(Array.isArray(A)?A:(E.grade<=1?A.g:A.b),sd); return /내일/.test((S.R&&S.R.when)||"")?t.replace(/^시험 전날엔/,"오늘 밤엔"):t; }
+function actLine(E,sd){ if(E.chase) return pickV(SUBP.chase.A,sd); if(E.intent==="고백"&&E.grade>=2&&/퇴사|이사|떠나|전학|유학|이민|이직|그만둬|그만둔/.test(S.q||"")) return "고백 대신, 떠나기 전에 고마웠다는 말 한 줄과 연락처를 남기게."; if(E.chk) return pickV(E.grade<=1?["결과 듣는 날 함께 가서 의원 말을 같이 듣고 적어 두게."]:["결과 듣는 날 함께 가서, 다시 볼 날짜와 할 일을 그 자리에서 적어 두게."],sd); if(E.qtype==="어느"&&S.R&&S.R.A&&S.R.B) return pickV(["두 쪽에서 얻을 것과 잃을 것을 한 줄씩 적어 오늘 견주어 보게.","두 쪽 가운데 자네가 끝까지 버틸 수 있는 쪽이 어디인지 오늘 한 줄로 적어 보게."],sd); const A=(E.dkey==="자녀"?null:ACT_I[E.intent])||ACT[E.dkey]||ACT[E.topic]||ACT.기타; const t=pickV(Array.isArray(A)?A:(E.grade<=1?A.g:A.b),sd); return /내일/.test((S.R&&S.R.when)||"")?t.replace(/^시험 전날엔/,"오늘 밤엔"):t; }
 const SAME_SUIT={"잔(컵)":"자네가 물은 마음과 정, 바로 그 일을 쥔 귀일세.","전(펜타클)":"자네가 물은 돈과 일, 바로 그 일을 쥔 귀일세.","검(소드)":"자네가 물은 사람 사이의 말, 바로 그 일을 쥔 귀일세.","지(완드)":"자네가 물은 몸과 기운, 바로 그 일을 쥔 귀일세.","대귀":"사람 힘 밖의 귀일세. 서두를 일이 아니라는 말이네."};
 /* 빗댐 말에서 '돈의 귀가 ~ 나왔네' 같은 갈래 설명은 걷고 뜻만 남긴다 */
 /* 패가 물음과 같은 갈래로 나왔을 때 — '그 일을 쥔 귀' 같은 빈말 대신 뿌리를 바로 짚는다 */
@@ -3443,7 +3460,7 @@ async function openReading(){
   footButtons(false);
   /* 결제 단추가 화면 밖에 있을 땐 아래에 '봉인 풀기'를 띄운다 — 누르면 환불 안내가 보이는 결제 단추로 데려간다 */
   const dock=document.createElement("button"); dock.className="btn"; dock.id="payDock"; dock.type="button";
-  dock.textContent="복비 내고 봉인 풀기"; dock.hidden=true;
+  dock.innerHTML=`<small class="dkp">${S.price===15000?"복비 15,000원":"정가 <s>15,000원</s> → 복비 3,990원"}</small>복비 내고 봉인 풀기`; dock.hidden=true;
   dock.addEventListener("click",()=>{ const b=$("pay"); if(!b) return; b.scrollIntoView({behavior:"smooth",block:"center"}); b.classList.add("nudge"); setTimeout(()=>b.classList.remove("nudge"),900); });
   $("readfoot").prepend(dock);
   if("IntersectionObserver" in window){ const io=new IntersectionObserver(es=>{ const d=$("payDock"); if(!d||!$("pay")){ io.disconnect(); return; } d.hidden=es[0].isIntersecting; const ab=$("againBtn"); if(ab) ab.style.visibility=d.hidden?"":"hidden"; },{root:readBox(),threshold:0.5}); io.observe($("pay")); }
@@ -3523,7 +3540,7 @@ function offerTimer(T){
     if(left<=0){
       S.price=15000;
       $("offer").classList.add("over"); $("offer").innerHTML="할인 시간이 지났네. 정가로 받네.";
-      $("price").innerHTML="복비 <span>15,000원</span>";
+      $("price").innerHTML="복비 <span>15,000원</span>"; { const dk=document.querySelector("#payDock .dkp"); if(dk) dk.textContent="복비 15,000원"; }
       document.querySelector(".seal .orig")?.remove();
       return false;
     }
