@@ -352,7 +352,12 @@ ${list}
 - 자리 '符'는 base에 적힌 두 처방을 질문자의 사정에 맞춰 오늘 당장 할 수 있는 행동으로 풀어 준다. 처방 자체는 바꾸지 않는다.
 - 각 자리 첫 문장에 그 자리의 답을 바로 말하라(막는 것, 돕는 것, 그 사람 속, 때, 붙은 귀와 까닭, 할 일 둘, 끝).
 - 질문에 나온 말을 ${cards.length >= 3 ? "최소 세 자리 이상" : "자리마다"}에서 직접 되짚어라.
-- 묻는 꼴이 '언제'면 時와 果에서 때를 한 번 더 못 박고, '왜'면 鬼에서 까닭을, '어떻게'면 符에서 방법을, '누구'나 '속'이면 心에서 그 사람의 속을, '어느'면 果에서 고른 쪽을 가장 두껍게 써라.`;
+${cards.some((c) => c.pos === "果") ? `- 배열 맨 끝에 {"pos":"答","text":"..."} 하나를 더 붙인다(그래서 원소는 ${cards.length + 1}개다). 이것은 손님 물음에 내리는 확답이다.
+  · 한두 문장, 30자에서 80자 사이. 첫마디에서 손님이 물은 그 말(되느냐·하느냐·언제·왜·누구)에 바로 답하고, 물음에 나온 사람이나 일을 그대로 넣는다.
+  · 뼈대의 확답 "${bone.verdict}"와 같은 쪽을 말한다. 좋다·나쁘다, 하라·말라의 결을 절대 뒤집지 않는다. 뼈대 확답에 든 조심시키는 말(진료·상담·신고·수의사·법률·글로 남기기·멈추라는 말 같은 것)은 빼지 않는다.
+  · 날짜나 달 이름은 넣지 않는다(때는 따로 말한다). 패나 귀 이름도 넣지 않는다.
+  · 손님을 '자네'로 부르고 '~네', '~게', '~일세'로 맺는다.
+` : ""}- 묻는 꼴이 '언제'면 時와 果에서 때를 한 번 더 못 박고, '왜'면 鬼에서 까닭을, '어떻게'면 符에서 방법을, '누구'나 '속'이면 心에서 그 사람의 속을, '어느'면 果에서 고른 쪽을 가장 두껍게 써라.`;
 }
 
 export const config = { maxDuration: 60 };
@@ -435,6 +440,7 @@ export default async function handler(req, res) {
     const prompt = buildPrompt(q, cards, bone, stage);
     const maxTok = Math.min(2400, 300 + cards.length * 330);
     /* 모델 글에서 자리별 풀이를 뽑는다 — 배열 뒤에 군말이 붙어도 개수가 맞는 첫 배열을 쓴다 */
+    const wantAns = stage === "paid" && cards.some((c) => c.pos === "果");
     const extract = (raw) => {
       if (!raw) return null;
       const start = raw.indexOf("[");
@@ -442,7 +448,7 @@ export default async function handler(req, res) {
       let got = null;
       for (let end = raw.indexOf("]", start); end >= 0 && !got; end = raw.indexOf("]", end + 1)) {
         const g = parseSections(raw.slice(start, end + 1));
-        if (Array.isArray(g) && g.length === cards.length) got = g;
+        if (Array.isArray(g) && (g.length === cards.length || (wantAns && g.length === cards.length + 1))) got = g;
       }
       if (!got) got = parseSections(raw.slice(start, raw.lastIndexOf("]") + 1));
       return Array.isArray(got) && got.length ? got : null;
@@ -460,6 +466,8 @@ export default async function handler(req, res) {
     }
 
     /* 자리 이름으로 다시 맞추고, 빠진 자리는 화면이 준 뼈대 글(base)로 채운다 — 손님에게 오류를 보이지 않는다 */
+    const ansRaw = wantAns ? sections.find((x) => String(x?.pos || "").trim() === "答") : null;
+    sections = sections.filter((x) => String(x?.pos || "").trim() !== "答");
     const byPos = new Map(sections.map((x) => [String(x?.pos || "").trim(), x]));
     const ordered = cards.map((c, i) => {
       const x = byPos.get(c.pos) || (sections.length === cards.length ? sections[i] : null);
@@ -510,8 +518,26 @@ export default async function handler(req, res) {
     /* '그 너머는 덮인 일곱 장이…'는 무료의 마지막 자리(隱)에만 붙는다 */
     clean.forEach((s) => { if (s.pos !== "隱") s.text = s.text.replace(/\s*(<br>)?\s*그 너머는 덮인 일곱 장이[^.<]*[.]?/g, "").trim(); });
 
+    /* 확답 다듬기 — 뼈대와 결이 같고, 조심시키는 말을 지켰을 때만 쓴다(아니면 화면의 확답을 그대로 둔다) */
+    let answer = "";
+    if (ansRaw) {
+      let a = hage(noHanja(String(ansRaw.text || ""))).replace(/<[^>]*>/g, "").replace(/\s+/g, " ").trim();
+      a = scrub("答", a);
+      const base = String(bone.verdict || "");
+      const KEEP = ["진료", "상담", "신고", "수의사", "변호사", "법률", "노무", "노동청", "지급정지", "임차권등기", "의료진", "멈추", "넣지 말", "서지 말", "받지 말", "보내지 말", "재검"];
+      const NEG = /(말게|아닐세|어렵네|이르네|멈추게|오지 않네|달라지지 않네|돌아오지 않네|아니네)/;
+      const first = (t) => (String(t).match(/^[^.!?]*[.!?]?/) || [""])[0];
+      const sents = a.split(/(?<=[.!?])\s+/).filter(Boolean);
+      const ok = a.length >= 12 && a.length <= 130 && sents.length <= 3 && /(네|게|세|지)[.!]?$/.test(a)
+        && !/[0-9]|[一-龥]|\d\s*월|봄머리|당신|그대/.test(a)
+        && KEEP.every((k) => !base.includes(k) || a.includes(k))
+        && !(NEG.test(first(base)) && !NEG.test(a))
+        && !(!NEG.test(first(base)) && (bone.grade ?? 0) <= 1 && NEG.test(first(a)) && !/서두르지 말게|겁먹지 말게|미루지 말게|놓지 말게|졸이지 말게/.test(first(a)));
+      if (ok) answer = /[.!]$/.test(a) ? a : a + ".";
+      else console.log("answer rejected", JSON.stringify(a).slice(0, 160));
+    }
     res.setHeader("cache-control", "no-store");
-    res.status(200).json({ sections: clean });
+    res.status(200).json(answer ? { sections: clean, answer } : { sections: clean });
   } catch (e) {
     console.error(e);
     res.status(502).json({ error: "패를 읽다 끊겼다" });
