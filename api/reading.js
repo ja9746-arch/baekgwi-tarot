@@ -142,7 +142,13 @@ const VAGUE_ANY = /알\s*수\s*없네|두고\s*봐야\s*아네|반반일세|장�
 const BLAME = /(자네|그대)\s*(안의|속의|마음(이|의))[^.!?]{0,20}(때문|탓|불러|쌓|만들|지어)|자네가\s*(불러들|자초|만든\s*일|키운\s*일)|(자네|그대)\s*탓(일세|이네|이라)/;
 /* 뼈대가 '지금 하라'는데 확답이 '미뤄라'로 돌아서면 버린다(그 반대도) */
 const DO_NOW = /(거절|거부|신고|고소|진정|지급\s*정지|멈추|끊)[가-힣]*게|오늘\s*(바로|안에)|지금\s*바로|미루지\s*말게|이번\s*주\s*안에/;
-const HOLD_OFF = /기다리게|묵히게|묵혀\s*두게|입을\s*다물게|지켜만\s*보게|미루게|서두르지\s*말고\s*기다|가만히\s*있게|한\s*철만\s*두고\s*보게/;
+const HOLD_OFF = /기다리게|묵히게|묵혀\s*두게|입\s*(을)?\s*다물|지켜만\s*보게|미루게|서두르지\s*말고\s*기다|가만히\s*있게|한\s*철만\s*두고\s*보게|아무\s*말도\s*말게/;
+/* 뼈대에 없는 '몇 가지·며칠' 같은 셈을 지어내면 버린다 */
+const COUNTS = /(한|두|세|네|다섯|여섯|일곱|여덟|아홉|열|사흘|이레|열흘|보름|며칠)\s*(가지|번|줄|개|달|주|가지를|장)/g;
+function madeUpCount(a, base) {
+  const inA = String(a).match(COUNTS) || [];
+  return inA.some((m) => !String(base).includes(m.replace(/\s+/g, "")) && !String(base).includes(m));
+}
 function hage(t) {
   let s = String(t || "");
   s = s.replace(/(될|할|갈|올|볼|줄|날|일어날)\s*테일세/g, "$1 걸세").replace(/테일세/g, "터일세");
@@ -548,7 +554,7 @@ export default async function handler(req, res) {
         && !/[一-龥]|\d\s*월|봄머리|당신|그대(?!로)/.test(a) && (a.match(/\d+/g) || []).every((d) => q.includes(d))
         && KEEP.every((k) => !base.includes(k) || a.includes(k))
         && first(a).length <= 34 && !VAGUE_HEAD.test(first(a)) && !VAGUE_ANY.test(a)
-        && !BLAME.test(a) && !(DO_NOW.test(base) && HOLD_OFF.test(a))
+        && !BLAME.test(a) && !(DO_NOW.test(base) && HOLD_OFF.test(a)) && !madeUpCount(a, base)
         && !(bone.noWhen && /\d|[0-9]월|봄|여름|가을|겨울/.test(a))
         && !(NEG.test(first(base)) && !NEG.test(a))
         && !(!NEG.test(first(base)) && (bone.grade ?? 0) <= 1 && NEG.test(first(a)) && !/서두르지 말게|겁먹지 말게|미루지 말게|놓지 말게|졸이지 말게/.test(first(a)));
