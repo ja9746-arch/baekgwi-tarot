@@ -26,6 +26,73 @@
   body{margin:0;font:14px/1.5 -apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo",sans-serif}
   img{max-width:100%}
   [hidden]{display:none !important}
+
+/* ══ 들어가는 화면 — 그림 한 장을 깔고 그 위에 손댈 것만 얹는다 ══ */
+#s-ask{padding-left:0;padding-right:0;overflow:hidden}
+.introwrap{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:6px;overflow-y:auto;overscroll-behavior:contain;
+  padding:env(safe-area-inset-top,0px) 0 calc(6px + env(safe-area-inset-bottom,0px))}
+.introwrap::-webkit-scrollbar{width:0}
+.intro{position:relative;flex:none;container-type:inline-size;
+  width:min(100%,calc((100svh - 60px) * 941 / 1672));aspect-ratio:941/1672;
+  background:url(img/intro.webp) center/100% 100% no-repeat;
+  box-shadow:0 0 44px rgba(0,0,0,.75)}
+/* 갈래 패 — 그림 위 제자리에 투명한 단추를 얹는다 */
+/* 글을 적는 동안에는 그림을 줄이지 않는다 — 글씨가 작아지면 못 읽네 */
+#s-ask.typing .intro{width:100%}
+#s-ask.typing .introwrap{justify-content:flex-start}
+.intro .chips{position:static;display:block}
+.intro .chips button{position:absolute;appearance:none;border:0;background:none;padding:0;
+  border-radius:7%;cursor:pointer;-webkit-tap-highlight-color:transparent;
+  font-size:0;color:transparent;transition:box-shadow .18s ease,background .18s ease}
+.intro .chips button:active{transform:scale(.97)}
+.intro .chips button.on{
+  background:radial-gradient(ellipse at 50% 46%,rgba(196,46,22,.36),rgba(140,26,12,.2) 58%,rgba(140,26,12,0) 76%);
+  box-shadow:0 0 0 .22cqw rgba(255,186,110,.95),0 0 2.4cqw .5cqw rgba(255,112,42,.72),
+             inset 0 0 2.2cqw rgba(255,96,40,.34)}
+/* 물음을 적는 자리 */
+.intro textarea{position:absolute;left:16.15%;top:62.05%;width:68.0%;height:7.1%;
+  margin:0;padding:0 2.3cqw;border:0;outline:none;resize:none;background:transparent;
+  color:#efe3d2;font-family:var(--serif);font-weight:500;font-size:3.1cqw;line-height:1.55;
+  text-align:left;overflow-y:auto;-webkit-tap-highlight-color:transparent}
+.intro textarea::placeholder{color:#8e8073}
+.intro textarea::-webkit-scrollbar{width:0}
+.intro .count{position:absolute;right:15.6%;top:69.9%;margin:0;display:block;
+  font-size:2.3cqw;letter-spacing:.02em;color:#8e8073;font-variant-numeric:tabular-nums}
+/* 오늘 앉은 인연 — 숫자만 그림 위에 얹는다 */
+.intro .visit{position:absolute;left:58.5%;top:76.45%;transform:translate(-50%,-50%);
+  margin:0;white-space:nowrap;font-family:var(--serif);font-weight:700;font-size:4.6cqw;
+  letter-spacing:.02em;color:#ffd98a;opacity:0;transition:opacity 1.4s ease;
+  text-shadow:0 0 1.6cqw rgba(255,150,60,.75),0 .1cqw .3cqw #000}
+.intro .visit.on{opacity:1}
+/* 패를 여는 단추 */
+.intro #go{position:absolute;left:10.9%;top:79.5%;width:78.1%;height:9.6%;
+  padding:0;border:0;border-radius:3.4cqw;background:transparent;box-shadow:none;
+  font-size:0;color:transparent;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.intro #go::before,.intro #go::after{display:none}
+.intro #go:disabled{opacity:1;filter:none}
+.intro #go:disabled::before{content:"";display:block;position:absolute;inset:-1.4%;
+  width:auto;height:auto;transform:none;margin:0;border:0;
+  border-radius:inherit;background:rgba(8,4,5,.34);pointer-events:none;
+  -webkit-backdrop-filter:saturate(.4) brightness(.58);backdrop-filter:saturate(.4) brightness(.58)}
+.intro #go:not(:disabled){animation:introglow 2.2s ease-in-out infinite}
+@keyframes introglow{0%,100%{box-shadow:0 0 0 rgba(255,120,50,0)}50%{box-shadow:0 0 3.2cqw .4cqw rgba(255,120,50,.42)}}
+.intro #go:active{transform:scale(.985)}
+/* 아래 글귀 두 개 */
+.intro .lk{position:absolute;top:94.6%;height:4.6%;border:0;background:none;padding:0;
+  font-size:0;color:transparent;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.intro .lkT{left:36.5%;width:10.5%}
+.intro .lkP{left:48.5%;width:16.5%}
+/* 그림에 담지 못한 법정 고지 */
+.underlegal{flex:none;text-align:center;font-size:11px;color:#7d7066;line-height:1.7;padding:0 16px}
+.underlegal #histLink{background:none;border:0;color:#a39486;text-decoration:underline;font-size:11.5px;padding:5px 6px}
+.underlegal .biz{display:inline-block;font-size:11px}
+.underlegal .biz summary{padding:4px 6px;color:#8d8075;text-decoration:underline;cursor:pointer}
+.underlegal .biz[open] summary{margin-bottom:2px}
+.underlegal .biz span{display:block;color:#7d7066;font-size:10.5px}
+.underlegal .note{margin:2px 0 0;color:#6f6359;font-size:10.5px}
+@media (max-height:560px){.underlegal .note{display:none}}
+
 </style>
 </head>
 <body>
@@ -97,55 +164,77 @@ body{word-break:keep-all;overflow-wrap:anywhere}
 .lg-lk span,.lg-lq,.verdict,.spot h2{text-wrap:balance}
 @media (max-width:340px){#s-ask .ask h2{font-size:15.5px;line-height:1.75;letter-spacing:-.03em}.brand .mark img{width:min(60vw,220px)}}
 @media (max-height:680px){#s-ask .brand{padding-top:10px}#s-ask .visit{margin-top:4px}#s-ask .visit b{display:inline;margin-left:4px}
-  #s-ask .ask{padding-top:8px;gap:12px}#s-ask .ask h2{line-height:1.6}.field textarea{min-height:76px}#s-ask .ask .hint{display:none}}
+  #s-ask .ask{padding-top:8px;gap:12px}#s-ask .ask h2{line-height:1.6}.field textarea{min-height:68px}#s-ask .ask .hint{display:none}}
 .ask::-webkit-scrollbar{width:0}
 .ask h2{font-family:var(--serif);font-weight:700;font-size:clamp(19px,5.2vw,23px);
   text-align:center;margin:0;color:var(--jae);text-wrap:balance;line-height:1.95;
   letter-spacing:-.012em;text-shadow:0 2px 14px #000,0 0 30px rgba(0,0,0,.85)}
-.field{position:relative}
-.field textarea{display:block;width:100%;min-height:94px;resize:none;color:var(--jae);background-color:rgba(10,5,6,.5);
-  background:radial-gradient(ellipse 70% 120% at 50% 50%,rgba(12,5,6,.82) 0%,rgba(12,5,6,.66) 55%,rgba(12,5,6,0) 100%);
-  border:0;border-radius:0;box-shadow:none;
-  padding:16px 20px;font:inherit;font-size:16px;line-height:1.75;max-height:190px;overflow-y:auto;text-align:center}
+/* 물음을 적는 자리 — 네 귀에 매화를 둔 금테 액자 */
+.field{position:relative;padding:13px 48px 11px 14px;border:1px solid rgba(201,162,74,.6);border-radius:9px;
+  background:linear-gradient(180deg,rgba(30,11,10,.80) 0%,rgba(11,5,6,.88) 100%);
+  box-shadow:inset 0 0 0 1px rgba(8,4,5,.92),inset 0 0 0 2px rgba(201,162,74,.22),0 10px 30px rgba(0,0,0,.5)}
+.field .fh{margin:0 -34px 10px 0;text-align:center;font-family:var(--serif);font-weight:700;font-size:14.5px;
+  letter-spacing:.01em;color:var(--jae);text-shadow:0 1px 8px #000}
+.field .fh::before,.field .fh::after{content:"◇";font-size:8.5px;vertical-align:3px;margin:0 9px;color:var(--geum-hot);opacity:.95}
+.field .fb{position:absolute;width:23px;height:23px;pointer-events:none;opacity:.92;
+  background:no-repeat center/contain;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='%23b5291e'%3E%3Ccircle cx='12' cy='6.6' r='3.4'/%3E%3Ccircle cx='17.3' cy='10.4' r='3.4'/%3E%3Ccircle cx='15.2' cy='16.6' r='3.4'/%3E%3Ccircle cx='8.8' cy='16.6' r='3.4'/%3E%3Ccircle cx='6.7' cy='10.4' r='3.4'/%3E%3C/g%3E%3Ccircle cx='12' cy='12' r='1.9' fill='%23e8c977'/%3E%3C/svg%3E");filter:drop-shadow(0 1px 3px rgba(0,0,0,.7))}
+.field .fb1{top:-7px;left:-7px}.field .fb2{top:-7px;right:-7px;transform:rotate(90deg)}
+.field .fb3{bottom:-7px;right:-7px;transform:rotate(180deg)}.field .fb4{bottom:-7px;left:-7px;transform:rotate(270deg)}
+.field textarea{display:block;width:100%;min-height:78px;resize:none;color:var(--jae);
+  background:rgba(6,3,4,.52);border:1px solid rgba(201,162,74,.26);border-radius:7px;box-shadow:inset 0 2px 10px rgba(0,0,0,.5);
+  padding:13px 15px;font:inherit;font-size:15.5px;line-height:1.75;max-height:180px;overflow-y:auto;text-align:center}
 .field textarea:not(:placeholder-shown){text-align:left}
-/* 위아래 금선이 가운데서 짙고 끝으로 갈수록 사라지는 두루마리 꼴 — 네모 테두리를 쓰지 않는다 */
-.field .cn{position:absolute;left:0;right:0;height:1px;pointer-events:none;z-index:1;
-  background:linear-gradient(90deg,transparent,rgba(201,162,74,.75) 30%,rgba(232,201,119,.95) 50%,rgba(201,162,74,.75) 70%,transparent)}
-.field .cn1{top:0}.field .cn2{top:4px;opacity:.35}
-.field .cn3{bottom:21px}.field .cn4{bottom:25px;opacity:.35}
-.field::before,.field::after{content:"";position:absolute;left:50%;width:7px;height:7px;margin-left:-3.5px;transform:rotate(45deg);
-  background:#1a0a09;border:1px solid var(--geum-hot);z-index:2}
-.field::before{top:-3px}.field::after{bottom:18px}
-.field textarea:focus{background:radial-gradient(ellipse 75% 130% at 50% 50%,rgba(14,6,7,.92) 0%,rgba(14,6,7,.75) 55%,rgba(14,6,7,0) 100%)}
+.field textarea:focus{border-color:rgba(232,201,119,.55);background:rgba(8,4,5,.66)}
+/* 오른쪽에 걸린 百 패 — 꾸밈일세 */
+.field .medal{position:absolute;top:50%;right:7px;margin-top:-17px;width:34px;height:34px;border-radius:50%;z-index:3;
+  display:flex;align-items:center;justify-content:center;pointer-events:none;
+  border:1px solid var(--geum);background:radial-gradient(circle at 50% 35%,#2a1210,#120708);
+  box-shadow:0 0 0 2px rgba(10,5,6,.9),0 0 14px rgba(255,120,60,.25),0 4px 10px rgba(0,0,0,.6)}
+.field .medal b{font-family:var(--serif);font-weight:700;font-size:15px;color:var(--geum-hot);line-height:1}
+.field .medal::before{content:"";position:absolute;top:-13px;left:50%;width:1px;height:13px;margin-left:-.5px;
+  background:linear-gradient(180deg,transparent,rgba(201,162,74,.8))}
+.field .medal::after{content:"";position:absolute;top:33px;left:50%;width:7px;height:21px;margin-left:-3.5px;border-radius:0 0 3px 3px;
+  background:linear-gradient(180deg,#b5291e,#6d1510 55%,rgba(109,21,16,0));
+  -webkit-mask-image:repeating-linear-gradient(90deg,#000 0 1.4px,transparent 1.4px 2.4px);
+  mask-image:repeating-linear-gradient(90deg,#000 0 1.4px,transparent 1.4px 2.4px)}
+@media (max-width:360px){.field .medal{display:none}.field{padding-right:14px}.field .fh{margin-right:0}}
+@media (max-width:382px){.field .fh{font-size:13px;letter-spacing:-.01em}.field .fh::before,.field .fh::after{display:none}}
 .topics{margin:0;text-align:center}
 .topics-h{margin:0 0 9px;font-family:var(--serif);font-size:13px;letter-spacing:.08em;color:var(--geum-hot);text-shadow:0 2px 10px #000,0 0 20px #000}
 .topics-h::before,.topics-h::after{content:"◆";font-size:8px;vertical-align:2px;margin:0 8px;color:#c0362a}
-.chips{display:flex;flex-wrap:wrap;justify-content:center;gap:7px 6px;max-width:370px;margin:0 auto}
-.chips button{appearance:none;padding:6px 13px;border:1px solid rgba(201,162,74,.55);border-radius:999px;
-  background:linear-gradient(180deg,rgba(70,18,13,.72),rgba(22,8,8,.82));
-  font-family:var(--serif);font-size:14px;font-weight:700;letter-spacing:.05em;color:#f1e3cf;position:relative;
-  box-shadow:inset 0 0 0 1px rgba(0,0,0,.5),0 4px 12px rgba(0,0,0,.55);text-shadow:0 1px 4px #000;transition:.2s}
+.chips{display:grid;grid-template-columns:repeat(5,1fr);gap:7px 6px;max-width:400px;margin:0 auto}
+.chips button{appearance:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  padding:9px 2px 7px;border:1px solid rgba(201,162,74,.5);border-radius:7px;
+  box-shadow:inset 0 0 0 1px rgba(8,4,5,.92),inset 0 0 0 2px rgba(201,162,74,.2),0 3px 10px rgba(0,0,0,.45);
+  background:linear-gradient(180deg,rgba(44,15,12,.86),rgba(13,6,7,.9));
+  font-family:var(--serif);font-weight:700;color:#e7d6c0;position:relative;
+  text-shadow:0 1px 4px #000;transition:.2s}
+.chips button .ic{display:block;width:21px;height:21px;color:var(--geum-hot);opacity:.86;transition:.2s}
+.chips button .ic svg{display:block;width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:1.5;
+  stroke-linecap:round;stroke-linejoin:round}
+.chips button .lb{display:block;font-size:11.5px;letter-spacing:-.02em;white-space:nowrap;line-height:1}
 .chips button:active{transform:scale(.96)}
 .chips button{position:relative}.chips button::after{content:"";position:absolute;inset:-6px -2px}
 .home::after,.snd::after{content:"";position:absolute;inset:-7px}
-@media (max-width:400px){.chips{gap:6px 5px}.chips button{padding:5px 10px;font-size:13px;letter-spacing:.02em}}
+@media (max-width:400px){.chips{gap:6px 5px}.chips button{padding:8px 1px 6px}.chips button .lb{font-size:11px}.chips button .ic{width:19px;height:19px}}
 @media (max-height:900px){#s-ask .ask .hint:last-child{display:none}}
 @media (max-height:720px){
   #s-ask .brand{padding-top:6px}#s-ask .brand .mark img{width:min(54vw,214px)}#s-ask .rule{margin-top:6px}
   #s-ask .visit{margin-top:4px;font-size:12px}#s-ask .visit b{font-size:16px;margin-top:0}#s-ask .visit b i{font-size:20px}
   #s-ask .ask{padding-top:6px;gap:10px}#s-ask .ask h2{font-size:17px;line-height:1.55}
-  .topics-h{margin-bottom:6px}.chips{gap:5px 5px}.chips button{padding:4px 10px;font-size:13px}
-  .field textarea{min-height:88px;padding:12px 18px}#s-ask .ask .hint{display:none}
+  .topics-h{margin-bottom:6px}.chips{gap:5px}.chips button{padding:7px 1px 5px}.chips button .ic{width:18px;height:18px}
+  .field textarea{min-height:70px;padding:11px 14px}#s-ask .ask .hint{display:none}
   .foot{padding-top:6px}
 }
-@media (max-width:340px){.visit{font-size:12px;letter-spacing:.02em}.visit b{font-size:15px;white-space:nowrap}.visit b i{font-size:18px}.chips button{padding:4px 9px;font-size:12.5px}}
+@media (max-width:340px){.visit{font-size:12px;letter-spacing:.02em}.visit b{font-size:15px;white-space:nowrap}.visit b i{font-size:18px}.chips button{padding:6px 0 5px}.chips button .lb{font-size:10px}.chips button .ic{width:17px;height:17px}}
 
-.chips button.on{color:#fff;border-color:var(--geum-hot);background:linear-gradient(180deg,#8a2418,#4e100b);
-  box-shadow:0 0 0 1px rgba(240,207,122,.35),0 0 18px rgba(255,110,60,.45),0 4px 12px rgba(0,0,0,.55)}
+.chips button.on{color:#fff6ea;border-color:var(--geum-hot);background:linear-gradient(180deg,#8a2418,#440e0a);
+  box-shadow:inset 0 0 0 1px rgba(8,4,5,.6),inset 0 0 0 2px rgba(240,207,122,.42),0 0 18px rgba(255,110,60,.4),0 4px 12px rgba(0,0,0,.55)}
+.chips button.on .ic{color:#ffd9cf;opacity:1}
 .field textarea::placeholder{color:#a89786}
-@media (max-width:350px){.field textarea::placeholder{font-size:14px;letter-spacing:-.02em}.field textarea{padding-left:10px;padding-right:10px}}
+@media (max-width:350px){.field textarea::placeholder{font-size:13.5px;letter-spacing:-.02em}.field textarea{padding-left:10px;padding-right:10px}.field{padding:11px 10px 9px}}
 .field textarea:focus{outline:none}
-.count{display:block;text-align:right;margin-top:6px;font-size:11px;color:#9a8b7e;font-variant-numeric:tabular-nums}
+.count{display:block;text-align:right;margin:5px 2px 0;font-size:11px;color:#9a8b7e;font-variant-numeric:tabular-nums}
 .seer-name{margin:0;display:flex;align-items:center;justify-content:center;gap:10px;font-family:var(--serif);
   text-shadow:0 2px 12px #000,0 0 24px #000}
 .seer-name span{font-size:12.5px;letter-spacing:.32em;color:#b99a5a;margin-right:-.2em}
@@ -172,6 +261,21 @@ body{word-break:keep-all;overflow-wrap:anywhere}
 .btn:hover{background:linear-gradient(180deg,#6c1d15 0%,#470f0b 55%,#320a08 100%);
   box-shadow:inset 0 0 0 3px rgba(20,6,6,.85),inset 0 0 0 4px rgba(232,201,119,.55),0 0 28px rgba(255,84,54,.28),0 10px 26px rgba(0,0,0,.6)}
 .btn:disabled{opacity:.92;cursor:default;filter:saturate(.85) brightness(.92)}
+#go{padding:17px 50px 17px 22px;border-radius:10px;border-color:rgba(201,162,74,.85);
+  box-shadow:inset 0 0 0 1px rgba(8,4,5,.9),inset 0 0 0 2px rgba(201,162,74,.3),0 8px 26px rgba(0,0,0,.55)}
+#go .gl{font-family:var(--serif);font-weight:700;font-size:clamp(17px,4.9vw,21px);letter-spacing:.015em;
+  text-shadow:0 1px 6px #000,0 0 18px rgba(255,120,60,.3)}
+#go .ga{position:absolute;top:50%;right:18px;width:26px;height:26px;margin-top:-13px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-style:normal;font-size:17px;line-height:1;
+  padding-bottom:2px;border:1px solid rgba(232,201,119,.75);color:var(--geum-hot);background:rgba(10,5,6,.4)}
+#go:not(:disabled) .ga{animation:nextglow 1.8s ease-in-out infinite}
+#go:not(:disabled){box-shadow:inset 0 0 0 1px rgba(8,4,5,.9),inset 0 0 0 2px rgba(240,207,122,.45),0 0 24px rgba(255,110,60,.3),0 8px 26px rgba(0,0,0,.55)}
+#go::before,#go::after{display:none}
+.gosub{margin:9px 0 0;display:flex;align-items:center;gap:10px;justify-content:center;
+  font-family:var(--serif);font-size:12px;letter-spacing:.06em;color:#a79682;text-shadow:0 1px 6px #000}
+.gosub::before,.gosub::after{content:"";height:1px;width:34px;background:linear-gradient(90deg,transparent,rgba(201,162,74,.6))}
+.gosub::after{background:linear-gradient(90deg,rgba(201,162,74,.6),transparent)}
+@media (max-height:700px){.gosub{display:none}}
 .btn.ghost{background:transparent;border-color:var(--line);color:#c9b37e;font-weight:400;
   font-size:14px;letter-spacing:.06em;padding:13px}
 .btn.ghost:hover{border-color:var(--geum-dim);color:var(--jae);box-shadow:none}
@@ -366,7 +470,7 @@ body{word-break:keep-all;overflow-wrap:anywhere}
   text-shadow:0 2px 12px #000,0 0 26px #000,0 0 4px #000}
 #s-ask .foot .visit{margin:0 0 8px;font-size:13px}
 #s-ask .foot .visit b{display:inline;margin:0 0 0 6px;font-size:17px}
-#s-ask .foot .visit b i{font-size:21px}
+#s-ask .foot .visit b i{font-size:26px;letter-spacing:.02em}
 @media (max-height:720px){
   #s-ask .hero-brand{height:clamp(250px,44vh,320px)}
   #s-ask .hero-foot h2{font-size:15.5px;line-height:1.5}
@@ -380,16 +484,16 @@ body{word-break:keep-all;overflow-wrap:anywhere}
 /* 아주 작은 화면 — 물음 영역이 넘쳐 첫 줄이 호연의 말에 가리지 않게 */
 @media (max-height:620px){
   #s-ask .ask{gap:6px;padding-top:4px}
-  .chips button{padding:3px 9px;font-size:12.5px}
-  .field textarea{min-height:58px}
+  .chips button{padding:5px 0 4px}.chips button .ic{width:16px;height:16px}
+  .field textarea{min-height:56px}.field{padding:9px 10px 8px}.field .fh{margin-bottom:7px;font-size:13.5px}
   #s-ask .legal{line-height:1.7}
 }
 #s-ask:not(.typing) .ask{padding-top:6px;padding-bottom:30px;justify-content:center;justify-content:safe center}
 @media (max-height:760px){#s-ask .topics-h{display:none}}
-@media (max-height:600px){ #s-ask .hero-brand{height:190px} #s-ask .hero-brand .mark img{width:min(60vw,226px)} #s-ask .hero-foot h2{font-size:14px;line-height:1.45} #s-ask .topics-h{display:none} .field textarea{min-height:66px} #s-ask .ask{gap:8px} }
+@media (max-height:600px){ #s-ask .hero-brand{height:190px} #s-ask .hero-brand .mark img{width:min(60vw,226px)} #s-ask .hero-foot h2{font-size:14px;line-height:1.45} #s-ask .topics-h{display:none} .field textarea{min-height:62px} #s-ask .ask{gap:8px} }
 @media (max-height:600px){
   #s-ask .hero-brand{height:236px}#s-ask .hero-brand .mark img{width:min(68vw,250px)}
-  #s-ask .hero-foot h2{font-size:14.5px}#s-ask .ask{gap:8px}.field textarea{min-height:70px}
+  #s-ask .hero-foot h2{font-size:14.5px}#s-ask .ask{gap:8px}.field textarea{min-height:64px}
   #s-ask .foot .visit{display:none}
   #s-ask .hero-brand .mark img{width:min(76vw,300px)}
   #s-ask .foot .visit{margin-bottom:4px;font-size:12px}#s-ask .foot .visit b{font-size:15px}#s-ask .foot .visit b i{font-size:18px}
@@ -659,32 +763,22 @@ body{word-break:keep-all;overflow-wrap:anywhere}
 
   <!-- 1. 질문 -->
   <section class="screen" id="s-ask">
-    <div class="brand hero-brand">
-      <div class="hero" aria-hidden="true"><i class="hero-img"></i><i class="hero-glow"></i><i class="hero-smoke"></i></div>
-      <h1 class="mark"><img src="img/title.webp" alt="백귀타로"></h1>
-      <div class="hero-foot">
-        <p class="seer-name"><i class="sn-l"></i><span>백귀술사</span><b>호연</b><i class="sn-r"></i></p>
-        <h2>자네가 품고 온 이야기를 들려주게<br>패는 이미 알고 있을지도 모르니</h2>
-      </div>
-    </div>
-    <div class="ask">
-      <div class="topics" id="topics" aria-label="물음 고르기">
-        <p class="topics-h">무엇이 궁금한가</p>
-        <div class="chips"></div>
-      </div>
-      <div class="field">
-        <i class="cn cn1"></i><i class="cn cn2"></i><i class="cn cn3"></i><i class="cn cn4"></i>
-        <textarea id="q" maxlength="120" placeholder="지금 가장 답답한 것 하나만 적어 보게.&#10;예) 그 사람과 끝까지 갈 수 있을까요"></textarea>
+    <div class="introwrap">
+      <div class="intro" id="intro">
+        <div class="chips" id="topics" aria-label="물음 고르기"></div>
+        <textarea id="q" maxlength="120" aria-label="지금 가장 답답한 것 하나만 적어 보게"
+                  placeholder="예) 그 사람과 끝까지 갈 수 있을까요"></textarea>
         <span class="count" id="count">0 / 120</span>
+        <p class="visit" id="visit" aria-hidden="true"></p>
+        <button class="btn" id="go" aria-label="호연에게 패를 열어 묻는다" disabled></button>
+        <button class="lk lkT" id="openTerms" aria-label="이용약관 · 환불규정"></button>
+        <button class="lk lkP" id="openPriv" aria-label="개인정보처리방침"></button>
       </div>
-      <p class="hint">생년월일은 묻지 않네. 질문 하나면 족하네.</p>
-      <p class="hint" style="font-size:11px;color:#8d7f73">여우의 연기, 호연 — 해동 백귀 백 장으로<br>말 속에 숨은 마음과 보이지 않는 기운을 읽는다</p>
-    </div>
-    <div class="foot">
-      <p class="visit" id="visit" aria-hidden="true"></p>
-      <button class="btn" id="go" disabled>패를 펴다</button>
-      <div class="legal"><button id="histLink" hidden>지난 물음 다시 보기</button><button id="openTerms">이용약관 · 환불규정</button><button id="openPriv"><b>개인정보처리방침</b></button><details class="biz"><summary>사업자 정보</summary>온미라이프 · <span>대표 김민철 · 사업자등록번호 501-04-95672<br>통신판매업 신고 진행 중 · 고객센터 <a href='tel:1866-0423'>1866-0423</a><br>울산광역시 북구 염포로 685, 110동 1801호 · ja9746@naver.com</span></details></div>
-      <p class="biz note">오락 목적의 해석 콘텐츠이며 미래를 보장하지 않습니다</p>
+      <div class="underlegal">
+        <button id="histLink" hidden>지난 물음 다시 보기</button>
+        <details class="biz"><summary>사업자 정보 · 환불규정</summary>온미라이프 · <span>대표 김민철 · 사업자등록번호 501-04-95672<br>통신판매업 신고 진행 중 · 고객센터 <a href='tel:1866-0423'>1866-0423</a><br>울산광역시 북구 염포로 685, 110동 1801호 · ja9746@naver.com</span></details>
+        <p class="note">오락 목적의 해석 콘텐츠이며 미래를 보장하지 않습니다</p>
+      </div>
     </div>
   </section>
 
@@ -1929,7 +2023,8 @@ function wait(ms){return new Promise(r=>setTimeout(r,ms));}
   try{ n=parseInt(sessionStorage.getItem(K),10); }catch(e){}
   if(!(n>=MIN&&n<=MAX)){ n=MIN+Math.floor(Math.random()*(MAX-MIN+1)); try{ sessionStorage.setItem(K,String(n)); }catch(e){} }
   const el=document.getElementById("visit");
-  if(el){ el.innerHTML=`오늘 호연의 판 앞에 앉은<b><i>${n}</i>번째 인연</b>`; setTimeout(()=>el.classList.add("on"),900); }
+  if(el){ el.innerHTML=document.getElementById("intro")?String(n):`오늘 호연의 판 앞에 앉은<b><i>${n}</i>번째 인연</b>`;
+    setTimeout(()=>el.classList.add("on"),900); }
 })();
 function store(k,v){try{ if(v===undefined) return JSON.parse(localStorage.getItem(k)||"null"); localStorage.setItem(k,JSON.stringify(v)); }catch(e){ return null; }}
 const IN_KAKAO=/KAKAOTALK/i.test(navigator.userAgent||"");
@@ -2103,7 +2198,8 @@ $("home").addEventListener("click",()=>{ reset(); try{ if(history.state&&history
 
 /* ── 1. 질문 ── */
 const q=$("q");
-q.addEventListener("focus",()=>{ $("s-ask").classList.add("typing"); $("stage").classList.add("typing"); });
+q.addEventListener("focus",()=>{ $("s-ask").classList.add("typing"); $("stage").classList.add("typing");
+  setTimeout(()=>{ try{ q.scrollIntoView({block:"center",behavior:"smooth"}); }catch(e){} },260); });
 q.addEventListener("blur",()=>{ $("s-ask").classList.remove("typing"); $("stage").classList.remove("typing"); });
 /* 주제 고르기 — 누르면 본보기 물음을 넣어 주고, 글에 주제 낱말이 없을 때 그 주제로 읽는다 */
 const CHIPS=[
@@ -2112,17 +2208,34 @@ const CHIPS=[
  {l:"속마음",t:"연애",q:["그 사람은 나를 어떻게 생각할까요","그 사람이 나를 좋아할까요","연락이 뜸해진 그 사람 속마음이 궁금해요","그 사람 진심이 뭘까요","그 사람이 나에게 관심이 있을까요","고백하면 받아줄까요"]},
  {l:"돈",t:"금전",q:["올해 안에 돈이 들어올까요","돈이 왜 자꾸 새는지 알고 싶어요","빌려준 돈을 돌려받을 수 있을까요","대출을 다 갚을 수 있을까요","지금 주식을 사도 될까요","이번 투자 괜찮을까요","사기를 당하는 건 아닐까요","올해 재물운이 어떨까요","돈 빌려달라는데 빌려줘도 될까요","대출 승인이 날까요"]},
  {l:"사업",t:"금전",q:["지금 사업을 시작해도 될까요","가게를 계속 끌고 가도 될까요","동업해도 괜찮을까요","매출이 언제쯤 오를까요","가게를 정리해야 할까요","새로운 일을 벌여도 될까요","이번 계약 성사될까요","유튜브 시작하면 잘될까요"]},
- {l:"직장",t:"직장",q:["지금 이직해도 될까요","이 회사에 계속 다녀도 될까요","취업은 언제쯤 될까요","이번에 승진할 수 있을까요","회사에서 잘릴까 봐 걱정돼요","퇴사하고 다른 길을 가도 될까요","직장 상사와의 관계가 나아질까요","나한테 맞는 일이 뭘까요","상사가 나를 싫어하는 것 같아요"]},
- {l:"시험",t:"직장",q:["이번 시험에 붙을 수 있을까요","면접에 붙을까요","자격증 시험에 합격할까요","원하는 대학에 붙을 수 있을까요","공무원 시험 붙을 수 있을까요","서류에서 떨어질까 걱정돼요"]},
+ {l:"직장",t:"직장",q:["지금 이직해도 될까요","이 회사에 계속 다녀도 될까요","취업은 언제쯤 될까요","이번에 승진할 수 있을까요","회사에서 잘릴까 봐 걱정돼요","퇴사하고 다른 길을 가도 될까요","직장 상사와의 관계가 나아질까요","나한테 맞는 일이 뭘까요","상사가 나를 싫어하는 것 같아요","이번 시험에 붙을 수 있을까요","면접에 붙을까요","자격증 시험에 합격할까요","원하는 대학에 붙을 수 있을까요","공무원 시험 붙을 수 있을까요"]},
  {l:"사람 사이",t:"사람",q:["그 사람과 사이가 풀릴까요","주변 사람들과 왜 자꾸 틀어질까요","친구가 나를 배신할까요","회사에 이상한 소문이 났는데 괜찮을까요","이 사람을 믿어도 될까요","멀어진 친구와 화해할 수 있을까요","소송에서 이길 수 있을까요"]},
  {l:"가족",t:"사람",q:["가족과의 갈등이 풀릴까요","부모님과 사이가 나아질까요","시댁과의 관계가 좋아질까요","형제와 다툰 일이 풀릴까요","아이와의 사이가 나아질까요","우리 아이가 학교에 잘 적응할까요","유산 문제가 잘 풀릴까요","이사해도 괜찮을까요"]},
  {l:"건강",t:"건강",q:["요즘 몸이 무거운데 괜찮을까요","잠을 못 자는데 언제 나아질까요","수술이 잘 될까요","부모님 건강이 괜찮을까요","요즘 마음이 지쳤는데 언제 나아질까요","올해 사고 날 일은 없을까요","번아웃이 왔는데 쉬어도 될까요","우리 강아지가 아픈데 괜찮을까요"]}
 ];
+/* 갈래마다 붙는 작은 그림 — 금빛 선으로만 그린다 */
+const TOPIC_ICON={
+ "연애":'<circle cx="12" cy="6.8" r="3"/><circle cx="17" cy="10.4" r="3"/><circle cx="15.1" cy="16.3" r="3"/><circle cx="8.9" cy="16.3" r="3"/><circle cx="7" cy="10.4" r="3"/><circle cx="12" cy="12" r="1.2" fill="currentColor" stroke="none"/>',
+ "재회":'<path d="M16.4 4.4a8 8 0 1 0 3.3 12.3A8.4 8.4 0 0 1 16.4 4.4Z"/><path d="M6.4 5.6v3M4.9 7.1h3"/>',
+ "속마음":'<path d="M12 20.2C9.6 18.4 4.3 14.6 4.3 10.6A3.9 3.9 0 0 1 12 8.6a3.9 3.9 0 0 1 7.7 2c0 4-5.3 7.8-7.7 9.6Z"/>',
+ "돈":'<circle cx="12" cy="12" r="7"/><rect x="9.9" y="9.9" width="4.2" height="4.2"/><path d="M12 5v1.8M12 17.2V19M5 12h1.8M17.2 12H19"/>',
+ "사업":'<path d="M12 3.4v11.4"/><path d="M12.9 5.6 18 14.8h-5.1Z"/><path d="M11.1 7.8 6.6 14.8h4.5"/><path d="M3.6 17.1h16.8c-1.2 2.4-3.1 3.6-5.6 3.6H9.2c-2.5 0-4.4-1.2-5.6-3.6Z"/>',
+ "직장":'<rect x="5.2" y="4.4" width="13.6" height="15.2" rx="1.5"/><path d="M8.6 8.7h6.8M8.6 12h6.8M8.6 15.3h4.4"/>',
+ "시험":'<path d="m18.4 4.4 1.4 1.4-7.9 7.9-2.1-.7-.7-2.1Z"/><path d="m9.8 12.9-2.9 7 6.9-2.9"/>',
+ "사람 사이":'<circle cx="8.4" cy="8.2" r="2.6"/><circle cx="15.6" cy="8.2" r="2.6"/><path d="M3.6 19.4c0-2.7 2.1-4.7 4.8-4.7s4.8 2 4.8 4.7"/><path d="M14 15c.5-.2 1-.3 1.6-.3 2.7 0 4.8 2 4.8 4.7"/>',
+ "가족":'<circle cx="12" cy="7.2" r="2.8"/><circle cx="5.4" cy="10.4" r="2.1"/><circle cx="18.6" cy="10.4" r="2.1"/><path d="M7.2 19.8c0-2.8 2.1-4.9 4.8-4.9s4.8 2.1 4.8 4.9"/><path d="M2.4 19.8c0-2 1-3.4 2.6-3.9"/><path d="M21.6 19.8c0-2-1-3.4-2.6-3.9"/>',
+ "건강":'<path d="M10.3 3.6h3.4"/><path d="M10.6 4.8v2.6c0 1.3-2.7 2-2.7 5.7 0 3.6 1.9 7.3 4.1 7.3s4.1-3.7 4.1-7.3c0-3.7-2.7-4.4-2.7-5.7V4.8"/><path d="M9.1 13.6h5.8"/>'
+};
+/* 그림(941×1672) 안 갈래 패의 자리 — 연애·재회·속마음·돈·사업 / 직장·사람 사이·가족·건강 */
+const CHIP_BOX=[[76,638],[237,638],[399,638],[559,638],[720,638],[140,788],[310,788],[486,788],[657,788]];
+const IW=941, IH=1672, CW=144, CH=134;
 S.tp=""; const chipN={};
 (function(){
-  const box=document.querySelector("#topics .chips");
-  CHIPS.forEach(c=>{
-    const b=document.createElement("button"); b.type="button"; b.textContent=c.l;
+  const box=document.getElementById("topics");
+  CHIPS.forEach((c,i)=>{
+    const b=document.createElement("button"); b.type="button"; b.setAttribute("aria-label",c.l);
+    const bx=CHIP_BOX[i]; if(bx){ b.style.left=(bx[0]/IW*100).toFixed(3)+"%"; b.style.top=(bx[1]/IH*100).toFixed(3)+"%";
+      b.style.width=(CW/IW*100).toFixed(3)+"%"; b.style.height=(CH/IH*100).toFixed(3)+"%"; }
     b.addEventListener("click",()=>{
       const k=chipN[c.l]=(chipN[c.l]??-1)+1;
       q.value=c.q[k%c.q.length]; S.tp=c.t;
@@ -2133,10 +2246,10 @@ S.tp=""; const chipN={};
     box.appendChild(b);
   });
 })();
-function growQ(){ q.style.height="auto"; q.style.height=Math.min(190,Math.max(parseFloat(getComputedStyle(q).minHeight)||88,q.scrollHeight+2))+"px"; }
+function growQ(){ if(document.getElementById("intro")) return; q.style.height="auto"; q.style.height=Math.min(190,Math.max(parseFloat(getComputedStyle(q).minHeight)||88,q.scrollHeight+2))+"px"; }
 let chipFill=false;
 q.addEventListener("input",()=>{
-  if(!chipFill&&S.tp){ S.tp=""; document.querySelectorAll("#topics .chips button.on").forEach(b=>b.classList.remove("on")); }
+  if(!chipFill&&S.tp){ S.tp=""; document.querySelectorAll("#topics button.on").forEach(b=>b.classList.remove("on")); }
   growQ();
   $("count").textContent=q.value.length+" / 120";
   $("go").disabled=q.value.trim().length<2;
@@ -4815,9 +4928,10 @@ function reset(){
   S.mode="main"; S.confirm=null; S.confirmDone=null; S.shown=new Set(); S.skip=false;
   $("boardPick").classList.remove("confirmboard"); $("s-read").classList.remove("slim"); $("halt").hidden=true;
   Object.assign(S,{q:"",aiIntent:null,order:[],picked:[],brushN:0,pass:0,dir:0,sinceFlip:0,done:false,spin:0,paid:false,E:null,R:null,replay:false,rec:null,freeTexts:null,paidTexts:null,paidJobs:null,aiAns:null,cOk:0,price:0,pin:false,tp:"",busy:false});
-  document.querySelectorAll("#topics .chips button.on").forEach(b=>b.classList.remove("on"));
+  document.querySelectorAll("#topics button.on").forEach(b=>b.classList.remove("on"));
   ["same","hist","share","cv","terms","risk","priv"].forEach(closeSheet);
   q.value=""; $("count").textContent="0 / 120"; $("go").disabled=true;
+  S.tp=""; document.querySelectorAll("#topics button.on").forEach(b=>b.classList.remove("on"));
   $("dealmsg").style.opacity=""; $("pickmsg").style.opacity="";
   $("dealmsg").innerHTML='패를 세 번 쓸어 보게<small>'+(matchMedia("(pointer:fine)").matches?"마우스로 패 위를 좌우로 훑으면 되네":"손으로 패 위를 좌우로 훑으면 되네")+'</small><span class="tally" id="tally"><i></i><i></i><i></i></span>';
   $("pickmsg").innerHTML='열 장을 뽑게<small>부채를 좌우로 돌리다가, 손이 멎는 자리를 누르게</small>';
