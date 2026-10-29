@@ -440,6 +440,40 @@ export default async function handler(req, res) {
     warn: cut(c?.warn, 160), fix: cut(c?.fix, 160), kind: cut(c?.kind, 4), lore: cut(c?.lore, 260), bridge: cut(c?.bridge, 200),
     base: cut(c?.base, 600),
   }));
+  /* ── 갈래만 가려 달라는 물음 — 패를 뽑는 동안 미리 묻는다 ── */
+  if (body?.mode === "intent") {
+    if (RISK.test(q) || q.length < 2) {
+      res.setHeader("cache-control", "no-store");
+      res.status(200).json({ intent: "" });
+      return;
+    }
+    const keys = (Array.isArray(body?.keys) ? body.keys : [])
+      .map((k) => cut(k, 12)).filter((k) => /^[가-힣]{1,12}$/.test(k)).slice(0, 200);
+    if (!keys.length) {
+      res.setHeader("cache-control", "no-store");
+      res.status(200).json({ intent: "" });
+      return;
+    }
+    const sys = "너는 한국어 물음을 미리 정해진 갈래 하나로 가르는 일만 한다. 설명하지 않고 갈래 이름 하나만 답한다.";
+    const pr =
+      `갈래 목록:\n${keys.join(", ")}\n\n물음:\n"${q}"\n\n` +
+      "이 물음이 무엇에 대한 것인지 위 목록에서 가장 알맞은 갈래 하나를 고른다.\n" +
+      "- 목록에 들어맞는 것이 없으면 빈칸으로 답한다. 억지로 고르지 않는다.\n" +
+      "- 물음에 곁들인 사정이 아니라, 손님이 실제로 묻고 있는 그 일을 고른다.\n" +
+      "- 갈래 이름을 그대로, 글자 하나 바꾸지 말고 적는다. 다른 말은 적지 않는다.";
+    let pick = "";
+    try {
+      const out = await callModel(req, sys, pr, 24, { models: [FAST], budget: 12000 });
+      pick = String(out || "").replace(/[^가-힣]/g, "").trim();
+    } catch {}
+    if (!keys.includes(pick)) pick = "";
+    /* 규칙이 못 잡은 물음만 셈해 둔다 — 물음 글은 남기지 않는다 */
+    if (body?.miss) console.log("intent-miss", pick || "(없음)");
+    res.setHeader("cache-control", "no-store");
+    res.status(200).json({ intent: pick });
+    return;
+  }
+
   const stage = body?.bone?.stage === "free" ? "free" : "paid";
   if (RISK.test(q)) {
     res.status(422).json({ error: "이 물음에는 패를 펴지 않는다" });

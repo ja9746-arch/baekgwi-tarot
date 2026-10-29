@@ -1653,8 +1653,15 @@ function intentOf(q){
   /* 그만두고 가게를 차리는 건 옮기는 일이 아니라 벌이는 일일세 */
   if(best&&/^(이직|퇴사|취업)$/.test(best.k)&&/차리|창업|개업|가게를?\s*(내|열)|장사를?\s*(해|시작)|카페|식당|매장을?\s*(내|열)/.test(q)){ const bz=INTENTS.find(y=>y.k==="사업"); if(bz) best=bz; }
   if(best&&best.k==="도전"&&/결과|발표|붙었을까|됐을까|뽑힐까|합격(했|할)/.test(q)&&/오디션|공모|대회|경연|서류|지원/.test(q)){ const mr=INTENTS.find(y=>y.k==="면접결과"); if(mr) best=mr; }
+  /* 규칙이 못 잡았거나 무른 갈래만 잡았을 때만, 미리 받아 둔 AI 판정을 받침으로 쓴다 */
+  if(q===S.q&&S.aiIntent&&(!best||AI_OVER.test(best.k))){
+    const x=INTENTS.find(y=>y.k===S.aiIntent);
+    if(x&&x!==best) best=x;
+  }
   return best;
 }
+/* AI 판정이 덮어도 되는 '무른' 갈래 — 또렷하게 잡힌 갈래는 건드리지 않는다 */
+const AI_OVER=/^(돈|운세|새인연|화해|미움)$/;
 
 /* 패의 갈래가 물음과 다를 때 — 설화를 그대로 읊지 않고 물음의 일에 빗대어 잇는다 */
 const BRIDGE={
@@ -1999,6 +2006,8 @@ $("go").addEventListener("click",()=>{
     return;
   }
   S.q=text; S.rec=null; S.freeTexts=null; S.paidTexts=null; S.paid=false; S.agreedAt=null; S.pay=null; S.replay=false; S.pin=false;
+  S.aiIntent=null;
+  askIntent(text);
   S.order=[];
   while(S.order.length<WHEEL) S.order.push(...DECK.map((_,i)=>i));
   shuffleArr(S.order);
@@ -2007,6 +2016,19 @@ $("go").addEventListener("click",()=>{
   enterFlow();
   show("s-shuffle");
 });
+/* ── 갈래 미리 묻기 — 손님이 패를 쓸고 뽑는 동안 조용히 다녀온다 ── */
+function askIntent(text){
+  let cur=null; try{ cur=intentOf(text); }catch(e){}
+  /* 또렷하게 잡혔으면 묻지 않는다 — 값도 아끼고 흔들릴 일도 없다 */
+  if(cur&&!AI_OVER.test(cur.k)) return;
+  const keys=INTENTS.map(x=>x.k).filter(k=>/^[가-힣]{1,12}$/.test(k));
+  const ctrl=new AbortController(); const bail=setTimeout(()=>ctrl.abort(),20000);
+  fetch("/api/reading",{method:"POST",headers:{"content-type":"application/json"},
+    body:JSON.stringify({q:text,mode:"intent",keys,miss:cur?0:1}),signal:ctrl.signal})
+    .then(r=>r.ok?r.json():null)
+    .then(j=>{ clearTimeout(bail); if(j&&j.intent&&S.q===text&&INTENTS.some(x=>x.k===j.intent)) S.aiIntent=j.intent; })
+    .catch(()=>{ clearTimeout(bail); });
+}
 function enterFlow(){ try{ if(!(history.state&&history.state.bg)) history.pushState({bg:1},""); }catch(e){} }
 window.addEventListener("popstate",e=>{
   const open=openSheets();
@@ -4563,7 +4585,7 @@ function reset(){
   document.querySelectorAll(".flycard").forEach(g=>g.remove());
   S.mode="main"; S.confirm=null; S.confirmDone=null; S.shown=new Set(); S.skip=false;
   $("boardPick").classList.remove("confirmboard"); $("s-read").classList.remove("slim"); $("halt").hidden=true;
-  Object.assign(S,{q:"",order:[],picked:[],brushN:0,pass:0,dir:0,sinceFlip:0,done:false,spin:0,paid:false,E:null,R:null,replay:false,rec:null,freeTexts:null,paidTexts:null,paidJobs:null,aiAns:null,cOk:0,price:0,pin:false,tp:"",busy:false});
+  Object.assign(S,{q:"",aiIntent:null,order:[],picked:[],brushN:0,pass:0,dir:0,sinceFlip:0,done:false,spin:0,paid:false,E:null,R:null,replay:false,rec:null,freeTexts:null,paidTexts:null,paidJobs:null,aiAns:null,cOk:0,price:0,pin:false,tp:"",busy:false});
   document.querySelectorAll("#topics .chips button.on").forEach(b=>b.classList.remove("on"));
   ["same","hist","share","cv","terms","risk","priv"].forEach(closeSheet);
   q.value=""; $("count").textContent="0 / 120"; $("go").disabled=true;
