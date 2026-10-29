@@ -374,9 +374,16 @@ body{word-break:keep-all;overflow-wrap:anywhere}
 @media (max-height:680px){ #s-ask .hero-brand{height:clamp(230px,37vh,260px)} #s-ask .hero-brand .mark img{width:min(70vw,270px)} }
 /* 첫 화면 — 물음 칸이 아래 단추 줄에 가리지 않게, 남는 높이만큼만 그림을 쓴다 */
 /* 호연 머리는 남는 자리만 차지한다 — 물음 영역이 밀려 글이 겹치지 않게 */
-#s-ask:not(.typing) .hero-brand{height:auto;flex:1 1 auto;min-height:178px;max-height:clamp(178px,calc(100svh - 470px),460px)}
+#s-ask:not(.typing) .hero-brand{height:auto;flex:1 1 auto;min-height:fit-content;max-height:clamp(178px,calc(100svh - 470px),460px)}
 #s-ask:not(.typing) .ask{flex:0 1 auto}
-#s-ask:not(.typing) .ask{padding-top:6px;padding-bottom:30px;justify-content:center}
+/* 아주 작은 화면 — 물음 영역이 넘쳐 첫 줄이 호연의 말에 가리지 않게 */
+@media (max-height:620px){
+  #s-ask .ask{gap:6px;padding-top:4px}
+  .chips button{padding:3px 9px;font-size:12.5px}
+  .field textarea{min-height:58px}
+  #s-ask .legal{line-height:1.7}
+}
+#s-ask:not(.typing) .ask{padding-top:6px;padding-bottom:30px;justify-content:center;justify-content:safe center}
 @media (max-height:760px){#s-ask .topics-h{display:none}}
 @media (max-height:600px){ #s-ask .hero-brand{height:190px} #s-ask .hero-brand .mark img{width:min(60vw,226px)} #s-ask .hero-foot h2{font-size:14px;line-height:1.45} #s-ask .topics-h{display:none} .field textarea{min-height:66px} #s-ask .ask{gap:8px} }
 @media (max-height:600px){
