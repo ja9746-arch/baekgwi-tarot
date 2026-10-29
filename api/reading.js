@@ -8,7 +8,9 @@
 /* 백귀사주와 같은 통로를 쓴다. 베르셀 안에서는 열쇠 없이도 붙는다. */
 import { payConfig, payTokenOk } from "./pay.js";
 
-const MODEL = process.env.BAEKGWI_MODEL || "anthropic/claude-haiku-4.5";
+/* 먼저 깊게 읽는 모델로 쓰고, 막히거나 늦으면 빠른 모델로 넘어간다(쉼표로 순서를 바꿀 수 있다) */
+const MODELS = String(process.env.BAEKGWI_MODEL || "anthropic/claude-sonnet-4.5,anthropic/claude-haiku-4.5").split(",").map((x) => x.trim()).filter(Boolean);
+const FAST = MODELS[MODELS.length - 1];
 const GATEWAY = "https://ai-gateway.vercel.sh/v1/chat/completions";
 const DIRECT = "https://api.anthropic.com/v1/messages";
 
@@ -42,13 +44,34 @@ function parseSections(txt) {
   return out;
 }
 
-async function callModel(req, system, prompt, maxTok = 3200) {
+async function callModel(req, system, prompt, maxTok = 3200, opt = {}) {
+  const list = opt.models || MODELS;
+  const end = Date.now() + (opt.budget || 38000);
+  for (let i = 0; i < list.length; i++) {
+    const left = end - Date.now();
+    if (left < 4000) break;
+    const last = i === list.length - 1;
+    const ms = last ? left : Math.min(left - 9000, 27000);
+    if (ms < 4000) continue;
+    const ctl = new AbortController();
+    const timer = setTimeout(() => ctl.abort(), ms);
+    try {
+      const out = await callOne(req, system, prompt, maxTok, list[i], ctl.signal);
+      if (out) { if (i > 0) console.log("model fallback", list[i]); return out; }
+    } catch (e) {
+      console.error("model", list[i], String(e && e.name === "AbortError" ? "timeout" : e).slice(0, 120));
+    } finally { clearTimeout(timer); }
+  }
+  return null;
+}
+async function callOne(req, system, prompt, maxTok, MODEL, signal) {
   const r = route(req);
   if (!r) return null;
 
   if (r.how === "gateway") {
     const res = await fetch(GATEWAY, {
       method: "POST",
+      signal,
       headers: {
         "content-type": "application/json",
         authorization: `Bearer ${r.token}`,
@@ -75,6 +98,7 @@ async function callModel(req, system, prompt, maxTok = 3200) {
 
   const res = await fetch(DIRECT, {
     method: "POST",
+    signal,
     headers: {
       "content-type": "application/json",
       "x-api-key": r.token,
@@ -426,7 +450,7 @@ export default async function handler(req, res) {
     let sections = extract(await callModel(req, SYSTEM, prompt, maxTok));
     /* 한 번 어긋나면 한 번만 더 부른다(시간이 남을 때만) */
     if ((!sections || sections.length < cards.length) && Date.now() - t0 < 30000) {
-      const again = extract(await callModel(req, SYSTEM, prompt, maxTok));
+      const again = extract(await callModel(req, SYSTEM, prompt, maxTok, { models: [FAST], budget: Math.max(6000, 40000 - (Date.now() - t0)) }));
       if (again && (!sections || again.length > sections.length)) sections = again;
     }
     console.log("reading", stage, sections ? sections.length + "/" + cards.length : "fail", Date.now() - t0 + "ms");
@@ -455,6 +479,33 @@ export default async function handler(req, res) {
         .replace(/>/g, (m, i, str) => (/<\/?(br|em|strong)\s*\/?$/i.test(str.slice(Math.max(0, i - 9), i)) ? ">" : "〉"))
         .replace(/<(\/?)(br|em|strong)\s*\/?>/gi, (m, c, t) => (t.toLowerCase() === "br" ? "<br>" : `<${c}${t.toLowerCase()}>`)),
     }));
+    /* 지켜지지 않은 규칙의 문장은 빼낸다 — 넘겨짚는 물음, 겁주는 그림, 아픈 물음에서 손님 탓·뒤집힘 말 */
+    const SENS = ["반려", "자녀", "가족건강", "마음건강"].includes(bone.subject) || ["임신", "가족건강", "반려", "반려이별", "마음건강", "자녀"].includes(bone.intent) || bone.tired || ["건강", "아이"].includes(bone.topic);
+    const GUESS = /(않았나|않은가|아닌가|않았는가|않나|잖은가|아니었나)\s*[.?!]?$/;
+    const SCARE = /목을\s*(졸|조)|헤집|밀어냈|뚝\s*끊|피를\s*|죽음|떨어질지|목숨/;
+    const BLAME = /자네[^.]{0,36}(번지|번진|옮기|옮겨|옮긴|전해지|전해진|전해졌|더디게\s*하|밀어\s*넣|탓일세|탓이네|때문일세)/;
+    const REV = /거꾸로|뒤집혀/;
+    const scrub = (pos, t) => {
+      const parts = String(t).split(/(<br>)/);
+      let kept = 0, total = 0;
+      const out = parts.map((seg) => {
+        if (seg === "<br>") return seg;
+        const ss = seg.split(/(?<=[.!?…])\s+/);
+        return ss.filter((x, k) => {
+          if (!x.trim()) return true;
+          total++;
+          const bad = GUESS.test(x.trim()) || SCARE.test(x) || (SENS && (BLAME.test(x) || REV.test(x)));
+          if (bad && !(k === 0 && seg === parts[0] && ss.length === 1)) return false;
+          kept++; return true;
+        }).join(" ");
+      }).join("").replace(/(<br>)\s*(<br>)+/g, "<br>").replace(/^(\s*<br>)+|(<br>\s*)+$/g, "").trim();
+      return kept ? out : t;
+    };
+    clean.forEach((s) => {
+      s.text = scrub(s.pos, s.text);
+      if (s.pos !== "鬼") s.text = s.text.replace(/(붙어\s*있네|붙었네)/g, s.pos === "心" ? "비치네" : "앉았네");
+      s.text = s.text.replace(/타이트/g, "빠듯").replace(/리듬/g, "흐름").replace(/시댉/g, "시댁");
+    });
     /* '그 너머는 덮인 일곱 장이…'는 무료의 마지막 자리(隱)에만 붙는다 */
     clean.forEach((s) => { if (s.pos !== "隱") s.text = s.text.replace(/\s*(<br>)?\s*그 너머는 덮인 일곱 장이[^.<]*[.]?/g, "").trim(); });
 
