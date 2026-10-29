@@ -4255,7 +4255,7 @@ function ledger(){
   const combos=E.combos.length?`<div class="lg-lt">조합</div><div class="lg-chips">${E.combos.map(c=>`<span>${c.name}<small>${c.han}</small></span>`).join("")}</div>`:"";
   const n=(S.confirm||[]).length, ok=S.cOk||0;
   const NW=["","한","두","세","네","다섯"];
-  const conf=n?`<div class="lg-lt">확인의 패</div><p class="lg-cf">${NW[n]} 번 다시 물어 `+(ok?`<b style="color:var(--geum);font-weight:400">${ok===n&&n>1?"모두":NW[ok]+" 번"}</b> 같은 말이 나왔네. `:`한 번도 같은 말이 나오지 않았네. `)+`${ok===n?"패의 말이 흔들리지 않네.":ok*2>=n?"패의 말이 반은 굳었네.":"패가 아직 망설이고 있네."}</p>`:"";
+  const conf=n?`<div class="lg-lt">확인의 패</div><p class="lg-cf">${NW[n]} 번 다시 물어 `+(ok?`<b style="color:var(--geum);font-weight:400">${ok===n&&n>1?"모두":NW[ok]+" 번"}</b> 같은 말이 나왔네. `:`한 번도 같은 말이 나오지 않았네. `)+`${ok===n?"확답이 굳었네.":"확답은 그대로일세. 다른 말을 한 대목은 부(符)로 메우게."}</p>`:"";
   const box=document.createElement("div"); box.className="ledger";
   box.innerHTML=`<h3>종합장<small>總合帳 · ${fmtDate(S.rec?S.rec.t:Date.now())}의 패</small></h3>`+
     `<p class="lg-lq">“${esc(S.q)}”</p>`+
