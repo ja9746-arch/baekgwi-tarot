@@ -2004,7 +2004,7 @@ function esc(t){return String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;","
 function wait(ms){return new Promise(r=>setTimeout(r,ms));}
 /* 오늘 판 앞에 앉은 인연 — 백귀사주와 같은 방식(한 번 방문하는 동안 같은 수) */
 (function(){
-  const K="baekgwi_entrance_no", MIN=173, MAX=218; let n=0;
+  const K="baekgwi_entrance_no", MIN=100, MAX=500; let n=0;
   try{ n=parseInt(sessionStorage.getItem(K),10); }catch(e){}
   if(!(n>=MIN&&n<=MAX)){ n=MIN+Math.floor(Math.random()*(MAX-MIN+1)); try{ sessionStorage.setItem(K,String(n)); }catch(e){} }
   const el=document.getElementById("visit");
