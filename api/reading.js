@@ -570,7 +570,8 @@ export default async function handler(req, res) {
         return ss.filter((x, k) => {
           if (!x.trim()) return true;
           total++;
-          const bad = GUESS.test(x.trim()) || SCARE.test(x) || FAST.test(x) || (SENS && (BLAME.test(x) || REV.test(x)));
+          /* 손님 탓하는 말은 갈래를 가리지 않고 뺀다. '거꾸로·뒤집혀'는 아픈 물음에서만 뺀다 */
+          const bad = GUESS.test(x.trim()) || SCARE.test(x) || FAST.test(x) || BLAME.test(x) || (SENS && REV.test(x));
           if (bad && !(k === 0 && seg === parts[0] && ss.length === 1)) return false;
           kept++; return true;
         }).join(" ");
