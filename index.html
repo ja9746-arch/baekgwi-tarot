@@ -35,53 +35,53 @@
   justify-content:center;justify-content:safe center;gap:6px;overflow-y:auto;overscroll-behavior:contain;
   padding:0 0 calc(6px + env(safe-area-inset-bottom,0px))}
 .introwrap::-webkit-scrollbar{width:0}
-.intro{position:relative;flex:none;--u:0.414px;width:100%;
+#s-ask .intro{position:relative;flex:none;--u:0.414px;width:100%;
   background:url(img/intro.webp) center/100% 100% no-repeat;
   box-shadow:0 0 44px rgba(0,0,0,.75)}
 /* 갈래 패 — 그림 위 제자리에 투명한 단추를 얹는다 */
 /* 글을 적는 동안에는 그림을 줄이지 않는다 — 글씨가 작아지면 못 읽네 */
 #s-ask.typing .intro{width:100%}
 #s-ask.typing .introwrap{justify-content:flex-start}
-.intro .chips{position:static;display:block}
-.intro .chips button{position:absolute;appearance:none;border:0;background:none;padding:0;
+#s-ask .intro .chips{position:static;display:block}
+#s-ask .intro .chips button{position:absolute;appearance:none;border:0;background:none;padding:0;
   border-radius:0;box-shadow:none;text-shadow:none;cursor:pointer;-webkit-tap-highlight-color:transparent;
   font-size:0;color:transparent}
-.intro .chips button:active{transform:scale(.97)}
-.intro .chips button.on{background:none;box-shadow:none}
-.intro .chips button.on::after{content:"";position:absolute;left:-6.944%;top:-7.463%;
+#s-ask .intro .chips button:active{transform:scale(.97)}
+#s-ask .intro .chips button.on{background:none;box-shadow:none}
+#s-ask .intro .chips button.on::after{content:"";position:absolute;left:-6.944%;top:-7.463%;
   width:113.889%;height:114.925%;background:url(img/glow.webp) center/100% 100% no-repeat;
   pointer-events:none;animation:glowin .22s ease both}
 @keyframes glowin{from{opacity:0}to{opacity:1}}
 /* 물음을 적는 자리 */
-.intro textarea{position:absolute;left:16.15%;top:62.05%;width:68.0%;height:7.1%;
+#s-ask .intro textarea{position:absolute;left:16.15%;top:62.05%;width:68.0%;height:7.1%;
   margin:0;padding:calc(var(--u)*10) calc(var(--u)*22) 0;border:0;outline:none;resize:none;background:transparent;
   color:#f5ead9;font-family:var(--serif);font-weight:500;font-size:calc(var(--u)*30);line-height:1.6;
   text-align:left;overflow-y:auto;-webkit-tap-highlight-color:transparent;
   text-shadow:0 0 calc(var(--u)*12) rgba(255,186,118,.3),0 calc(var(--u)*2) calc(var(--u)*5) rgba(0,0,0,.9)}
-.intro textarea::placeholder{color:#938476;text-shadow:0 calc(var(--u)*2) calc(var(--u)*4) rgba(0,0,0,.8)}
-.intro textarea::-webkit-scrollbar{width:0}
-.intro .count{position:absolute;right:15.6%;top:69.9%;margin:0;display:block;
+#s-ask .intro textarea::placeholder{color:#938476;text-shadow:0 calc(var(--u)*2) calc(var(--u)*4) rgba(0,0,0,.8)}
+#s-ask .intro textarea::-webkit-scrollbar{width:0}
+#s-ask .intro .count{position:absolute;right:15.6%;top:69.9%;margin:0;display:block;
   font-size:calc(var(--u)*22);letter-spacing:.02em;color:#8e8073;font-variant-numeric:tabular-nums}
 /* 오늘 앉은 인연 — 숫자만 그림 위에 얹는다 */
-.intro .visit{position:absolute;left:58.5%;top:76.75%;transform:translate(-50%,-50%);
+#s-ask .intro .visit{position:absolute;left:58.5%;top:76.75%;transform:translate(-50%,-50%);
   margin:0;white-space:nowrap;font-family:var(--serif);font-weight:700;font-size:calc(var(--u)*60);
   letter-spacing:.05em;color:#fff3d6;opacity:0;transition:opacity 1.4s ease;
   text-shadow:0 0 calc(var(--u)*6) rgba(255,214,130,.95),
               0 0 calc(var(--u)*18) rgba(255,160,60,.8),
               0 0 calc(var(--u)*40) rgba(255,96,30,.55),
               0 calc(var(--u)*2) calc(var(--u)*5) rgba(0,0,0,.9)}
-.intro .visit.on{opacity:1}
+#s-ask .intro .visit.on{opacity:1}
 /* 패를 여는 단추 */
-.intro #go{position:absolute;left:10.9%;top:79.5%;width:78.1%;height:9.6%;
+#s-ask .intro #go{position:absolute;left:10.9%;top:79.5%;width:78.1%;height:9.6%;
   padding:0;border:0;border-radius:0;background:transparent;box-shadow:none;
   font-size:0;color:transparent;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.intro #go::before,.intro #go::after{display:none}
-.intro #go:active{transform:scale(.985)}
+#s-ask .intro #go::before,#s-ask .intro #go::after{display:none}
+#s-ask .intro #go:active{transform:scale(.985)}
 /* 아래 글귀 두 개 */
-.intro .lk{position:absolute;top:94.6%;height:4.6%;border:0;background:none;padding:0;
+#s-ask .intro .lk{position:absolute;top:94.6%;height:4.6%;border:0;background:none;padding:0;
   font-size:0;color:transparent;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.intro .lkT{left:36.5%;width:10.5%}
-.intro .lkP{left:48.5%;width:16.5%}
+#s-ask .intro .lkT{left:36.5%;width:10.5%}
+#s-ask .intro .lkP{left:48.5%;width:16.5%}
 /* 그림에 담지 못한 법정 고지 */
 .underlegal{flex:none;text-align:center;font-size:11px;color:#7d7066;line-height:1.7;padding:0 16px}
 .underlegal #histLink,.underlegal #openRefund{background:none;border:0;color:#a39486;text-decoration:underline;font-size:11.5px;padding:5px 6px;font-family:inherit}
@@ -162,7 +162,7 @@ body{word-break:keep-all;overflow-wrap:anywhere}
 .nw{white-space:nowrap}
 .lg-lk span,.lg-lq,.verdict,.spot h2{text-wrap:balance}
 @media (max-width:340px){#s-ask .ask h2{font-size:15.5px;line-height:1.75;letter-spacing:-.03em}.brand .mark img{width:min(60vw,220px)}}
-@media (max-height:680px){#s-ask .brand{padding-top:10px}#s-ask .visit{margin-top:4px}#s-ask .visit b{display:inline;margin-left:4px}
+@media (max-height:680px){#s-ask .brand{padding-top:10px}
   #s-ask .ask{padding-top:8px;gap:12px}#s-ask .ask h2{line-height:1.6}.field textarea{min-height:68px}#s-ask .ask .hint{display:none}}
 .ask::-webkit-scrollbar{width:0}
 .ask h2{font-family:var(--serif);font-weight:700;font-size:clamp(19px,5.2vw,23px);
@@ -219,7 +219,6 @@ body{word-break:keep-all;overflow-wrap:anywhere}
 @media (max-height:900px){#s-ask .ask .hint:last-child{display:none}}
 @media (max-height:720px){
   #s-ask .brand{padding-top:6px}#s-ask .brand .mark img{width:min(54vw,214px)}#s-ask .rule{margin-top:6px}
-  #s-ask .visit{margin-top:4px;font-size:12px}#s-ask .visit b{font-size:16px;margin-top:0}#s-ask .visit b i{font-size:20px}
   #s-ask .ask{padding-top:6px;gap:10px}#s-ask .ask h2{font-size:17px;line-height:1.55}
   .topics-h{margin-bottom:6px}.chips{gap:5px}.chips button{padding:7px 1px 5px}.chips button .ic{width:18px;height:18px}
   .field textarea{min-height:70px;padding:11px 14px}#s-ask .ask .hint{display:none}
