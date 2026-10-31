@@ -609,7 +609,24 @@ export default async function handler(req, res) {
           : (!(NEG.test(first(base)) && !NEG.test(a))
              && !(!NEG.test(first(base)) && (bone.grade ?? 0) <= 1 && NEG.test(first(a)) && !/서두르지 말게|겁먹지 말게|미루지 말게|놓지 말게|졸이지 말게/.test(first(a)))));
       if (ok) answer = /[.!]$/.test(a) ? a : a + ".";
-      else console.log("answer rejected", JSON.stringify(a).slice(0, 160));
+      else {
+        /* 손님 사정이 로그에 남지 않게, 글은 남기지 않고 걸린 까닭만 적는다 */
+        const why = [];
+        if (!(a.length >= 12 && a.length <= 150)) why.push("길이" + a.length);
+        if (sents.length > 4) why.push("문장수" + sents.length);
+        if (!/(네|게|세|지)[.!]?$/.test(a)) why.push("말끝");
+        if (/[一-龥]/.test(a)) why.push("한자");
+        if (/당신|그대(?!로)/.test(a)) why.push("호칭");
+        if (!(a.match(/\d+/g) || []).every((d) => q.includes(d))) why.push("없는숫자");
+        if (first(a).length > 34) why.push("첫문장길이");
+        if (VAGUE_HEAD.test(first(a))) why.push("머뭇거림");
+        if (VAGUE_ANY.test(a)) why.push("흐린말");
+        if (BLAME.test(a)) why.push("손님탓");
+        if (DO_NOW.test(base) && HOLD_OFF.test(a)) why.push("뼈대와어긋남");
+        if (madeUpCount(a, base)) why.push("지어낸수");
+        if (bone.noWhen && /\d|[0-9]월|봄|여름|가을|겨울/.test(a)) why.push("때없는판에때");
+        console.log("answer rejected", why.length ? why.join(",") : "결이어긋남");
+      }
     }
     res.setHeader("cache-control", "no-store");
     res.status(200).json(answer ? { sections: clean, answer } : { sections: clean });
