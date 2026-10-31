@@ -63,9 +63,14 @@
 #s-ask .intro .count{position:absolute;right:15.6%;top:69.9%;margin:0;display:block;
   font-size:calc(var(--u)*22);letter-spacing:.02em;color:#8e8073;font-variant-numeric:tabular-nums}
 /* 오늘 앉은 인연 — 숫자만 그림 위에 얹는다 */
-#s-ask .intro .visit{position:absolute;left:58.5%;top:76.75%;transform:translate(-50%,-50%);
-  margin:0;white-space:nowrap;font-family:var(--serif);font-weight:700;font-size:calc(var(--u)*60);
-  letter-spacing:.05em;color:#fff3d6;opacity:0;transition:opacity 1.4s ease;
+/* 인연 줄 — 그림에서 통째로 지우고 글로 얹는다. 글자가 잘릴 일이 없네 */
+#s-ask .intro .visit{position:absolute;left:50%;top:76.4%;transform:translate(-50%,-50%);
+  margin:0;white-space:nowrap;display:flex;align-items:baseline;justify-content:center;
+  font-family:var(--serif);font-weight:500;font-size:calc(var(--u)*28);
+  letter-spacing:.02em;color:#efe3d2;opacity:0;transition:opacity 1.4s ease;
+  text-shadow:0 calc(var(--u)*2) calc(var(--u)*8) rgba(0,0,0,.95),0 0 calc(var(--u)*20) rgba(0,0,0,.8)}
+#s-ask .intro .visit b{display:inline;margin:0 calc(var(--u)*12);font-weight:700;
+  font-size:calc(var(--u)*58);letter-spacing:.015em;color:#fff3d6;
   text-shadow:0 0 calc(var(--u)*6) rgba(255,214,130,.95),
               0 0 calc(var(--u)*18) rgba(255,160,60,.8),
               0 0 calc(var(--u)*40) rgba(255,96,30,.55),
@@ -2007,7 +2012,7 @@ function wait(ms){return new Promise(r=>setTimeout(r,ms));}
   try{ n=parseInt(sessionStorage.getItem(K),10); }catch(e){}
   if(!(n>=MIN&&n<=MAX)){ n=MIN+Math.floor(Math.random()*(MAX-MIN+1)); try{ sessionStorage.setItem(K,String(n)); }catch(e){} }
   const el=document.getElementById("visit");
-  if(el){ el.innerHTML=document.getElementById("intro")?String(n):`오늘 호연의 판 앞에 앉은<b><i>${n}</i>번째 인연</b>`;
+  if(el){ el.innerHTML=`오늘 호연의 판 앞에 앉은<b>${n}</b>번째 인연`;
     setTimeout(()=>el.classList.add("on"),900); }
 })();
 function store(k,v){try{ if(v===undefined) return JSON.parse(localStorage.getItem(k)||"null"); localStorage.setItem(k,JSON.stringify(v)); }catch(e){ return null; }}
