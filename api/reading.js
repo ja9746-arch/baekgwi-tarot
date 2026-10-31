@@ -559,6 +559,9 @@ export default async function handler(req, res) {
     const GUESS = /(않았나|않은가|아닌가|않았는가|않나|잖은가|아니었나)\s*[.?!]?$/;
     const SCARE = /목을\s*(졸|조)|헤집|밀어냈|뚝\s*끊|피를\s*|죽음|떨어질지|목숨/;
     const BLAME = /자네[^.]{0,36}(번지|번진|옮기|옮겨|옮긴|전해지|전해진|전해졌|더디게\s*하|밀어\s*넣|탓일세|탓이네|때문일세)/;
+    /* 당한 쪽이 물어 온 물음 — '자네가 먼저 물러선 탓'이라 되받지 않는다 */
+    const VICTIM = ["따돌림", "괴롭힘", "구설", "공가로챔", "배신", "사기피해", "사기", "이웃", "기빨림", "선긋기", "가족중독", "부모이혼", "양육권", "돈받기", "보증금"].includes(bone.intent);
+    const SELFCAUSE = /자네\s*(쪽에서|스스로|가)[^.!?]{0,28}(먼저\s*(물러|빠지|빠진|닫|등\s*돌|피하|멀어|끊)|자초|불러들|불러온|만든\s*일|키운\s*일|자처)/;
     const REV = /거꾸로|뒤집혀/;
     const FAST = /더\s*빨리,?\s*(더\s*)?세게|빨리,?\s*세게/;
     const scrub = (pos, t) => {
@@ -571,7 +574,7 @@ export default async function handler(req, res) {
           if (!x.trim()) return true;
           total++;
           /* 손님 탓하는 말은 갈래를 가리지 않고 뺀다. '거꾸로·뒤집혀'는 아픈 물음에서만 뺀다 */
-          const bad = GUESS.test(x.trim()) || SCARE.test(x) || FAST.test(x) || BLAME.test(x) || (SENS && REV.test(x));
+          const bad = GUESS.test(x.trim()) || SCARE.test(x) || FAST.test(x) || BLAME.test(x) || (VICTIM && SELFCAUSE.test(x)) || (SENS && REV.test(x));
           if (bad && !(k === 0 && seg === parts[0] && ss.length === 1)) return false;
           kept++; return true;
         }).join(" ");
