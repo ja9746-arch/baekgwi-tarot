@@ -1542,7 +1542,7 @@ const INTENTS=[
   v:["다시 불이 붙네. 둘이 함께 새로운 일을 하나 벌이게.","고비를 넘기면 더 깊어지네. 지금 서운함을 말로 꺼내게.","이대로는 식어 가네. 둘 중 하나가 먼저 바뀌어야 하네.","이미 끝을 향하고 있네. 붙잡기보다 마음을 정리할 때일세."]},
  {k:"미련",t:"연애",re:/잊을\s*수|못\s*잊|잊혀질|잊어야|마음\s*정리|미련/,
   v:["잊히네. 생각보다 빨리 새 바람이 드네.","잊히되 한 번 더 크게 그리워지는 날이 오네. 그날만 넘기게.","아직은 놓지 못하네. 억지로 지우려 말고 시간에 맡기게.","미련이 깊네. 그 사람 소식을 끊는 데서부터 시작하게."]},
- {k:"반대",t:"연애",re:/반대(하|가|를|해)|허락|집안\s*(에서|이)\s*(싫|반대)|부모님(이|께서|은|도)?.{0,8}(싫어|반대|탐탁|마음에\s*안)/,
+ {k:"반대",t:"연애",re:new RegExp(["(결혼|연애|사귀|남친|여친|남자\\s*친구|여자\\s*친구|애인|상견례|동거|재혼|혼인|약혼|연인|이\\s*사람|그\\s*사람|만나는\\s*사람|사귀는\\s*사람)[^.?!]{0,28}(반대|허락|탐탁|마음에\\s*안|싫어하)","(반대|허락|탐탁|마음에\\s*안|싫어하)[^.?!]{0,28}(결혼|연애|사귀|남친|여친|남자\\s*친구|여자\\s*친구|애인|상견례|동거|재혼|혼인|약혼|연인|이\\s*사람|그\\s*사람|만나는\\s*사람|사귀는\\s*사람)"].join("|")),
   v:["반대는 풀리네. 시간이 자네 편일세.","한 번 크게 부딪힌 뒤에 허락이 나네.","지금 밀어붙이면 더 굳어지네. 그쪽 마음부터 얻게.","반대가 쉽게 꺾이지 않네. 둘의 마음이 그만큼 단단한지부터 보게."]},
  {k:"금지된인연",t:"연애",re:/^(?!.*(남편|아내|와이프|신랑|배우자)(이|한테|에게|의|가)?.{0,14}(내연|불륜|유부))(?=.*(유부남|유부녀|기혼자|불륜\s*(관계|중|상대)|(^|[^가-힣])내연|(결혼한|기혼|임자\s*있는)\s*(사람|남자|여자|분|이)))/,
   v:["이 인연은 끝내 자네를 지켜 주지 못하네. 끝을 자네 손으로 정할 때 가장 덜 다치네.","흔들리는 마음은 이해하네. 허나 이 길 끝엔 자네만 남네. 지금 멈추게.","이 인연은 더 깊어질수록 상처도 깊어지네. 거리를 두게.","이 인연은 자네를 상하게 하네. 지금 끊는 것이 자네를 살리는 길일세."]},
@@ -1725,7 +1725,9 @@ function intentOf(q0){
     /* 손님이 먼저 다가가는 물음에 '받아 주지 말게'라 답하던 일이 있었네 — 그건 재회일세 */
     if(k==="받아줄까"&&/(제가|내가|저는|내가)\s*(먼저|다시)|다시\s*연락|연락해\s*(보|볼)|후회(돼|된|스럽|하고)|되돌리고\s*싶/.test(q)) continue;
     /* 집을 옮기는 물음을 보증금이 가로채던 것 */
-    if(k==="보증금"&&/(집|방)(을|를)?\s*(옮기|옮겨|구하|보러|알아보)|이사(를|를\s*갈|갈|가도|해도)/.test(q)) continue; if(k==="처우"&&/이직|퇴사|옮기|옮겨|그만두|(다른|딴)\s*(데|곳|회사)/.test(q)) continue;
+    if(k==="보증금"&&/(집|방)(을|를)?\s*(옮기|옮겨|구하|보러|알아보)|이사(를|를\s*갈|갈|가도|해도)/.test(q)) continue; if(k==="반대"&&!/(결혼|연애|사귀|남친|여친|남자\s*친구|여자\s*친구|애인|상견례|동거|재혼|혼인|약혼|연인|그\s*사람|소개팅|선\s*본)/.test(q)) continue;  /* "부모님은 반대하시는데 카페를 차려도 될까요"가 연애 갈래로 읽혀
+       "허락이 나네"라 답하고 있었네. 반대는 혼인 이야기일 때만 쓴다 */
+    if(k==="처우"&&/이직|퇴사|옮기|옮겨|그만두|(다른|딴)\s*(데|곳|회사)/.test(q)) continue;
     if(k==="처우"&&/(월급|급여|임금|주급|일당|알바비)[^.?!]{0,10}(체불|밀렸|밀린|밀려|밀립|못\s*받|안\s*(줘|줍|주|나와|나옵|나오)|떼)/.test(q)) continue; const x=INTENTS.find(y=>y.k===k); if(x&&x.re.test(q)){ d=x; break; } }
   if(d) best=d;
   if(best&&best.k==="운세"){ const others=INTENTS.filter(y=>y.k!=="운세"&&!SOFT[y.k]&&y.re.test(q)); if(others.length){ let b2=null,at2=1e9; others.forEach(x=>{ const m=q.match(x.re); if(m&&m.index<at2){ at2=m.index; b2=x; } }); if(b2) best=b2; } }
@@ -3425,6 +3427,22 @@ function buildReading(){
   { const nv0=neverEcho({stem:(S.R&&S.R.act)||""}); if(nv0&&nv0.includes(verdict)) noLean=true; }
   if(/(해도|돼도|될까|할까|괜찮을까|되나요|돼요|해야\s*할까|좋을까|괜찮나|어떨까|어떨지|어때요|어떤가|되겠|될지|해볼까|말까|그만둘까|끊을까|미룰까)/.test(S.q||"")){
     const nvq=neverEcho({stem:S.q}); if(nvq){ verdict=nvq[grade]; noLean=true; }
+  }
+  /* 한 판에 두 가지를 물으면 뒤엣것만 읽고 앞엣것은 말없이 버리고 있었네.
+     ("결혼할 수 있을까요? 그리고 이직은 어떨까요?" 에 이직만 답했네)
+     어느 쪽을 폈는지 적어 주어, 나머지는 다시 물을 수 있게 한다. */
+  { const sents=String(S.q||"").split(/(?<=[.?!？。])\s+|\n+/).map(x=>x.trim()).filter(Boolean);
+    const asks=sents.filter(x=>x.length>7&&/[?？]|까요|나요|가요|을까|ㄹ까|할까|될까/.test(x));
+    /* '아니면·또는'으로 이어지면 한 물음을 둘로 적은 것일세 — 두 가지로 세지 않는다 */
+    const orSplit=sents.some(x=>/^(아니면|또는|혹은|아님)/.test(x));
+    if(asks.length>=2&&!orSplit){
+      const tops=[...new Set(asks.map(x=>topicOf(x)))];
+      if(tops.length>=2){
+        const used=askSentence(S.q).s.replace(/[?？!.~]+$/,"")
+          .replace(/^(그리고|그럼|그러면|또|그리고는|아 그리고|근데|그런데)\s*/,"").trim();
+        const short=used.length>18?used.slice(0,18)+"…":used;
+        verdict+=` 한 판에는 한 가지만 보네. 이번엔 ‘${esc(short)}’ 쪽으로 폈으니, 나머지는 다시 물어 오게.`;
+      } }
   }
   return {topic,qtype,combos,el,elN:tally[el],rev,grade,score,why,leanSuit,leanN:suits[leanSuit],daegui,seed,loose,noLean,thin:qThin(S.q),
     wover:S.wover, verdict:(S.rec&&S.rec.fx&&S.rec.fx.v)||honorWho(verdict,I&&I.k,R), when:(S.rec&&S.rec.fx&&S.rec.fx.w)||(I&&I.k==="임종"?{t:"바로 지금",d:"",fixed:true}:null)||opWhen(I,R,topicOf(S.q))||dateWhen(I,R)||clockWhen(I,R)||nearWhen(R.when)||examWhen(I,R)||nearClamp(healthClamp(yearClamp(whenFor(el,S.rec?S.rec.t:Date.now()),R,grade,I),I,topicOf(S.q)),I),
