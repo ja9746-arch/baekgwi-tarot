@@ -159,15 +159,16 @@ body::after{content:'';position:fixed;inset:0;z-index:2147483000;pointer-events:
   transition:opacity .25s,max-height .3s ease,padding-top .3s ease;max-height:230px;overflow:hidden}
 .screen.typing .brand{max-height:0;opacity:0;padding-top:0}
 .brand .mark{margin:0;line-height:0;position:relative}
-.brand .mark img{width:min(66vw,268px);height:auto;display:inline-block;
+.brand .mark img{width:66vw;max-width:268px;height:auto;display:inline-block;
   filter:drop-shadow(0 0 26px rgba(255,40,20,.5)) drop-shadow(0 2px 6px #000)}
 #s-shuffle .brand,#s-pick .brand{padding-top:calc(3.4vh + 4px)}
-#s-shuffle .brand .mark img,#s-pick .brand .mark img{width:min(42vw,168px);opacity:.9}
+#s-shuffle .brand .mark img,#s-pick .brand .mark img{width:42vw;max-width:168px;opacity:.9}
 
 /* 들어가기 */
 .ask{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;
   display:flex;flex-direction:column;justify-content:center;gap:18px;padding-block:10px}
-#s-ask .ask{justify-content:flex-start;padding-top:min(5vh,44px)}
+#s-ask .ask{justify-content:flex-start;padding-top:44px}
+@media (max-height:879px){#s-ask .ask{padding-top:5vh}}
 /* 아래로 넘친 글이 반쯤 잘려 보이지 않게 끝을 흐린다 */
 #s-ask .ask{-webkit-mask-image:linear-gradient(#000 calc(100% - 34px),transparent);mask-image:linear-gradient(#000 calc(100% - 34px),transparent)}
 #s-ask:not(.typing) .ask{overscroll-behavior:none;scroll-snap-type:y proximity}
@@ -176,7 +177,7 @@ body{word-break:keep-all;overflow-wrap:anywhere}
 @media (min-width:520px){.fanwrap{-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 9%,#000 91%,transparent);mask-image:linear-gradient(90deg,transparent 0,#000 9%,#000 91%,transparent)}}
 .nw{white-space:nowrap}
 .lg-lk span,.lg-lq,.verdict,.spot h2{text-wrap:balance}
-@media (max-width:340px){#s-ask .ask h2{font-size:15.5px;line-height:1.75;letter-spacing:-.03em}.brand .mark img{width:min(60vw,220px)}}
+@media (max-width:340px){#s-ask .ask h2{font-size:15.5px;line-height:1.75;letter-spacing:-.03em}.brand .mark img{width:60vw;max-width:220px}}
 @media (max-height:680px){#s-ask .brand{padding-top:10px}
   #s-ask .ask{padding-top:8px;gap:12px}#s-ask .ask h2{line-height:1.6}}
 .ask::-webkit-scrollbar{width:0}
@@ -196,7 +197,7 @@ body{word-break:keep-all;overflow-wrap:anywhere}
 .home::after,.snd::after{content:"";position:absolute;inset:-7px}
 @media (max-width:400px){.chips{gap:6px 5px}.chips button{padding:8px 1px 6px}}
 @media (max-height:720px){
-  #s-ask .brand{padding-top:6px}#s-ask .brand .mark img{width:min(54vw,214px)}
+  #s-ask .brand{padding-top:6px}#s-ask .brand .mark img{width:54vw;max-width:214px}
   #s-ask .ask{padding-top:6px;gap:10px}#s-ask .ask h2{font-size:17px;line-height:1.55}.chips{gap:5px}.chips button{padding:7px 1px 5px}
   .foot{padding-top:6px}
 }
@@ -528,9 +529,21 @@ body{word-break:keep-all;overflow-wrap:anywhere}
   gap:10px;background:rgba(5,2,3,.97);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);transition:opacity .3s}
 @media (min-width:760px){.spot{background:radial-gradient(60% 80% at 50% 50%,rgba(5,2,3,.97) 40%,rgba(5,2,3,.82) 100%)}}
 .spot.out{opacity:0}
-@media (max-height:700px){.spot{padding-top:56px;padding-bottom:20px}.spot .spotcard{width:min(62vw,240px,32vh)}.spotmeta{font-size:12.5px;line-height:1.65}}
-@media (max-height:600px){.spot .spotcard{width:min(62vw,230px,33vh)}.spotmeta{font-size:12px;line-height:1.6;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}.spotname{font-size:19px}}
-.spotcard{width:min(66vw,270px,37vh);aspect-ratio:2/3;perspective:1000px}
+@media (max-height:700px){.spot{padding-top:56px;padding-bottom:20px}.spot .spotcard{width:62vw;max-width:240px}.spotmeta{font-size:12.5px;line-height:1.65}}
+@media (max-height:600px){.spot .spotcard{width:62vw;max-width:230px}.spotmeta{font-size:12px;line-height:1.6;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}.spotname{font-size:19px}}
+/* 가로로 누운 화면에서 글이 통째로 눌려 8픽셀짜리 띠가 되어 있었네.
+   세로로 쌓는 상자라 남는 자리가 없으면 글부터 줄어드네. 글은 줄이지 않고
+   넘치면 굴리게 둔다(상자에 이미 굴림이 있네). */
+.spotpos,.spotname,.spotmeta,.spotflip,.spotcard{flex-shrink:0}
+/* 아주 낮은 화면(가로로 누운 손전화)에서는 위아래 여백과 사이를 좁혀
+   패와 글이 굴리지 않고도 한눈에 들어오게 한다 */
+@media (max-height:460px){.spot{padding-top:26px;padding-bottom:62px!important;gap:4px}.spotname{font-size:18px;margin-top:2px}.spotmeta{-webkit-line-clamp:2;line-height:1.55}.spottap{padding:14px 0 calc(10px + env(safe-area-inset-bottom,0px));font-size:11.5px}}
+.spotcard{width:66vw;max-width:270px;aspect-ratio:2/3;perspective:1000px}
+/* min()은 카카오 안의 브라우저가 못 읽네. 세로·가로 가운데 작은 쪽 고르기는
+   화면 비(aspect-ratio)로 가른다 — 62vw<32vh 인 자리가 곧 가로세로 비일세. */
+@media (min-aspect-ratio:37/66){.spotcard{width:37vh}}
+@media (max-height:700px) and (min-aspect-ratio:129/250){.spot .spotcard{width:32vh}}
+@media (max-height:600px) and (min-aspect-ratio:33/62){.spot .spotcard{width:33vh}}
 .spottap{position:fixed;left:0;right:0;bottom:0;margin:0;padding:22px 0 calc(14px + env(safe-area-inset-bottom,0px));text-align:center;font-size:12.5px;letter-spacing:.06em;color:var(--geum-hot);opacity:0;transition:opacity .5s;text-shadow:0 2px 10px #000;background:linear-gradient(to bottom,transparent,rgba(5,2,3,.92) 55%);pointer-events:none}
 .spot{padding-bottom:58px!important}
 .spothome{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));left:12px}
@@ -549,7 +562,7 @@ body{word-break:keep-all;overflow-wrap:anywhere}
 /* 대부분은 가만히 있다가, 안에 무언가 든 것처럼 한 번씩 움찔한다 */
 @keyframes cardTwitch{0%,84%,100%{transform:none}86%{transform:translateY(-3px) rotate(-.7deg)}88.5%{transform:translateY(1px) rotate(.5deg)}91%{transform:translateY(-1px) rotate(-.2deg)}93.5%{transform:none}}
 @keyframes backGlow{0%,100%{filter:brightness(.97)}50%{filter:brightness(1.08)}}
-.spotflip{position:absolute;left:0;right:0;top:calc(50% + min(33vw,135px,18.5vh) + 18px);margin:0;text-align:center;font-family:var(--serif);font-weight:700;font-size:16px;letter-spacing:.14em;color:var(--geum-hot);
+.spotflip{position:absolute;left:0;right:0;top:calc(50% + 153px);margin:0;text-align:center;font-family:var(--serif);font-weight:700;font-size:16px;letter-spacing:.14em;color:var(--geum-hot);
   text-shadow:0 0 14px rgba(255,160,60,.6),0 2px 10px #000;opacity:0;transition:opacity .4s;pointer-events:none}
 .spot.await .spotflip{opacity:1;animation:tapPulse 3s ease-in-out infinite}
 .spot .spotcard::after{content:"";position:absolute;inset:-30%;border-radius:50%;pointer-events:none;opacity:0;
@@ -579,7 +592,7 @@ body{word-break:keep-all;overflow-wrap:anywhere}
 .spotcard .front.rev .cf{border-color:#ff5436}
 .spotpos{margin:0;font-family:var(--serif);font-size:14px;letter-spacing:.08em;color:var(--geum)}
 .spotname{margin:6px 0 0;font-family:var(--serif);font-weight:700;font-size:21px;color:#fff;opacity:0;transition:opacity .4s .45s;text-shadow:0 2px 6px rgba(0,0,0,.9)}
-.spotmeta{margin:2px 0 0;font-size:13px;line-height:1.75;color:#d6c8ba;opacity:0;transition:opacity .4s .55s;max-width:min(86vw,420px);text-align:center;text-shadow:0 1px 5px rgba(0,0,0,.95);word-break:keep-all;text-wrap:balance}
+.spotmeta{margin:2px 0 0;font-size:13px;line-height:1.75;color:#d6c8ba;opacity:0;transition:opacity .4s .55s;max-width:86vw;text-align:center;text-shadow:0 1px 5px rgba(0,0,0,.95);word-break:keep-all;text-wrap:balance}
 .spotsrc{display:block;margin-bottom:4px;font-family:var(--serif);font-size:11.5px;letter-spacing:.06em;color:#c9a24a}
 .spot.open .spotname,.spot.open .spotmeta{opacity:1}
 .rv{display:inline-block;font-family:var(--sans);font-weight:500;font-size:11px;letter-spacing:.08em;color:#fff;
@@ -598,7 +611,12 @@ body{word-break:keep-all;overflow-wrap:anywhere}
 .hq{font-family:var(--serif);font-size:14px;color:var(--jae);line-height:1.5}
 .hm{font-size:11px;color:#8d7f73}
 /* 결과 한 장 */
-.shareimg{display:block;width:auto;max-width:min(100%,300px);max-height:min(56vh,calc(100vh - 340px));margin:12px auto 6px;border:1px solid var(--line);border-radius:3px}
+.shareimg{display:block;width:auto;max-width:100%;max-height:calc(100vh - 340px);margin:12px auto 6px;border:1px solid var(--line);border-radius:3px}
+@media (min-width:489px){.spotmeta{max-width:420px}}
+@media (min-width:340px){.shareimg{max-width:300px}}
+@media (min-height:773px){.shareimg{max-height:56vh}}
+@media (max-aspect-ratio:37/66) and (max-width:409px){.spotflip{top:calc(50% + 33vw + 18px)}}
+@media (min-aspect-ratio:37/66) and (max-height:729px){.spotflip{top:calc(50% + 18.5vh + 18px)}}
 .sharehint{text-align:center;font-size:12px!important}
 .linkish{background:none;border:0;color:var(--geum);text-decoration:underline;padding:0;font-size:12px}
 .duo{display:grid;grid-template-columns:1fr 1fr;gap:8px}
@@ -1648,6 +1666,16 @@ const INTENTS=[
 const HON_PLAIN=[[/시어머님/g,"시어머니"],[/시아버님/g,"시아버지"],[/외할머님/g,"외할머니"],[/외할아버님/g,"외할아버지"],
   [/큰아버님/g,"큰아버지"],[/작은아버님/g,"작은아버지"],[/할머님/g,"할머니"],[/할아버님/g,"할아버지"],
   [/어머님/g,"어머니"],[/아버님/g,"아버지"],[/장모님/g,"장모"],[/장인어른/g,"장인"],[/부모님들/g,"부모님"]];
+/* 손님이 자주 틀리게 적는 말 — 갈래를 못 알아보거나 되받는 말이 깨지네.
+   "헤어저야 할까요"가 이별 갈래에 들지 못하고 "헤어저게"로 나가던 일이 있었네. */
+const TYPO=[[/헤어저/g,"헤어져"],[/해어지/g,"헤어지"],[/해어저/g,"헤어져"],
+  [/어떻해/g,"어떡해"],[/어떻케/g,"어떻게"],[/할려고/g,"하려고"],[/갈려고/g,"가려고"],
+  [/됄/g,"될"],[/되요/g,"돼요"],[/됀/g,"된"],[/안되/g,"안 되"],
+  [/바램/g,"바람"],[/몇일/g,"며칠"],[/왠만/g,"웬만"],[/금새/g,"금세"],
+  [/이혼할려/g,"이혼하려"],[/결혼할려/g,"결혼하려"],[/그만둘려/g,"그만두려"],
+  [/있슴|있음니/g,"있습니"],[/업어요/g,"없어요"],[/시러요/g,"싫어요"],
+  [/만날려/g,"만나려"],[/사귈려/g,"사귀려"],[/짜르/g,"자르"],[/깜빡/g,"깜박"]];
+function fixTypo(t){ let x=String(t||""); for(const [re,to] of TYPO) x=x.replace(re,to); return x; }
 function plainHon(t){ let x=String(t||""); for(const [re,to] of HON_PLAIN) x=x.replace(re,to); return x; }
 function intentOf(q0){
   const q=plainHon(q0);
@@ -2612,7 +2640,7 @@ function flyTo(src,slot){
 
 /* ── 풀이 엔진 ── */
 function topicOf(q0){
-  const q=plainHon(q0);
+  const q=plainHon(fixTypo(q0));
   if(/건강|수술|병원|아프|아픈|입원|통증|검사\s*결과/.test(q)&&!/임신|난임|시험관/.test(q)) return "건강";
   let best="기타", n=0;
   TOPICS.forEach(t=>{ const c=(q.match(t.re)||[]).length; if(c>n){n=c;best=t.k;} });
@@ -2657,6 +2685,7 @@ function toStem(w){
   return w.slice(0,-1)+String.fromCharCode(0xAC00+cho*588+nj*28);
 }
 function actionOf(q){
+  q=fixTypo(q);
   const ask=askSentence(q).s.replace(/[?？!.~]+$/,"");
   if(/어떻게|뭘|무엇을|뭐라고|뭐라|어디로|어디에|어디까지|어느|언제|누구|얼마|어떡|무슨\s*말|어디서/.test(ask)) return null;
   let stem="";
@@ -2677,6 +2706,10 @@ function actionOf(q){
     .trim().replace(/^(그럼|그냥|그래서|근데|그런데|제가|저는|저도|내가|나는|이제|지금)\s+/,"");
   const wds=stem.split(/\s+/); if(wds.length>5) stem=wds.slice(-5).join(" ");
   if(stem.length<1||/^(하|가|보|해 보)$/.test(stem)) return null;
+  /* 띄어쓰기 없이 붙여 적은 글은 토막이 통째로 잡히네. 그대로 되받으면
+     "머리가아픈데병원가게" 같은 말이 나가니, 그런 자리에선 되받지 않는다.
+     ('아픈데'의 ㄴ은 앞 글자 받침이라 이음말 가르기가 비켜 가네) */
+  if(/[가-힣]{9,}/.test(stem)) return null;
   /* 바라는 일이 아니라 겁나는 일(명단에 들까·잘릴까·떨어질까)은 '하게'로 받지 않는다 */
   if(/(명단|대상)에?\s*들|잘리|짤리|떨어지|망하|들키|버림받|당하|아프|다치|헤어지게|이혼까지|버티|견디|몸이|마음이|낫|나아지|좋아지|생기|오르|내리|인연이|연락이|소식이|기회가|때가|운이|복이|오긴|되긴|가긴|나긴|있긴/.test(stem)) return null;
   const lk=stem.slice(-1).charCodeAt(0)-0xAC00, jong=(lk>=0&&lk<11172)?lk%28:0;
