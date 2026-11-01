@@ -696,7 +696,9 @@ body{word-break:keep-all;overflow-wrap:anywhere}
 /* 풀이 도중 한 줄 더 묻는 자리 — 첫 화면의 두루마리 입력과 결을 맞춘다 */
 .askmore{margin:2px 0 20px;animation:rise .5s ease both}
 .askmore .amf{position:relative;margin:0 0 18px}
-.askmore textarea{display:block;width:100%;min-height:54px;max-height:120px;resize:none;color:var(--jae);
+/* 한도는 자바스크립트가 줄 수(다섯 줄)로 잡는다. 여기 max-height 가 그보다 낮으면
+   반 잘린 줄이 생기므로 넉넉히 둔다. */
+.askmore textarea{display:block;width:100%;min-height:54px;max-height:170px;resize:none;color:var(--jae);
   background:radial-gradient(ellipse 70% 120% at 50% 50%,rgba(12,5,6,.86) 0%,rgba(12,5,6,.7) 55%,rgba(12,5,6,0) 100%);
   border:0;border-radius:0;box-shadow:none;outline:none;
   padding:13px 16px;font:inherit;font-size:15.5px;line-height:1.75;text-align:center;overflow-y:auto}
@@ -2356,7 +2358,13 @@ function askMore(){
     const done=v=>{ if(T0!==RUN) return; box.remove(); res(v); };
     ta.addEventListener("input",()=>{ const v=ta.value.trim();
       cn.textContent=`${ta.value.length} / 60`; cn.classList.toggle("on",ta.value.length>=40); ok.disabled=v.length<2;
-      ta.style.height="auto"; ta.style.height=Math.min(120,Math.max(54,ta.scrollHeight))+"px"; });
+      /* 줄 수에 딱 맞춰 늘린다 — 반 잘린 줄이 비어져 나오지 않게 */
+      ta.style.height="auto";
+      const lh=parseFloat(getComputedStyle(ta).lineHeight)||22,
+            pad=parseFloat(getComputedStyle(ta).paddingTop)+parseFloat(getComputedStyle(ta).paddingBottom),
+            lines=Math.max(2,Math.min(5,Math.ceil((ta.scrollHeight-pad)/lh)));
+      ta.style.height=Math.round(lines*lh+pad)+"px";
+      ta.scrollTop=0; });
     ta.addEventListener("keydown",e=>{ if(e.key==="Enter"&&!e.shiftKey){ e.preventDefault(); if(!ok.disabled) ok.click(); } });
     ok.addEventListener("click",()=>done(ta.value.trim()),{once:true});
     sk.addEventListener("click",()=>done(""),{once:true});
