@@ -90,13 +90,13 @@
 #s-ask .intro .lkT{left:36.5%;width:10.5%}
 #s-ask .intro .lkP{left:48.5%;width:16.5%}
 /* 그림에 담지 못한 법정 고지 */
-.underlegal{flex:none;text-align:center;font-size:11px;color:#7d7066;line-height:1.7;padding:0 16px}
-.underlegal #histLink,.underlegal #openRefund{background:none;border:0;color:#a39486;text-decoration:underline;font-size:11.5px;padding:5px 6px;font-family:inherit}
+.underlegal{flex:none;text-align:center;font-size:11px;color:#8f8277;line-height:1.7;padding:0 16px}
+.underlegal #histLink,.underlegal #openRefund{background:none;border:0;color:#b3a496;text-decoration:underline;font-size:11.5px;padding:5px 6px;font-family:inherit}
 .underlegal .biz{display:inline-block;font-size:11px}
-.underlegal .biz summary{padding:4px 6px;color:#8d8075;text-decoration:underline;cursor:pointer}
+.underlegal .biz summary{padding:4px 6px;color:#a1948a;text-decoration:underline;cursor:pointer}
 .underlegal .biz[open] summary{margin-bottom:2px}
-.underlegal .biz span{display:block;color:#7d7066;font-size:10.5px}
-.underlegal .note{margin:2px 0 0;color:#6f6359;font-size:10.5px}
+.underlegal .biz span{display:block;color:#8f8277;font-size:10.5px}
+.underlegal .note{margin:2px 0 0;color:#8f8277;font-size:10.5px}
 @media (max-height:560px){.underlegal .note{display:none}}
 
 </style>
@@ -2770,7 +2770,7 @@ function buildReading(){
   if(grade<=1) for(let k=combos.length-1;k>=0;k--) if(/^(daegui3|miss-|fox|betray|tiger|jailer)/.test(combos[k].id)) combos.splice(k,1);
 
   const seed=P.reduce((a,p,i)=>a+(p.idx+1)*(i+3),0);
-  S.wover=null; S.DO=null;
+  S.wover=null; S.DO=null; S.said=new Set();
   let verdict=I?I.v[grade]:VERDICT[topic][grade];
   /* 갈래가 안 잡힌 식구 이야기에 '거리를 두게'라 하지 않는다 */
   if(!I&&topic==="사람"&&grade>=2&&/엄마|아빠|어머니|아버지|부모님|할머니|할아버지|아들|딸|자식|형|누나|언니|오빠|동생|며느리|사위|손주/.test(S.q||""))
@@ -3099,7 +3099,7 @@ function closingTalk(E){ const wn=whenNeedOf(E), good=E.grade<=1, care=/^(반려
   let t=`다시 한 번 못 박네. <strong>${head}</strong>`;
   if(wn) t+=`<br><strong class="nw">${E.when.t}</strong>, ${whenWW(E)}`;
   t+=`<br>`+(good?`그 전에 부(符)에 적힌 두 가지를 해 두게. 그래야 기운 쪽으로 끝까지 가네.`:`부(符)에 적힌 두 가지부터 하게. 그게 판을 돌리는 첫 매듭일세.`)+(care?` ${vetw?"수의사":"의원"}의 말이 늘 먼저일세.`:"");
-  return honorWho(t,E.dkey,S.R); }
+  return dedupe(honorWho(t,E.dkey,S.R)); }
 function verdictHTML(E){ const v=String(E.verdict), m=v.match(/^(.*?[.!?])\s+(.+)$/); return (m?`<strong class="vh">${m[1]}</strong> <span class="vr">${m[2]}</span>`:`<strong class="vh">${v}</strong>`)+`<br>`+leanHTML(E); }
 function leanHTML(E){ const n=E.lean||5; return `<span class="lean"><span class="lean-bar" aria-hidden="true">${"<i class=on></i>".repeat(n)}${"<i></i>".repeat(10-n)}</span><span class="lean-t">자네 바라는 쪽으로 <b>열에 ${NUMW[n]}</b></span></span>`; }
 function bat(w){const m=String(w).match(/[가-힣](?=[^가-힣]*$)/);if(!m)return 0;const c=(m[0].charCodeAt(0)-0xAC00)%28;return c===0?0:(c===8?2:1);}
@@ -3109,9 +3109,31 @@ function jo(w,t){const b=bat(w);
   if(t==="과와")return b?"과":"와"; if(t==="이라")return b?"이라":"라";
   if(t==="으로")return b===1?"으로":"로"; return "";}
 
+/* 한 판에서 같은 말을 두 번 하지 않는다 — 손님이 '아까 한 말 또 하네' 하지 않게 */
+function dedupe(html){
+  if(!S.said) S.said=new Set();
+  /* 꾸밈표가 짝을 이루는지 본다 — 문장을 빼다 <strong> 한쪽만 남으면 글이 깨지네 */
+  const balanced=t=>{ const o=(String(t).match(/<(strong|em|b|span)\b/g)||[]).length,
+                            c=(String(t).match(/<\/(strong|em|b|span)>/g)||[]).length; return o===c; };
+  const out=String(html).split(/(<br>)/).map(seg=>{
+    if(seg==="<br>") return seg;
+    const keep=[], drop=[];
+    seg.split(/(?<=[.!?])\s+/).forEach(x=>{
+      const k=x.replace(/<[^>]+>/g,"").replace(/\s+/g,"").trim();
+      if(k.length<8||!S.said.has(k)){ if(k.length>=8) S.said.add(k); keep.push(x); }
+      else drop.push(x);
+    });
+    if(!drop.length) return seg;
+    const t=keep.join(" ");
+    /* 빼고 나서 짝이 안 맞거나 통째로 비면 본디 토막을 그대로 둔다 */
+    return (t.trim()&&balanced(t))?t:seg;
+  }).join("");
+  const t=out.replace(/(<br>)\s*(<br>)+/g,"<br>").replace(/^(\s*<br>)+|(<br>\s*)+$/g,"").replace(/ {2,}/g," ").trim();
+  return t||html;   /* 통째로 비면 본디 것을 쓴다 */
+}
 function frame(i,p,E){
   /* 자리마다 '귀 한 줄 → 물음에 대한 답 한두 줄'만. 갈래·오행 같은 말은 쓰지 않는다 */
-  return honorWho(frameCore(i,p,E),E.dkey,S.R||readQ(S.q)).replace(/ {2,}/g," ").replace(/ <br>/g,"<br>").replace(/<br>(<br>)+/g,"<br>").replace(/(<br>|\s)+$/,"").trim();
+  return dedupe(honorWho(frameCore(i,p,E),E.dkey,S.R||readQ(S.q)).replace(/ {2,}/g," ").replace(/ <br>/g,"<br>").replace(/<br>(<br>)+/g,"<br>").replace(/(<br>|\s)+$/,"").trim());
 }
 /* ── 설화 문장을 술사의 말로 — '~한다' → '~하지' ── */
 const HAJI_SPECIAL={"만든다":"만들지","이끈다":"이끌지","준다":"줄지","안다":"알지","기운다":"기울지","시든다":"시들지","판다":"파지","운다":"울지","든다":"들지"};
@@ -4143,7 +4165,8 @@ function wholeTalk(E){
   if(WT&&E.dkey!=="반려이별"&&!E.chk) t+=WT[Math.max(0,Math.min(3,E.grade))];
   else if(E.dkey==="반려이별") t+=`그리움은 서서히 따뜻한 기억으로 바뀌는 판일세.`;
   else if(E.chk) t+= E.grade<=1?`걱정보다 가벼운 판일세.`:`한 번 더 살펴야 할 판일세. 놀랄 일은 아닐세.`;
-  else if(care) t+= E.grade<=0?`흐름은 분명히 나아지는 쪽일세.`:E.grade===1?`흐름은 나아지는 쪽일세. 다만 서두르지 말게.`:E.grade===2?`나아지되 더디게 오는 판일세. 곁을 지키며 기다리게.`:`시간이 걸리는 판일세. 혼자 지지 말고 의원과 함께 가게.`;
+  else if(care){ const vetw=/^반려/.test(E.dkey||"")||/강아지|고양이|반려|댕댕|냥이|반려견|반려묘/.test(S.q||"");
+    t+= E.grade<=0?`흐름은 분명히 나아지는 쪽일세.`:E.grade===1?`흐름은 나아지는 쪽일세. 다만 서두르지 말게.`:E.grade===2?`나아지되 더디게 오는 판일세. 곁을 지키며 기다리게.`:`시간이 걸리는 판일세. 혼자 지지 말고 ${vetw?"수의사":"의원"}와 함께 가게.`.replace("의원와","의원과").replace("수의사와 함께","수의사와 함께"); }
   else t+= E.grade<=0 ? `흐름은 분명히 자네 쪽으로 기울었네.`
     : E.grade===1 ? `흐름은 자네 쪽일세. 다만 막는 것 하나는 치우고 가야 하네.`
     : E.grade===2 ? `흐름은 지금 자네 쪽이 아닐세. 한 가지를 바꿔야 돌아오네.`
@@ -4151,7 +4174,7 @@ function wholeTalk(E){
   t+= `<br>패의 기울기는 자네 바라는 쪽으로 <strong>열에 ${NUMW[E.lean||5]}</strong>일세.`;
   if(whenNeedOf(E)) t+= `<br>때는 <strong class="nw">${E.when.t}</strong>, ${whenWW(E)}`;
   t+= `<br>이제 내 답을 말하지.`;
-  return t;
+  return dedupe(t);
 }
 
 /* ── 자리 × 갈래 — 패마다 한 단락 더 ── */
@@ -4320,7 +4343,7 @@ async function comboEvent(c,T){
   if(!S.replay) await halt(c);
   if(T!==RUN) return false;
   const names=c.pos.map(i=>`<em>${S.picked[i].card.nm}</em>`).join(" · ");
-  await line(`잠깐 · ${c.name} ${c.han}`, (names?`${names}<br>`:"")+c.line);
+  await line(`잠깐 · ${c.name} ${c.han}`, (names?`${names}<br>`:"")+dedupe(c.line));
   setTimeout(()=>c.pos.forEach(i=>{ const s=$("fl"+i); if(s) s.parentElement.classList.remove("combo"); }),1200);
   return T===RUN;
 }
