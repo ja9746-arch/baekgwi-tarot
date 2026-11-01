@@ -97,6 +97,16 @@
 .underlegal .biz[open] summary{margin-bottom:2px}
 .underlegal .biz span{display:block;color:#8f8277;font-size:10.5px}
 .underlegal .note{margin:2px 0 0;color:#8f8277;font-size:10.5px}
+/* 누르는 자리는 손가락만 하게 — 보이는 글씨는 그대로 두고 둘레만 넓힌다 */
+.underlegal #histLink,.underlegal #openRefund,.underlegal .biz summary{position:relative}
+.underlegal #histLink::after,.underlegal #openRefund::after,.underlegal .biz summary::after{
+  content:"";position:absolute;left:0;right:0;top:50%;height:44px;transform:translateY(-50%)}
+#s-ask .intro .lk{position:relative}
+#s-ask .intro .lk::after{content:"";position:absolute;left:-8%;right:-8%;top:50%;height:44px;transform:translateY(-50%)}
+.underlegal a[href^="tel:"],.sheet a[href^="tel:"]{position:relative;display:inline-block}
+.underlegal a[href^="tel:"]::after,.sheet a[href^="tel:"]::after{content:"";position:absolute;left:-8px;right:-8px;top:50%;height:44px;transform:translateY(-50%)}
+.sheet .sx{position:sticky}
+.sheet .sx::after{content:"";position:absolute;inset:-3px}
 @media (max-height:560px){.underlegal .note{display:none}}
 
 </style>
@@ -742,7 +752,7 @@ body{word-break:keep-all;overflow-wrap:anywhere}
 #payDock .dkp s{opacity:.7}
 #payDock ~ #againBtn{border:0;background:none;box-shadow:none;padding:10px;font-size:13.5px;letter-spacing:.02em;text-decoration:underline;text-underline-offset:3px;color:#b8a48a}
 #payDock ~ #againBtn::before,#payDock ~ #againBtn::after{display:none}
-.sheet .btn.ghost.close{border:0;background:none;box-shadow:none;padding:12px;font-size:14px;letter-spacing:.04em;text-decoration:underline;text-underline-offset:3px;color:#b8a48a}
+.sheet .btn.ghost.close{border:0;background:none;box-shadow:none;padding:13px;min-height:44px;font-size:14px;letter-spacing:.04em;text-decoration:underline;text-underline-offset:3px;color:#b8a48a}
 .sheet .btn.ghost.close::before,.sheet .btn.ghost.close::after{display:none}
 .halt::after{content:"";position:absolute;left:50%;bottom:calc(36px + env(safe-area-inset-bottom,0px));width:120px;height:2px;margin-left:-60px;background:linear-gradient(90deg,#c9a24a,#c9a24a) left/100% 100% no-repeat,rgba(201,162,74,.18);animation:haltbar 1.7s linear both}
 @keyframes haltbar{from{background-size:0 100%,auto}to{background-size:100% 100%,auto}}
