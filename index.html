@@ -3099,7 +3099,7 @@ function closingTalk(E){ const wn=whenNeedOf(E), good=E.grade<=1, care=/^(반려
   let t=`다시 한 번 못 박네. <strong>${head}</strong>`;
   if(wn) t+=`<br><strong class="nw">${E.when.t}</strong>, ${whenWW(E)}`;
   t+=`<br>`+(good?`그 전에 부(符)에 적힌 두 가지를 해 두게. 그래야 기운 쪽으로 끝까지 가네.`:`부(符)에 적힌 두 가지부터 하게. 그게 판을 돌리는 첫 매듭일세.`)+(care?` ${vetw?"수의사":"의원"}의 말이 늘 먼저일세.`:"");
-  return dedupe(honorWho(t,E.dkey,S.R)); }
+  return honorWho(t,E.dkey,S.R); }
 function verdictHTML(E){ const v=String(E.verdict), m=v.match(/^(.*?[.!?])\s+(.+)$/); return (m?`<strong class="vh">${m[1]}</strong> <span class="vr">${m[2]}</span>`:`<strong class="vh">${v}</strong>`)+`<br>`+leanHTML(E); }
 function leanHTML(E){ const n=E.lean||5; return `<span class="lean"><span class="lean-bar" aria-hidden="true">${"<i class=on></i>".repeat(n)}${"<i></i>".repeat(10-n)}</span><span class="lean-t">자네 바라는 쪽으로 <b>열에 ${NUMW[n]}</b></span></span>`; }
 function bat(w){const m=String(w).match(/[가-힣](?=[^가-힣]*$)/);if(!m)return 0;const c=(m[0].charCodeAt(0)-0xAC00)%28;return c===0?0:(c===8?2:1);}
@@ -3133,7 +3133,7 @@ function dedupe(html){
 }
 function frame(i,p,E){
   /* 자리마다 '귀 한 줄 → 물음에 대한 답 한두 줄'만. 갈래·오행 같은 말은 쓰지 않는다 */
-  return dedupe(honorWho(frameCore(i,p,E),E.dkey,S.R||readQ(S.q)).replace(/ {2,}/g," ").replace(/ <br>/g,"<br>").replace(/<br>(<br>)+/g,"<br>").replace(/(<br>|\s)+$/,"").trim());
+  return honorWho(frameCore(i,p,E),E.dkey,S.R||readQ(S.q)).replace(/ {2,}/g," ").replace(/ <br>/g,"<br>").replace(/<br>(<br>)+/g,"<br>").replace(/(<br>|\s)+$/,"").trim();
 }
 /* ── 설화 문장을 술사의 말로 — '~한다' → '~하지' ── */
 const HAJI_SPECIAL={"만든다":"만들지","이끈다":"이끌지","준다":"줄지","안다":"알지","기운다":"기울지","시든다":"시들지","판다":"파지","운다":"울지","든다":"들지"};
@@ -4174,7 +4174,7 @@ function wholeTalk(E){
   t+= `<br>패의 기울기는 자네 바라는 쪽으로 <strong>열에 ${NUMW[E.lean||5]}</strong>일세.`;
   if(whenNeedOf(E)) t+= `<br>때는 <strong class="nw">${E.when.t}</strong>, ${whenWW(E)}`;
   t+= `<br>이제 내 답을 말하지.`;
-  return dedupe(t);
+  return t;
 }
 
 /* ── 자리 × 갈래 — 패마다 한 단락 더 ── */
@@ -4343,7 +4343,7 @@ async function comboEvent(c,T){
   if(!S.replay) await halt(c);
   if(T!==RUN) return false;
   const names=c.pos.map(i=>`<em>${S.picked[i].card.nm}</em>`).join(" · ");
-  await line(`잠깐 · ${c.name} ${c.han}`, (names?`${names}<br>`:"")+dedupe(c.line));
+  await line(`잠깐 · ${c.name} ${c.han}`, (names?`${names}<br>`:"")+c.line);
   setTimeout(()=>c.pos.forEach(i=>{ const s=$("fl"+i); if(s) s.parentElement.classList.remove("combo"); }),1200);
   return T===RUN;
 }
@@ -4377,6 +4377,8 @@ async function dots(ms){
   p.remove();
 }
 async function line(who,html){
+  /* 손님 눈에 닿는 순간에만 거른다. 확답은 판의 알맹이라 건드리지 않는다. */
+  if(who!=="확답") html=dedupe(html);
   const p=document.createElement("div");
   p.className="line";
   p.innerHTML=(who?`<span class="who">${who}</span>`:"")+'<span class="body"></span>';
