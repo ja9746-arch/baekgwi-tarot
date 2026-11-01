@@ -59,7 +59,7 @@ async function callModel(req, system, prompt, maxTok = 3200, opt = {}) {
       const out = await callOne(req, system, prompt, maxTok, list[i], ctl.signal);
       if (out) { if (i > 0) console.log("model fallback", list[i]); return out; }
     } catch (e) {
-      console.error("model", list[i], String(e && e.name === "AbortError" ? "timeout" : e).slice(0, 120));
+      console.error("model", list[i], e && e.name === "AbortError" ? "timeout" : errCode(e && (e.message || e)));
     } finally { clearTimeout(timer); }
   }
   return null;
@@ -89,7 +89,7 @@ async function callOne(req, system, prompt, maxTok, MODEL, signal) {
       }),
     });
     if (!res.ok) {
-      console.error("gateway", res.status, (await res.text()).slice(0, 400));
+      console.error("gateway", res.status, errCode(await res.text()));
       return null;
     }
     const d = await res.json();
@@ -113,7 +113,7 @@ async function callOne(req, system, prompt, maxTok, MODEL, signal) {
     }),
   });
   if (!res.ok) {
-    console.error("direct", res.status, (await res.text()).slice(0, 400));
+    console.error("direct", res.status, errCode(await res.text()));
     return null;
   }
   const d = await res.json();
@@ -132,6 +132,17 @@ function dropN(ch) {
   const c = ch.charCodeAt(0) - 0xac00;
   if (c < 0 || c > 11171 || c % 28 !== JONG_N) return null;
   return String.fromCharCode(ch.charCodeAt(0) - JONG_N);
+}
+/* 바깥(모형 가게·관문)에서 온 오류 글에는 손님이 적은 물음이 섞여 돌아올 수 있네.
+   로그는 오래 남는 것이라, 한글과 따옴표 안의 글은 걷어 내고 까닭만 적는다. */
+function errCode(t) {
+  let s = String(t == null ? "" : t);
+  try { const j = JSON.parse(s); const e = (j && j.error) || j;
+        s = [e.type, e.code, e.param, e.message].filter(Boolean).join(" "); } catch (_) {}
+  s = s.replace(/[가-힣ㄱ-ㅎㅏ-ㅣ]+/g, "□")
+       .replace(/["'\u201c\u201d\u2018\u2019][^"'\u201c\u201d\u2018\u2019]{0,400}["'\u201c\u201d\u2018\u2019]/g, "…")
+       .replace(/\s+/g, " ").trim();
+  return s.slice(0, 160) || "(빈 글)";
 }
 function jong(c) { const k = c.charCodeAt(0) - 0xac00; return k >= 0 && k < 11172 ? k % 28 : 0; }
 /* 확답 첫마디로 쓸 수 없는 흐리는 말 */
@@ -645,7 +656,8 @@ export default async function handler(req, res) {
     res.setHeader("cache-control", "no-store");
     res.status(200).json(answer ? { sections: clean, answer } : { sections: clean });
   } catch (e) {
-    console.error(e);
+    console.error("reading", (e && e.name) || "Error", errCode(e && e.message),
+      String((e && e.stack) || "").split("\n")[1] || "");
     res.status(502).json({ error: "패를 읽다 끊겼다" });
   }
 }
