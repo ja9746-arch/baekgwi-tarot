@@ -106,7 +106,6 @@
 .underlegal a[href^="tel:"]::after,.sheet a[href^="tel:"]::after{content:"";position:absolute;left:-8px;right:-8px;top:50%;height:44px;transform:translateY(-50%)}
 .sheet .sx{position:sticky}
 .sheet .sx::after{content:"";position:absolute;inset:-3px}
-@media (max-height:560px){.underlegal .note{display:none}}
 
 </style>
 </head>
@@ -2184,6 +2183,10 @@ function fitIntro(){
   let w=availW;
   const tall=availW*INTRO_H/INTRO_W;
   if(availH>80 && tall>availH*1.35){ w=Math.min(availW, availH*INTRO_W/INTRO_H); }
+  /* 가로로 누운 화면에서 높이에 맞추다 보면 그림이 너무 줄어, 글상자 글씨가
+     6픽셀까지 내려가 읽을 수 없게 되네(칩도 28픽셀이라 손가락이 못 짚네).
+     세로로 흐르는 것은 괜찮으니, 가로폭이 허락하는 한 370까지는 지킨다. */
+  w=Math.max(w, Math.min(availW, 370));
   if(!(w>80)) w=availW;
   w=Math.round(w);
   el.style.width=w+"px";
