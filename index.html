@@ -5100,7 +5100,12 @@ async function makeShare0(T){
     { const vt=String(E.verdict).replace(/<[^>]+>/g,""), m=vt.match(/^(.*?[.!?])\s+(.+)$/), head=m?m[1]:vt, rest=m?m[2]:"", ymax=H-150;
       x.fillStyle="#ffd9cf"; x.font='400 54px "Song Myung", serif'; let hl=countLines(x,head,900); if(hl>2){ x.font='400 46px "Song Myung", serif'; hl=Math.min(3,countLines(x,head,900)); }
       const hlh=hl>2?58:66; wrapText(x,head,W/2,ty+252,900,hlh,3); let y=ty+252+hl*hlh-14;
-      if(rest){ const left=Math.max(0,Math.floor((ymax+30-y)/42)); if(left>0){ x.fillStyle="#d8cabd"; x.font='400 31px "Noto Sans KR", sans-serif'; y+=wrapText(x,rest,W/2,y+8,880,42,Math.min(4,left))*42+8; } }
+      /* 확답 끝이 "…"로 잘리느니 글씨를 줄여 다 보여 준다.
+         도박·빚·매 맞는 판은 확답 끝에 도움 받을 곳이 붙는데, 그 줄이 잘리고 있었네. */
+      if(rest){ let fs=31, lh=42, need=0, left=0;
+        const fit=()=>{ x.font=`400 ${fs}px "Noto Sans KR", sans-serif`; need=countLines(x,rest,880); left=Math.max(0,Math.floor((ymax+30-y)/lh)); };
+        fit(); while(need>left&&fs>23){ fs-=2; lh-=3; fit(); }
+        if(left>0){ x.fillStyle="#d8cabd"; x.font=`400 ${fs}px "Noto Sans KR", sans-serif`; y+=wrapText(x,rest,W/2,y+8,880,lh,Math.min(need,left))*lh+8; } }
       }
   } else {
     x.fillStyle="#ece0d2"; x.font='400 46px "Song Myung", serif'; x.fillText("일곱 장이 아직 덮여 있네",W/2,ty+90);
