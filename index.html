@@ -5041,8 +5041,15 @@ async function makeShare0(T){
       const hj=/[가-힣]/.test(c.hanja)||!c.hanja?"":c.hanja;
       if(hj){ x.fillStyle="#e2423a"; x.font=`400 ${hj.length>3?30:36}px "Song Myung", serif`; x.fillText(hj,cx+cw/2,cy+ch-66);
         x.fillStyle="#ece0d2"; x.font=`400 ${c.nm.length>4?27:31}px "Song Myung", serif`; x.fillText(c.nm,cx+cw/2,cy+ch-24); }
-      else { /* 한자 이름이 없는 귀는 우리말 이름을 붉은 자리에 크게 — 칸이 비어 보이지 않게 */
-        x.fillStyle="#e2423a"; x.font=`400 ${c.nm.length>4?30:36}px "Song Myung", serif`; x.fillText(c.nm,cx+cw/2,cy+ch-44); }
+      else { /* 한자 이름이 없는 귀(매구·두억시니 따위 열 장)는 우리말 이름을 붉은 자리에 크게 두되,
+                 화면 안 패와 같이 위아래로 실선을 그어 둔다. 그래야 한 줄만 있는 칸이
+                 비어 보이지 않고, 옆 칸들과 글줄이 어긋나 보이지 않네. */
+        const my=cy+ch-44, fs=c.nm.length>4?30:36;
+        x.fillStyle="#e2423a"; x.font=`400 ${fs}px "Song Myung", serif`; x.fillText(c.nm,cx+cw/2,my);
+        x.strokeStyle="rgba(226,66,58,.5)"; x.lineWidth=1;
+        /* 글자 위아래로 열두 점씩 띄워, 선이 획에 닿지 않게 한다 */
+        [my-Math.round(fs*0.75)-12, my+14].forEach(ly=>{
+          x.beginPath(); x.moveTo(cx+cw/2-19,ly+.5); x.lineTo(cx+cw/2+19,ly+.5); x.stroke(); }); }
     } else {
       cover(x,backI,cx,cy,cw,ch); x.fillStyle="rgba(6,3,4,.55)"; x.fillRect(cx,cy,cw,ch);
       x.fillStyle="#ff5436"; x.font='400 70px "Song Myung", serif'; x.fillText("封",cx+cw/2,cy+ch/2+24);
