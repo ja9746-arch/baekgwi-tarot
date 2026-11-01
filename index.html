@@ -3075,7 +3075,7 @@ function buildReading(){
   const loose=!I&&verdict===VERDICT[topic][grade];
   return {topic,qtype,combos,el,elN:tally[el],rev,grade,score,why,leanSuit,leanN:suits[leanSuit],daegui,seed,loose,thin:qThin(S.q),
     wover:S.wover, verdict:(S.rec&&S.rec.fx&&S.rec.fx.v)||honorWho(verdict,I&&I.k,R), when:(S.rec&&S.rec.fx&&S.rec.fx.w)||(I&&I.k==="임종"?{t:"바로 지금",d:"",fixed:true}:null)||opWhen(I,R,topicOf(S.q))||dateWhen(I,R)||clockWhen(I,R)||nearWhen(R.when)||examWhen(I,R)||nearClamp(healthClamp(yearClamp(whenFor(el,S.rec?S.rec.t:Date.now()),R,grade,I),I,topicOf(S.q)),I),
-    tie:pickV(TIE[(I&&TIE[I.k])?I.k:topic],seed),lean:leanOf(score,grade),intent:I?I.k:"",worry:worryOv!==null?worryOv:(I&&I.worry||""),chk,chase:chaseQ,
+    tie:pickV(TIE[(I&&TIE[I.k])?I.k:topic],seed),lean:leanOf(score,grade),intent:I?I.k:"",worry:worryOv!==null?worryOv:(I&&I.worry||""),chk,chase:chaseQ,loss:lossQ,
     nopartner:!!(I&&I.k==="새인연"&&/생길|생기|나타날|언제\s*생|올까|들어올|만날\s*수|인연이?\s*(언제|있)/.test(S.q)&&!/썸|그\s*사람|좋아하는|짝사랑|소개팅|고백/.test(S.q))||!!(I&&I.k==="결혼"&&!/앞두고|예정|날짜|식장|준비|예비/.test(S.q)&&(!/남친|여친|남자\s*친구|여자\s*친구|애인|그\s*사람|만나는|사귀|연인|약혼|상견례|프러포즈|청혼/.test(S.q)||/(만나는|사귀는)\s*사람(은|이|도)?\s*없|애인(은|이|도)?\s*없|솔로/.test(S.q))),
     cool:!!(I&&I.k==="결혼생활"&&/각방|별거|대화가?\s*없|말이\s*없|권태|무관심|각자/.test(S.q)),
     chronic:!!((I&&I.k==="가족건강"||topic==="건강")&&/치매|파킨슨|투석|만성|요양|노환|중풍|뇌졸중/.test(S.q)),
@@ -4499,10 +4499,10 @@ async function askSeer(E,from,to,stage){
   const opened=Array.from({length:from},(_,i)=>({pos:POS[i].k, nm:S.picked[i].card.full}));
   const R=S.R||readQ(S.q);
   const bone = stage==="free"
-    ? {stage, lean:E.grade<=1?"good":"bad", tired:/아무것도\s*하기\s*싫|무서워|두려워|번아웃|우울|잠이\s*안|숨이\s*막/.test(S.q)?1:0, topic:E.topic, qtype:E.qtype, who:R.who, feel:R.feel, whenWord:R.when, intent:E.intent, worry:E.worry, subject:(/^반려/.test(E.dkey||"")?"반려":E.dkey||""), facts:R.facts||[], act:(S.DO&&S.DO.stem)||""}   /* 무료 단계엔 덮인 패의 답을 보내지 않는다 */
+    ? {stage, lean:E.grade<=1?"good":"bad", tired:/아무것도\s*하기\s*싫|무서워|두려워|번아웃|우울|잠이\s*안|숨이\s*막/.test(S.q)?1:0, topic:E.topic, qtype:E.qtype, who:R.who, feel:R.feel, whenWord:R.when, intent:E.intent, worry:E.worry, subject:(/^반려/.test(E.dkey||"")?"반려":E.dkey||""), facts:R.facts||[], act:(S.DO&&S.DO.stem)||"", loss:E.loss?1:0, chase:E.chase?1:0}   /* 무료 단계엔 덮인 패의 답을 보내지 않는다 */
     : {stage, opened, combos:(E.combos||[]).map(c=>c.name), grade:E.grade, why:E.why, topic:E.topic, qtype:E.qtype, el:E.el, elN:E.elN, rev:E.rev,
        leanSuit:E.leanSuit, leanN:E.leanN, daegui:E.daegui, when:E.when, verdict:E.verdict, noWhen:whenNeedOf(E)?0:1, lean10:E.lean||5,
-       loose:E.loose?1:0, thin:E.thin?1:0, who:R.who, feel:R.feel, whenWord:R.when, intent:E.intent, worry:E.worry, subject:(/^반려/.test(E.dkey||"")?"반려":E.dkey||""), facts:R.facts||[], act:(S.DO&&S.DO.stem)||"", tired:/아무것도\s*하기\s*싫|무서워|두려워|번아웃|우울|잠이\s*안|숨이\s*막/.test(S.q)?1:0};
+       loose:E.loose?1:0, thin:E.thin?1:0, who:R.who, feel:R.feel, whenWord:R.when, intent:E.intent, worry:E.worry, subject:(/^반려/.test(E.dkey||"")?"반려":E.dkey||""), facts:R.facts||[], act:(S.DO&&S.DO.stem)||"", loss:E.loss?1:0, chase:E.chase?1:0, tired:/아무것도\s*하기\s*싫|무서워|두려워|번아웃|우울|잠이\s*안|숨이\s*막/.test(S.q)?1:0};
   const ctrl=new AbortController();
   const bail=setTimeout(()=>ctrl.abort(), 45000);
   try{
