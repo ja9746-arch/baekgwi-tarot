@@ -472,6 +472,14 @@ body{word-break:keep-all;overflow-wrap:anywhere}
   background:#0d0709;border-top:1px solid var(--line);
   padding:22px calc(20px + env(safe-area-inset-right,0px) + 44px) calc(24px + env(safe-area-inset-bottom,0px)) calc(20px + env(safe-area-inset-left,0px));
   animation:up .32s cubic-bezier(.2,.9,.3,1) both}
+/* 가로로 누운 손전화에서는 장막이 화면 높이를 거의 다 써야 아래 단추까지 들어가네.
+   접힘 아래로 내려간 채 굴려야만 보이던 것을 고친다. */
+@media (max-height:460px){
+  .sheet .inner{max-height:97%;padding-top:12px;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px))}
+  .sheet h3{font-size:15px;margin-bottom:2px}
+  .sheet p,.sheet li{font-size:11.5px;line-height:1.72;margin-bottom:5px}
+  .sos .ln{padding:7px 0}
+  .sheet .close{margin-top:10px}}
 @keyframes up{from{transform:translateY(24px);opacity:0}to{transform:none;opacity:1}}
 .sheet .sx{position:sticky;top:4px;float:right;margin:-8px -42px 0 10px;width:38px;height:38px;border:1px solid var(--line);border-radius:50%;background:#140c0e;color:var(--jae);font-size:16px;line-height:1;z-index:2;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,.8)}
 .sheet h3{font-family:var(--serif);font-weight:700;font-size:17px;margin:0 0 4px;color:var(--jae)}
@@ -2922,10 +2930,14 @@ function buildReading(){
   const I=intentOf(S.q);
   const own=topicOf(S.q);
   /* 아이가 학교에서 괴롭힘을 당하는 물음이 '직장 괴롭힘'으로 읽혀 회사 이야기가 나가던 일이 있었네 */
+  /* 약·치료를 끊고 미루는 물음은 몸의 일일세. "항암치료를 그만둬도 될까요"가
+     '그만두다' 때문에 이직으로 읽혀 열 장이 회사 이야기를 하고 있었네. */
+  const medQ=NEVER_MED.test(S.q||"")||MED_UP.test(S.q||"");
   const childSchool=/(아이|애|딸|아들|자식|손주|조카)/.test(S.q||"")&&/(학교|학원|반\s*친구|교실|담임|유치원|어린이집|같은\s*반)/.test(S.q||"");
   const PEOPLE=/(?<!(남자|여자|남|여)\s*)친구|가족|엄마|아빠|어머니|아버지|부모|형제|자매|형|누나|언니|오빠|동생|동료|상사|팀장|선배|후배|시어머니|시댁/;
-  const topic=!I?own
+  const topic=medQ?"건강":!I?own
     : I.t===null ? (I.k==="연락"&&PEOPLE.test(S.q)?"사람":own)
+    : medQ ? "건강"
     : (I.k==="괴롭힘"&&childSchool) ? "사람"
     : I.t==="기타" ? own
     : (I.k==="속마음"||I.k==="화해"||I.k==="미움")&&own!=="기타" ? own : I.t;
