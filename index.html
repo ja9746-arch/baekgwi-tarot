@@ -3145,21 +3145,29 @@ function jo(w,t){const b=bat(w);
 /* 한 판에서 같은 말을 두 번 하지 않는다 — 손님이 '아까 한 말 또 하네' 하지 않게 */
 function dedupe(html){
   if(!S.said) S.said=new Set();
-  /* 꾸밈표가 짝을 이루는지 본다 — 문장을 빼다 <strong> 한쪽만 남으면 글이 깨지네 */
-  const balanced=t=>{ const o=(String(t).match(/<(strong|em|b|span)\b/g)||[]).length,
-                            c=(String(t).match(/<\/(strong|em|b|span)>/g)||[]).length; return o===c; };
+  /* 꾸밈표가 몇 개 열리고 몇 개 닫혔는지 — 빼기 앞뒤로 이 셈이 같아야 글이 안 깨지네 */
+  const bal=t=>(String(t).match(/<(strong|em|b|span)\b/g)||[]).length
+               -(String(t).match(/<\/(strong|em|b|span)>/g)||[]).length;
   const out=String(html).split(/(<br>)/).map(seg=>{
     if(seg==="<br>") return seg;
-    const keep=[], drop=[];
-    seg.split(/(?<=[.!?])\s+/).forEach(x=>{
+    let dropped=false;
+    const parts=seg.split(/(?<=[.!?])\s+/).map(x=>{
       const k=x.replace(/<[^>]+>/g,"").replace(/\s+/g,"").trim();
-      if(k.length<8||!S.said.has(k)){ if(k.length>=8) S.said.add(k); keep.push(x); }
-      else drop.push(x);
+      if(k.length<8) return x;
+      if(!S.said.has(k)){ S.said.add(k); return x; }
+      dropped=true;
+      /* 글만 빼고 꾸밈표는 그 자리에 남긴다 — 줄 끝 문장에 </span> 이 붙어 따라가면
+         짝이 깨져 거르기가 통째로 되돌아가 버리네(그래서 끝 문장은 영영 안 지워졌네). */
+      return (x.match(/<[^>]+>/g)||[]).join("");
     });
-    if(!drop.length) return seg;
-    const t=keep.join(" ");
-    /* 빼고 나서 짝이 안 맞거나 통째로 비면 본디 토막을 그대로 둔다 */
-    return (t.trim()&&balanced(t))?t:seg;
+    if(!dropped) return seg;
+    let t=parts.filter(x=>x!=="").join(" ")
+             .replace(/\s+(?=<\/)/g,"").replace(/ {2,}/g," ").trim();
+    /* 알맹이가 빠져 빈 껍데기만 남은 꾸밈표는 걷어 낸다 */
+    for(let i=0;i<3;i++) t=t.replace(/<(strong|em|b|span)\b[^>]*>\s*<\/\1>/g,"");
+    /* 셈이 어긋나면 본디 토막을 그대로 둔다. 토막이 통째로 비는 것은 괜찮네 —
+       <br> 가 겹치는 것은 아래에서 정리하고, 글이 몽땅 비면 맨 끝에서 본디 글로 되돌리네 */
+    return bal(t)===bal(seg)?t:seg;
   }).join("");
   const t=out.replace(/(<br>)\s*(<br>)+/g,"<br>").replace(/^(\s*<br>)+|(<br>\s*)+$/g,"").replace(/ {2,}/g," ").trim();
   return t||html;   /* 통째로 비면 본디 것을 쓴다 */
