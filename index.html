@@ -413,8 +413,10 @@ body{word-break:keep-all;overflow-wrap:anywhere}
   #s-ask .foot .visit{margin-bottom:4px;font-size:12px}#s-ask .foot .visit b{font-size:15px}#s-ask .foot .visit b i{font-size:18px}
 }
 .tel{color:var(--geum-hot);font-weight:700;text-decoration:underline;text-underline-offset:3px;padding:0 2px}
-/* 급할 때 눌러야 할 번호는 줄 사이를 벌려 손가락 자리가 서로를 깎지 않게 한다 */
-.sos{display:block;line-height:3.2}
+/* 급할 때 눌러야 할 번호는 각자 제 블록에 두어, 손가락 자리가 서로를 깎지 않게 한다.
+   글줄 간격은 그대로 두고 블록 사이만 벌린다(늘어져 보이지 않게). */
+.sos{display:block;margin:2px 0 0}
+.sos .ln{display:block;padding:11px 0}
 .visit{margin:10px 0 0;text-align:center;font-family:var(--serif);font-size:13.5px;line-height:1.5;letter-spacing:.06em;color:rgba(236,224,210,.82);
   text-shadow:0 2px 10px #000,0 0 22px #000;transition:opacity 1.6s ease;opacity:0}
 .visit b{display:block;margin-top:2px;font-weight:700;font-size:19px;letter-spacing:.1em;color:var(--geum-hot);
@@ -1998,7 +2000,7 @@ function riskOf(t){ t=String(t); const n=t.replace(/\s+/g,"");
   if(RISK_SELF.test(t)||/죽어버리|죽고싶|죽고십|죽구싶|자살하/.test(n)) return "self"; if(RISK_HARM.test(t)) return "harm"; if(RISK_HURT.test(t)) return "hurt"; if(RISK_MED.test(t)) return PETW.test(t)?"vet":"med"; return ""; }
 const RISK_MSG={
  self:"이 물음에는 패를 펴지 않겠네.<br>패는 자네 목숨을 두고는 답하지 않네.<br><br>그런 마음이 들 만큼 무거운 것을 지고 있다는 건 알겠네. 오늘 밤은 혼자 두지 말게. 곁에 있는 사람 하나에게 지금 그 마음을 그대로 말하게.<br><br>말할 사람이 없거든 <a class='tel' href='tel:109'>109</a>에 전화하게. 밤에도 받네.<br><br>그 짐이 조금 내려앉거든, 그때 다른 물음을 들고 오게. 그때는 패를 펴 주지.",
- hurt:"이 일은 패보다 사람의 손이 먼저일세.<br>누가 자네 몸이나 마음을 해치고 있다면, 그건 운이 아니라 멈춰야 할 일이네.<br><br><span class='sos'>지금 위험하면 <a class='tel' href='tel:112'>112</a>에 바로 알리게.<br>가정폭력·데이트폭력·스토킹은 <a class='tel' href='tel:1366'>1366</a>(여성긴급전화)이 밤낮없이 받네.</span><br><br>몸이 안전한 곳에 닿거든, 그때 다른 물음을 들고 오게. 그때는 패를 펴 주지.",
+ hurt:"이 일은 패보다 사람의 손이 먼저일세.<br>누가 자네 몸이나 마음을 해치고 있다면, 그건 운이 아니라 멈춰야 할 일이네.<br><br><span class='sos'><span class='ln'>지금 위험하면 <a class='tel' href='tel:112'>112</a>에 바로 알리게.</span><span class='ln'>가정폭력·데이트폭력·스토킹은 <a class='tel' href='tel:1366'>1366</a>(여성긴급전화)이 밤낮없이 받네.</span></span><br><br>몸이 안전한 곳에 닿거든, 그때 다른 물음을 들고 오게. 그때는 패를 펴 주지.",
  vet:"그 아이의 몸과 목숨이 걸린 결정은 패로 정하지 않네.<br>그건 그 아이를 직접 본 수의사와 정할 일일세.<br><br>한 사람의 말로 부족하거든 다른 수의사의 말도 들어 보게. 자네가 곁에 있다는 것만으로 그 아이는 힘을 얻네.<br><br>그 결정과 별개로 자네 마음이 어디로 흐르는지가 궁금하거든, 그때 그 물음을 들고 오게.",
  med:"몸과 목숨이 걸린 결정은 패로 정하지 않네.<br>그건 패가 아니라 자네 몸을 직접 본 의원과 정할 일일세.<br><br>망설여지는 마음 그대로 의원에게 물어보게. 한 사람의 말로 부족하거든 다른 의원의 말도 들어 보게.<br><br>그 결정과 별개로 자네 마음이 어디로 흐르는지가 궁금하거든, 그때 그 물음을 들고 오게.",
  harm:"남을 해치는 일에는 패를 펴지 않겠네.<br>그 마음은 상대보다 자네를 먼저 삼키네.<br><br>자네가 정말 묻고 싶은 건 그 사람이 아니라, 그 일로 다친 자네 자리일 것일세. 그걸 물어 오게. 그 물음에는 패를 펴 주지."
