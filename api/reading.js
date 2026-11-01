@@ -143,6 +143,9 @@ const BLAME = /(자네|그대)\s*(안의|속의|마음(이|의))[^.!?]{0,20}(때
 /* 뼈대가 '지금 하라'는데 확답이 '미뤄라'로 돌아서면 버린다(그 반대도) */
 const DO_NOW = /(거절|거부|신고|고소|진정|지급\s*정지|멈추|끊)[가-힣]*게|오늘\s*(바로|안에)|지금\s*바로|미루지\s*말게|이번\s*주\s*안에/;
 const HOLD_OFF = /기다리게|묵히게|묵혀\s*두게|입\s*(을)?\s*다물|지켜만\s*보게|미루게|서두르지\s*말고\s*기다|가만히\s*있게|한\s*철만\s*두고\s*보게|아무\s*말도\s*말게|때가\s*(오|되)면|때를\s*기다|나중에\s*말하게|천천히\s*해도\s*되네/;
+/* 이미 잃은 손님에게 '그래도 넣으라'는 말 — 확답 첫마디가 '넣지 말게'여도
+   뒷문장에서 슬그머니 되돌리는 일이 있었다. 문장 단위로 들어낸다. */
+const PUSH_IN = /(넣더라도|넣어\s*보게|넣어\s*보는|넣으면\s*되|나눠\s*넣|나누어\s*넣|조금씩\s*넣|다시\s*넣|더\s*넣게|넣는\s*것도|넣을\s*거면|넣을\s*때는|잃어도\s*(괜찮|좋|되)은|여윳돈|여유\s*자금|분할\s*(매수|매입)|사\s*두게|사들이|매수하게|묻어\s*두게|비중을\s*(늘|실)|복구하게|만회하게|본전을\s*찾)/;
 /* 뼈대에 없는 '몇 가지·며칠' 같은 셈을 지어내면 버린다 */
 const COUNTS = /(한|두|세|네|다섯|여섯|일곱|여덟|아홉|열|사흘|이레|열흘|보름|며칠)\s*(가지|번|줄|개|달|주|가지를|장)/g;
 function madeUpCount(a, base) {
@@ -563,6 +566,8 @@ export default async function handler(req, res) {
     const SCARE = /목을\s*(졸|조)|헤집|밀어냈|뚝\s*끊|피를\s*|죽음|떨어질지|목숨/;
     const BLAME = /자네[^.]{0,36}(번지|번진|옮기|옮겨|옮긴|전해지|전해진|전해졌|더디게\s*하|밀어\s*넣|탓일세|탓이네|때문일세)/;
     /* 당한 쪽이 물어 온 물음 — '자네가 먼저 물러선 탓'이라 되받지 않는다 */
+    /* 이미 잃었거나 잃은 것을 쫓는 손님 */
+    const LOST = !!(bone.loss || bone.chase);
     const VICTIM = ["따돌림", "괴롭힘", "구설", "공가로챔", "배신", "사기피해", "사기", "이웃", "기빨림", "선긋기", "가족중독", "부모이혼", "양육권", "돈받기", "보증금"].includes(bone.intent);
     const SELFCAUSE = /자네\s*(쪽에서|스스로|가)[^.!?]{0,28}(먼저\s*(물러|빠지|빠진|닫|등\s*돌|피하|멀어|끊)|자초|불러들|불러온|만든\s*일|키운\s*일|자처)/;
     const REV = /거꾸로|뒤집혀/;
@@ -577,7 +582,7 @@ export default async function handler(req, res) {
           if (!x.trim()) return true;
           total++;
           /* 손님 탓하는 말은 갈래를 가리지 않고 뺀다. '거꾸로·뒤집혀'는 아픈 물음에서만 뺀다 */
-          const bad = GUESS.test(x.trim()) || SCARE.test(x) || FAST.test(x) || BLAME.test(x) || (VICTIM && SELFCAUSE.test(x)) || (SENS && REV.test(x));
+          const bad = GUESS.test(x.trim()) || SCARE.test(x) || FAST.test(x) || BLAME.test(x) || (VICTIM && SELFCAUSE.test(x)) || (SENS && REV.test(x)) || (LOST && PUSH_IN.test(x));
           if (bad && !(k === 0 && seg === parts[0] && ss.length === 1)) return false;
           kept++; return true;
         }).join(" ");
@@ -607,6 +612,7 @@ export default async function handler(req, res) {
         && (bone.loose || KEEP.every((k) => !base.includes(k) || a.includes(k)))
         && first(a).length <= 34 && !VAGUE_HEAD.test(first(a)) && !VAGUE_ANY.test(a)
         && !BLAME.test(a) && !(DO_NOW.test(base) && HOLD_OFF.test(a)) && !madeUpCount(a, base)
+        && !(LOST && PUSH_IN.test(a))
         && !(bone.noWhen && /\d|[0-9]월|봄|여름|가을|겨울/.test(a))
         && (bone.loose
           /* 바닥 문장일 땐 뼈대 말이 아니라 판의 등급과 결이 맞는지만 본다 */
@@ -631,6 +637,7 @@ export default async function handler(req, res) {
         if (BLAME.test(a)) why.push("손님탓");
         if (DO_NOW.test(base) && HOLD_OFF.test(a)) why.push("뼈대와어긋남");
         if (madeUpCount(a, base)) why.push("지어낸수");
+        if (LOST && PUSH_IN.test(a)) why.push("잃은이에게넣으라함");
         if (bone.noWhen && /\d|[0-9]월|봄|여름|가을|겨울/.test(a)) why.push("때없는판에때");
         console.log("answer rejected", why.length ? why.join(",") : "결이어긋남");
       }
