@@ -5081,20 +5081,23 @@ async function openReading(){
 
 /* ── 복비 결제 ──
    결제 키가 Vercel에 들어가기 전(데모)에는 누르면 바로 봉인이 풀린다.
-   키가 들어가면 포트원 결제창 → 서버가 포트원에 직접 조회해 결제 완료·금액을 확인 → 증표를 받아 유료 풀이를 연다. */
+   키가 들어가면 토스 결제창 → 돌아오면 서버가 토스에 승인을 넣고 금액을 확인 →
+   증표를 받아 유료 풀이를 연다. 화면이 "냈다"고 하는 말만으로는 열리지 않는다. */
 const PAY={mode:"demo"};
-fetch("/api/pay").then(r=>r.ok?r.json():null).then(d=>{ if(d&&d.mode==="live"&&d.storeId&&d.channelKey) Object.assign(PAY,d); }).catch(()=>{});
-function loadPortOne(){
-  if(window.PortOne) return Promise.resolve();
-  return new Promise((ok,no)=>{ const sc=document.createElement("script"); sc.src="https://cdn.portone.io/v2/browser-sdk.js"; sc.onload=()=>ok(); sc.onerror=()=>no(new Error("sdk")); document.head.appendChild(sc); });
+const PAYNAME="백귀타로 봉인 해제";
+fetch("/api/pay").then(r=>r.ok?r.json():null).then(d=>{ if(d&&d.mode==="live"&&d.clientKey) Object.assign(PAY,d); }).catch(()=>{});
+function loadToss(){
+  if(window.TossPayments) return Promise.resolve();
+  return new Promise((ok,no)=>{ const sc=document.createElement("script"); sc.src="https://js.tosspayments.com/v2/standard"; sc.onload=()=>ok(); sc.onerror=()=>no(new Error("sdk")); document.head.appendChild(sc); });
 }
-async function verifyPay(pid,amount,q){
+async function verifyPay(paymentKey,orderId,amount,q){
   for(let k=0;k<3;k++){
-    try{ const r=await fetch("/api/pay",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({paymentId:pid,amount,q})});
-      if(r.ok){ const d=await r.json(); if(d&&d.token) return {id:pid,token:d.token}; }
+    try{ const r=await fetch("/api/pay",{method:"POST",headers:{"content-type":"application/json"},
+        body:JSON.stringify({paymentKey,orderId,amount,q})});
+      if(r.ok){ const d=await r.json(); if(d&&d.token) return {id:orderId,token:d.token}; }
       if(r.status===400||r.status===409) return null;
     }catch(e){}
-    await wait(1200);   /* 결제 직후엔 포트원 쪽 반영이 한 박자 늦을 수 있다 */
+    await wait(1200);   /* 결제 직후엔 토스 쪽 반영이 한 박자 늦을 수 있다 */
   }
   return null;
 }
@@ -5103,30 +5106,42 @@ async function startPay(){
   const btn=$("pay"); if(btn) btn.disabled=true;
   const done=v=>{ if(btn) btn.disabled=false; return v; };
   try{
-    await loadPortOne();
+    await loadToss();
     recordNow();
-    const pid="bg-"+Date.now().toString(36)+Math.random().toString(36).slice(2,10);
+    const oid="bg-"+Date.now().toString(36)+Math.random().toString(36).slice(2,10);
     const amount=S.price===15000?15000:3990;
-    store("baekgwi.pending",{pid,amount,rec:S.rec&&S.rec.id,q:S.q,t:Date.now()});
-    const r=await window.PortOne.requestPayment({storeId:PAY.storeId,channelKey:PAY.channelKey,paymentId:pid,
-      orderName:"백귀타로 봉인 해제",totalAmount:amount,currency:"CURRENCY_KRW",payMethod:"CARD",
-      redirectUrl:location.origin+location.pathname});
-    if(!r||r.code!==undefined){ store("baekgwi.pending",null); toast(r&&/취소|cancel/i.test(String(r.message||r.code))?"결제를 그만두었네. 마음이 서면 다시 누르게.":"결제를 마치지 못했네. 잠시 뒤 다시 눌러 주게."); return done(false); }
-    const ok=await verifyPay(pid,amount,S.q);
-    if(!ok){ toast("복비가 확인되지 않았네. 결제가 됐다면 고객센터 1866-0423으로 알려 주게."); return done(false); }
-    store("baekgwi.pending",null);
-    S.pay=ok; unseal(); return true;
-  }catch(e){ toast("결제 창을 열지 못했네. 잠시 뒤 다시 눌러 주게."); return done(false); }
+    store("baekgwi.pending",{oid,amount,rec:S.rec&&S.rec.id,q:S.q,t:Date.now()});
+    const toss=window.TossPayments(PAY.clientKey);
+    const widgets=toss.widgets({customerKey:(window.TossPayments&&window.TossPayments.ANONYMOUS)||"ANONYMOUS"});
+    await widgets.setAmount({value:amount,currency:"KRW"});
+    const back=location.origin+location.pathname;
+    /* 결제창을 띄우고, 손님이 그 안에서 결제를 누르면 토스로 넘어갔다가 back 으로 돌아온다 */
+    const win=await widgets.renderPaymentWindow({orderName:PAYNAME,
+      variantKey:{paymentMethod:"DEFAULT",agreement:"AGREEMENT"}});
+    win.on("paymentRequest",async()=>{
+      try{ await widgets.requestPayment({orderId:oid,orderName:PAYNAME,successUrl:back,failUrl:back}); }
+      catch(e){ store("baekgwi.pending",null);
+        toast(/취소|cancel|CANCELED/i.test(String(e&&(e.message||e.code)))?"결제를 그만두었네. 마음이 서면 다시 누르게.":"결제를 마치지 못했네. 잠시 뒤 다시 눌러 주게."); }
+    });
+    /* 여기서 끝내지 않는다. 결제는 저 창에서 이어지고, 돌아오면 resumePay 가 받는다.
+       손님이 창을 닫으면 다시 누를 수 있어야 하므로 단추를 풀어 둔다 */
+    return done(false);
+  }catch(e){ store("baekgwi.pending",null); toast("결제 창을 열지 못했네. 잠시 뒤 다시 눌러 주게."); return done(false); }
 }
-/* 휴대폰은 결제창이 다른 화면으로 넘어갔다가 돌아온다 — 돌아오면 확인하고 그 풀이를 연다 */
+/* 결제창은 다른 화면으로 넘어갔다가 돌아온다 — 돌아오면 확인하고 그 풀이를 연다 */
 async function resumePay(){
   let u; try{ u=new URL(location.href); }catch(e){ return; }
-  const pid=u.searchParams.get("paymentId"); if(!pid) return;
+  const paymentKey=u.searchParams.get("paymentKey");
+  const orderId=u.searchParams.get("orderId");
+  const code=u.searchParams.get("code");
+  if(!paymentKey&&!code) return;
   try{ history.replaceState(null,"",location.pathname); }catch(e){}
-  const pend=store("baekgwi.pending"); if(!pend||pend.pid!==pid) return;
-  if(u.searchParams.get("code")){ store("baekgwi.pending",null); toast("결제를 마치지 못했네. 지난 물음에서 다시 열 수 있네."); return; }
+  const pend=store("baekgwi.pending");
+  if(code){ store("baekgwi.pending",null);
+    toast(/CANCEL/i.test(code)?"결제를 그만두었네. 지난 물음에서 다시 열 수 있네.":"결제를 마치지 못했네. 지난 물음에서 다시 열 수 있네."); return; }
+  if(!pend||pend.oid!==orderId) return;
   toast("복비를 확인하는 중일세…");
-  const ok=await verifyPay(pid,pend.amount,pend.q);
+  const ok=await verifyPay(paymentKey,orderId,pend.amount,pend.q);
   if(!ok){ toast("복비가 확인되지 않았네. 결제가 됐다면 고객센터 1866-0423으로 알려 주게."); return; }
   store("baekgwi.pending",null);
   const h=hist(), rec=h.find(r=>r.id===pend.rec); if(!rec) return;
